@@ -15,7 +15,10 @@ public class Location {
     public Location(String location) {
         this.location = location;
 
-        bgImage = StaticValue.bg;
+        switch (location) {
+            case "farm": bgImage = StaticValue.farm;
+
+        }
     }
 
     public BufferedImage getBgImage() {
