@@ -6,7 +6,6 @@ import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class MyFrame extends JFrame implements KeyListener,Runnable {
     private List<Location> Locations = new ArrayList<>(); // 用于存储所有的地图

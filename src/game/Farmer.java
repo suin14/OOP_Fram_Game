@@ -10,6 +10,8 @@ public class Farmer implements Runnable{
 
     private int dir; //0上1右2下3左
 
+    private final int movespeed = 10;
+
     // 移动速度
     private int xspreed;
     private int yspreed;
@@ -63,24 +65,24 @@ public class Farmer implements Runnable{
             case 0:
                 dir = direction;
                 xspreed = 0;
-                yspreed = -5;
+                yspreed = -movespeed;
                 status = "move--up";
                 break;
             case 1:
                 dir = direction;
-                xspreed = 5;
+                xspreed = movespeed;
                 yspreed = 0;
                 status = "move--right";
                 break;
             case 2:
                 dir = direction;
                 xspreed = 0;
-                yspreed = 5;
+                yspreed = movespeed;
                 status = "move--down";
                 break;
             case 3:
                 dir = direction;
-                xspreed = -5;
+                xspreed = -movespeed;
                 yspreed = 0;
                 status = "move--left";
         }
@@ -114,12 +116,20 @@ public class Farmer implements Runnable{
                 if (x < 0) {
                     x = 0;
                 }
+                if (x > 1680) {
+                    x = 1680;
+                }
             }
             if (yspreed != 0) {
                 y += yspreed;
+                System.out.println(y);
+
                 // 判断pc是否到底地图最下边
                 if (y < 0) {
                     y = 0;
+                }
+                if (y > 910) {
+                    y = 910;
                 }
             }
 
