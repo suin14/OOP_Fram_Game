@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class StaticValue {
+
     // 背景
     public static BufferedImage farm = null;
 

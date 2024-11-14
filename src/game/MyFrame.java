@@ -22,6 +22,8 @@ public class MyFrame extends JFrame implements KeyListener,Runnable {
 
     private Thread thread = new Thread(this);
 
+    private SoundManager soundManager = new SoundManager();
+
 
     public MyFrame() {
         setTitle("圈圈物语");
@@ -44,6 +46,9 @@ public class MyFrame extends JFrame implements KeyListener,Runnable {
 
         // 设置初始场景
         nowLocation = Locations.get(0);
+
+        // 播放BGM
+        soundManager.playBGM();
 
 
         // 绘制图像
