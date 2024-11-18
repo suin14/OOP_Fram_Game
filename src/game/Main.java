@@ -107,6 +107,12 @@ public class Main extends JFrame implements KeyListener,Runnable {
         // 互动键(使用道具/对话) Space
 
         // 切换道具栏 Q E
+        if (keyCode == KeyEvent.VK_Q) {
+
+        }
+        if (keyCode == KeyEvent.VK_E) {
+
+        }
 
     }
 
