@@ -16,7 +16,7 @@ public class Location {
         this.location = location;
 
         switch (location) {
-            case "farm": bgImage = StaticValue.farm;
+            case "farm": bgImage = AssetManager.farm;
 
         }
     }

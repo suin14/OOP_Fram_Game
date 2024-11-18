@@ -1,6 +1,5 @@
 package game;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Objects;
@@ -37,7 +36,7 @@ public class Farmer implements Runnable{
         this.x = x;
         this.y = y;
         this.dir = 2;
-        show = StaticValue.stand_D; // 默认向下站立
+        show = AssetManager.stand_D; // 默认向下站立
         this.currentStatus = "stand--down";
         this.newStatus = "stand--down";
         thread = new Thread(this);
@@ -142,42 +141,42 @@ public class Farmer implements Runnable{
             // 改变pc图像
             switch (newStatus) {
                 case "move--up" -> {
-                    BufferedImage[] anim = StaticValue.walk_U;
+                    BufferedImage[] anim = AssetManager.walk_U;
                     updateframe(anim);
                     show = anim[currentFrame];
                 }
                 case "move--right" -> {
-                    BufferedImage[] anim = StaticValue.walk_R;
+                    BufferedImage[] anim = AssetManager.walk_R;
                     updateframe(anim);
                     show = anim[currentFrame];
                 }
                 case "move--down" -> {
-                    BufferedImage[] anim = StaticValue.walk_D;
+                    BufferedImage[] anim = AssetManager.walk_D;
                     updateframe(anim);
                     show = anim[currentFrame];
                 }
                 case "move--left" -> {
-                    BufferedImage[] anim = StaticValue.walk_L;
+                    BufferedImage[] anim = AssetManager.walk_L;
                     updateframe(anim);
                     show = anim[currentFrame];
                 }
                 case "stand--up" -> {
-                    BufferedImage[] anim = StaticValue.walk_U;
+                    BufferedImage[] anim = AssetManager.walk_U;
                     currentFrame = 0;
                     show = anim[2];
                 }
                 case "stand--right" -> {
-                    BufferedImage[] anim = StaticValue.walk_R;
+                    BufferedImage[] anim = AssetManager.walk_R;
                     currentFrame = 0;
                     show = anim[4];
                 }
                 case "stand--down" -> {
-                    BufferedImage[] anim = StaticValue.walk_D;
+                    BufferedImage[] anim = AssetManager.walk_D;
                     currentFrame = 0;
                     show = anim[2];
                 }
                 case "stand--left" -> {
-                    BufferedImage[] anim = StaticValue.walk_L;
+                    BufferedImage[] anim = AssetManager.walk_L;
                     currentFrame = 0;
                     show = anim[4];
                 }

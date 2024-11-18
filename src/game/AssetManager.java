@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class StaticValue {
+public class AssetManager {
 
     // 背景
     public static BufferedImage farm = null;

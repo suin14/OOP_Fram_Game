@@ -7,7 +7,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyFrame extends JFrame implements KeyListener,Runnable {
+public class Main extends JFrame implements KeyListener,Runnable {
     private List<Location> Locations = new ArrayList<>(); // 用于存储所有的地图
 
     private final int LocationsCnt = 1; // 场景数量
@@ -25,7 +25,7 @@ public class MyFrame extends JFrame implements KeyListener,Runnable {
     private SoundManager soundManager = new SoundManager();
 
 
-    public MyFrame() {
+    public Main() {
         setTitle("圈圈物语");
         setSize(1152, 648);
         setLocationRelativeTo(null);
@@ -34,7 +34,7 @@ public class MyFrame extends JFrame implements KeyListener,Runnable {
         addKeyListener(this);
         setVisible(true);
 
-        StaticValue.init(); // 初始化图片资源
+        AssetManager.init(); // 初始化图片资源
 
         // 初始化PC
         pc = new Farmer(0, 0);
@@ -103,6 +103,11 @@ public class MyFrame extends JFrame implements KeyListener,Runnable {
         if (keyCode == KeyEvent.VK_A || keyCode == KeyEvent.VK_D || keyCode == KeyEvent.VK_W || keyCode == KeyEvent.VK_S) {
             pc.stop();
         }
+
+        // 互动键(使用道具/对话) Space
+
+        // 切换道具栏 Q E
+
     }
 
     @Override
@@ -111,7 +116,7 @@ public class MyFrame extends JFrame implements KeyListener,Runnable {
     }
 
     public static void main(String[] args) {
-        new MyFrame();
+        new Main();
     }
 
     @Override
