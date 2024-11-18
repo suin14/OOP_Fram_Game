@@ -10,12 +10,8 @@ public class AssetManager {
     // 背景
     public static BufferedImage farm = null;
 
-    // PC状态
-    public static BufferedImage stand_U = null;
-    public static BufferedImage stand_D = null;
-    public static BufferedImage stand_L = null;
-    public static BufferedImage stand_R = null;
-
+    // PC
+    public static BufferedImage idle = null;
     public static BufferedImage[] walk_U = new BufferedImage[5];
     public static BufferedImage[] walk_D = new BufferedImage[5];
     public static BufferedImage[] walk_L = new BufferedImage[8];
@@ -33,6 +29,8 @@ public class AssetManager {
             walk_D = loadFrames("walk_d.png", 5);
             walk_L = loadFrames("walk_l.png", 8);
             walk_R = loadFrames("walk_r.png", 8);
+
+            idle = walk_D[2];
 
         } catch (IOException e) {
             throw new RuntimeException(e);

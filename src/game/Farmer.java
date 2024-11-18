@@ -36,7 +36,7 @@ public class Farmer implements Runnable{
         this.x = x;
         this.y = y;
         this.dir = 2;
-        show = AssetManager.stand_D; // 默认向下站立
+        show = AssetManager.idle; // 默认向下站立
         this.currentStatus = "stand--down";
         this.newStatus = "stand--down";
         thread = new Thread(this);
