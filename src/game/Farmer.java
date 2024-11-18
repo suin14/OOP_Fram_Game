@@ -96,6 +96,7 @@ public class Farmer implements Runnable{
     public void stop() {
         xspreed = 0;
         yspreed = 0;
+        currentFrame = 0;
 
         switch (dir) {
             case 0 -> newStatus = "stand--up";
@@ -140,6 +141,7 @@ public class Farmer implements Runnable{
 
             // 改变pc图像
             switch (newStatus) {
+                // 走动
                 case "move--up" -> {
                     BufferedImage[] anim = AssetManager.walk_U;
                     updateframe(anim);
@@ -160,28 +162,24 @@ public class Farmer implements Runnable{
                     updateframe(anim);
                     show = anim[currentFrame];
                 }
+                // 站立
                 case "stand--up" -> {
                     BufferedImage[] anim = AssetManager.walk_U;
-                    currentFrame = 0;
                     show = anim[2];
                 }
                 case "stand--right" -> {
                     BufferedImage[] anim = AssetManager.walk_R;
-                    currentFrame = 0;
                     show = anim[4];
                 }
                 case "stand--down" -> {
                     BufferedImage[] anim = AssetManager.walk_D;
-                    currentFrame = 0;
                     show = anim[2];
                 }
                 case "stand--left" -> {
                     BufferedImage[] anim = AssetManager.walk_L;
-                    currentFrame = 0;
                     show = anim[4];
                 }
             }
-
             try {
                 Thread.sleep(80); // 让线程休眠50毫秒
             } catch (InterruptedException e) {
