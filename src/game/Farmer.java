@@ -1,7 +1,9 @@
 package game;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Objects;
 
 public class Farmer implements Runnable{
     // 横纵坐标
@@ -10,15 +12,17 @@ public class Farmer implements Runnable{
 
     private int dir; //0上1右2下3左
 
-    private final int movespeed = 10;
+    private final int movespeed = 8;
 
     // 移动速度
     private int xspreed;
     private int yspreed;
 
-    // 当前状态
-    private String status;
+    private String newStatus; // 下一状态
+    private String currentStatus; // 当前状态
     private BufferedImage show = null;
+    private int currentFrame = 0; //当前动画帧
+
 
     private Location loc = new Location();
 
@@ -34,7 +38,8 @@ public class Farmer implements Runnable{
         this.y = y;
         this.dir = 2;
         show = StaticValue.stand_D; // 默认向下站立
-        this.status = "stand--down";
+        this.currentStatus = "stand--down";
+        this.newStatus = "stand--down";
         thread = new Thread(this);
         thread.start();
     }
@@ -55,36 +60,37 @@ public class Farmer implements Runnable{
         this.y = y;
     }
 
-    public BufferedImage getShow() {
+    public Image getShow() {
         return show;
     }
 
     // 移动
     public void move(int direction) {
         switch (direction) {
-            case 0:
+            case 0 -> {
                 dir = direction;
                 xspreed = 0;
                 yspreed = -movespeed;
-                status = "move--up";
-                break;
-            case 1:
+                newStatus = "move--up";
+            }
+            case 1 -> {
                 dir = direction;
                 xspreed = movespeed;
                 yspreed = 0;
-                status = "move--right";
-                break;
-            case 2:
+                newStatus = "move--right";
+            }
+            case 2 -> {
                 dir = direction;
                 xspreed = 0;
                 yspreed = movespeed;
-                status = "move--down";
-                break;
-            case 3:
+                newStatus = "move--down";
+            }
+            case 3 -> {
                 dir = direction;
                 xspreed = -movespeed;
                 yspreed = 0;
-                status = "move--left";
+                newStatus = "move--left";
+            }
         }
     }
 
@@ -93,17 +99,19 @@ public class Farmer implements Runnable{
         yspreed = 0;
 
         switch (dir) {
-            case 0:
-                status = "stop--up";
-                break;
-            case 1:
-                status = "stop--right";
-                break;
-            case 2:
-                status = "stop--down";
-                break;
-            case 3:
-                status = "stop--left";
+            case 0 -> newStatus = "stand--up";
+            case 1 -> newStatus = "stand--right";
+            case 2 -> newStatus = "stand--down";
+            case 3 -> newStatus = "stand--left";
+        }
+    }
+
+    private void updateframe(BufferedImage[] anim) {
+        if (Objects.equals(newStatus, currentStatus)) {
+            currentFrame = (currentFrame + 1) % anim.length; // 动画帧循环
+        } else {
+            currentFrame = 0; // 进入新状态时重置帧
+            currentStatus = newStatus;
         }
     }
 
@@ -112,48 +120,71 @@ public class Farmer implements Runnable{
         while(true) {
             if (xspreed != 0) {
                 x += xspreed;
-                // 判断pc是否到底地图最左边
                 if (x < 0) {
                     x = 0;
                 }
-                if (x > 1680) {
-                    x = 1680;
+                if (x > 1112) {
+                    x = 1112;
                 }
             }
             if (yspreed != 0) {
                 y += yspreed;
-                System.out.println(y);
 
                 // 判断pc是否到底地图最下边
                 if (y < 0) {
                     y = 0;
                 }
-                if (y > 910) {
-                    y = 910;
+                if (y > 600) {
+                    y = 600;
                 }
             }
 
             // 改变pc图像
-            if (status.equals("move--up")) {
-                show = StaticValue.walk_U;
-            } else if (status.equals("move--right")) {
-                show = StaticValue.walk_R;
-            } else if (status.equals("move--down")) {
-                show = StaticValue.walk_D;
-            } else if (status.equals("move--left")) {
-                show = StaticValue.walk_L;
-            } else if (status.equals("stand--up")) {
-                show = StaticValue.stand_U;
-            } else if (status.equals("stand--right")) {
-                show = StaticValue.stand_R;
-            } else if (status.equals("stand--down")) {
-                show = StaticValue.stand_D;
-            } else if (status.equals("stand--left")) {
-                show = StaticValue.stand_L;
+            switch (newStatus) {
+                case "move--up" -> {
+                    BufferedImage[] anim = StaticValue.walk_U;
+                    updateframe(anim);
+                    show = anim[currentFrame];
+                }
+                case "move--right" -> {
+                    BufferedImage[] anim = StaticValue.walk_R;
+                    updateframe(anim);
+                    show = anim[currentFrame];
+                }
+                case "move--down" -> {
+                    BufferedImage[] anim = StaticValue.walk_D;
+                    updateframe(anim);
+                    show = anim[currentFrame];
+                }
+                case "move--left" -> {
+                    BufferedImage[] anim = StaticValue.walk_L;
+                    updateframe(anim);
+                    show = anim[currentFrame];
+                }
+                case "stand--up" -> {
+                    BufferedImage[] anim = StaticValue.walk_U;
+                    currentFrame = 0;
+                    show = anim[2];
+                }
+                case "stand--right" -> {
+                    BufferedImage[] anim = StaticValue.walk_R;
+                    currentFrame = 0;
+                    show = anim[4];
+                }
+                case "stand--down" -> {
+                    BufferedImage[] anim = StaticValue.walk_D;
+                    currentFrame = 0;
+                    show = anim[2];
+                }
+                case "stand--left" -> {
+                    BufferedImage[] anim = StaticValue.walk_L;
+                    currentFrame = 0;
+                    show = anim[4];
+                }
             }
 
             try {
-                Thread.sleep(50); // 让线程休眠50毫秒
+                Thread.sleep(80); // 让线程休眠50毫秒
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

@@ -27,17 +27,17 @@ public class MyFrame extends JFrame implements KeyListener,Runnable {
 
     public MyFrame() {
         setTitle("圈圈物语");
-        setSize(1920, 1080);
+        setSize(1152, 648);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false); // 窗口大小不可变
         addKeyListener(this);
         setVisible(true);
 
-        StaticValue.init(); // 初始化图片
+        StaticValue.init(); // 初始化图片资源
 
         // 初始化PC
-        pc = new Farmer(10, 395);
+        pc = new Farmer(0, 0);
 
         // 创建所有场景
         for (int i = 1; i <= LocationsCnt; i++) {
@@ -64,11 +64,11 @@ public class MyFrame extends JFrame implements KeyListener,Runnable {
         Graphics graphics = offScreenImage.getGraphics();
         graphics.fillRect(0, 0, getWidth(), getHeight());
 
-        // 绘制背景，按窗口大小缩放背景图
+        // 绘制背景，按窗口大小缩放背景图(3倍)
         graphics.drawImage(nowLocation.getBgImage(), 0, 0, getWidth(), getHeight(), this);
 
-        // 绘制pc
-        graphics.drawImage(pc.getShow(), pc.getX(), pc.getY(), this);
+        // 绘制pc, 放大至64x64
+        graphics.drawImage(pc.getShow(), pc.getX(), pc.getY(), 64, 64,  this);
 
         // 将图片绘制到窗口中
         g.drawImage(offScreenImage, 0, 0, this);
@@ -119,7 +119,7 @@ public class MyFrame extends JFrame implements KeyListener,Runnable {
         while (true) {
             repaint();
             try {
-                Thread.sleep(50);
+                Thread.sleep(80);
 
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
