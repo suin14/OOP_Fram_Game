@@ -5,14 +5,30 @@ import java.io.File;
 import java.io.IOException;
 
 public class SoundManager {
-    private static String path = System.getProperty("user.dir") + File.separator + "assets" + File.separator + "audio" + File.separator;
+    private static final String path = System.getProperty("user.dir") + File.separator + "assets" + File.separator + "audio" + File.separator;
 
     private Clip bgmClip;
-
     private Clip sfxClip;
+
+    // 静态变量用于保存唯一的实例
+    private static SoundManager instance;
+
+    private SoundManager() {}
+
+    // 获取单例实例
+    public static SoundManager getInstance() {
+        if (instance == null) {
+            instance = new SoundManager();
+        }
+        return instance;
+    }
 
     // 播放背景音乐
     public void playBGM() {
+        if (bgmClip != null && bgmClip.isRunning()) {
+            return;
+        }
+
         try {
             File bgmFile = new File(path + "bgm.wav");
             AudioInputStream bgmStream = AudioSystem.getAudioInputStream(bgmFile);
@@ -37,4 +53,5 @@ public class SoundManager {
             e.printStackTrace();
         }
     }
+
 }

@@ -11,13 +11,11 @@ public class Main extends JFrame implements KeyListener,Runnable {
 
     private final Thread thread = new Thread(this);
 
-    private final SoundManager soundManager = new SoundManager();
-
     private final MapLoader mapViewer;
 
     private final Farmer pc;
 
-    private BlackScreenController blackScreenController;
+    private final BlackScreenController blackScreenController;
 
     public Main() {
         setTitle("圈圈物语");
@@ -40,6 +38,7 @@ public class Main extends JFrame implements KeyListener,Runnable {
         pc = Farmer.getInstance(mapViewer, 14, 7);
 
         // 播放BGM
+        SoundManager soundManager = SoundManager.getInstance();
         soundManager.playBGM();
 
 

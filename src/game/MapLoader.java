@@ -19,13 +19,13 @@ public class MapLoader extends JPanel {
     private int mapHeight; // 地图高度（以图块为单位）
 
     // 存储图层数据
-    private ArrayList<ArrayList<Integer>> layersData = new ArrayList<>();
+    private final ArrayList<ArrayList<Integer>> layersData = new ArrayList<>();
     private ArrayList<Integer> collisionData = new ArrayList<>();
 
-    private ArrayList<Warp> warps = new ArrayList<>(); // 传送点列表
+    private final ArrayList<Warp> warps = new ArrayList<>(); // 传送点列表
 
 
-    private BlackScreenController blackScreenController;
+    private final BlackScreenController blackScreenController;
 
 
     public MapLoader(String tmxFilePath, String tilesetImagePath) {
