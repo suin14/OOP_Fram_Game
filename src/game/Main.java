@@ -30,7 +30,7 @@ public class Main extends JFrame implements KeyListener,Runnable {
 
 
         // 初始化场景farm
-        mapViewer = new MapLoader(AssetManager.path + "map" + File.separator + "farm.tmx", AssetManager.path + "map" + File.separator + "farm.png");
+        mapViewer = new MapLoader(AssetManager.mapPath + "farm.tmx", AssetManager.mapPath + "farm.png");
         add(mapViewer, BorderLayout.CENTER);
 
         // 初始化PC
@@ -95,16 +95,6 @@ public class Main extends JFrame implements KeyListener,Runnable {
         // 当松开任意方向时，停止移动
         if (keyCode == KeyEvent.VK_A || keyCode == KeyEvent.VK_D || keyCode == KeyEvent.VK_W || keyCode == KeyEvent.VK_S) {
             pc.stop();
-        }
-
-        // 互动键(使用道具/对话) Space
-
-        // 切换道具栏 Q E
-        if (keyCode == KeyEvent.VK_Q) {
-
-        }
-        if (keyCode == KeyEvent.VK_E) {
-
         }
 
     }
