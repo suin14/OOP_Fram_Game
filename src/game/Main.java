@@ -4,7 +4,7 @@ import javax.swing.JFrame;
 import java.awt.*;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
-import java.io.File;
+
 
 public class Main extends JFrame implements KeyListener,Runnable {
     private Image offScreenImage = null;
@@ -15,7 +15,9 @@ public class Main extends JFrame implements KeyListener,Runnable {
 
     private final MapLoader mapViewer;
 
-    private Farmer pc;
+    private final Farmer pc;
+
+    private BlackScreenController blackScreenController;
 
     public Main() {
         setTitle("圈圈物语");
@@ -28,13 +30,14 @@ public class Main extends JFrame implements KeyListener,Runnable {
 
         AssetManager.init(); // 初始化图片资源
 
+        blackScreenController = BlackScreenController.getInstance(this); //控制过场动画
 
         // 初始化场景farm
         mapViewer = new MapLoader(AssetManager.mapPath + "farm.tmx", AssetManager.mapPath + "farm.png");
         add(mapViewer, BorderLayout.CENTER);
 
         // 初始化PC
-        pc = new Farmer(mapViewer, 640, 256);
+        pc = Farmer.getInstance(mapViewer, 14, 7);
 
         // 播放BGM
         soundManager.playBGM();
@@ -53,18 +56,25 @@ public class Main extends JFrame implements KeyListener,Runnable {
         Graphics graphics = offScreenImage.getGraphics();
         graphics.clearRect(0, 0, getWidth(), getHeight());  // 清空背景
 
-        // 渲染地图
-        if (mapViewer != null) {
-            mapViewer.paintComponent(graphics);
-        }
 
-        // 绘制PC角色, 放大至64x64
-        if (pc != null) {
-            graphics.drawImage(pc.getShow(), pc.getX(), pc.getY(), 64, 64, this);
-        }
+        if (blackScreenController != null && blackScreenController.isBlackScreen()) { //播放过场动画
+            // 绘制黑屏
+            g.setColor(Color.BLACK);
+            g.fillRect(0, 0, getWidth(), getHeight());
+        } else {
+            // 渲染地图
+            if (mapViewer != null) {
+                mapViewer.paintComponent(graphics);
+            }
 
-        // 将图片绘制到窗口中
-        g.drawImage(offScreenImage, 0, 0, this);
+            // 绘制PC角色, 放大至64x64
+            if (pc != null) {
+                graphics.drawImage(pc.getShow(), pc.getX(), pc.getY(), 64, 64, this);
+            }
+
+            // 将图片绘制到窗口中
+            g.drawImage(offScreenImage, 0, 0, this);
+        }
     }
 
 
