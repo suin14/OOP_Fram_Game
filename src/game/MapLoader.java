@@ -10,20 +10,29 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class MapLoader extends JPanel {
+    private Farmer pc;
     private final int scaleFactor = 3; // 缩放倍数
     private BufferedImage tileset; // 图块集图像
     private static final int tileWidth = 16; // 单个图块宽度
     private static final int tileHeight = 16; // 单个图块高度
     private static int mapWidth; // 地图宽度（以图块为单位）
     private int mapHeight; // 地图高度（以图块为单位）
-    private ArrayList<Integer> collisionData = new ArrayList<>();
 
     // 存储图层数据
     private ArrayList<ArrayList<Integer>> layersData = new ArrayList<>();
+    private ArrayList<Integer> collisionData = new ArrayList<>();
+
+    private ArrayList<Warp> warps = new ArrayList<>(); // 传送点列表
+
+
+    private BlackScreenController blackScreenController;
+
 
     public MapLoader(String tmxFilePath, String tilesetImagePath) {
         loadTileset(tilesetImagePath);
         loadMap(tmxFilePath);
+        pc = Farmer.getInstance();
+        blackScreenController = BlackScreenController.getInstance(); //过场动画
     }
 
     // 加载图块集
@@ -47,6 +56,32 @@ public class MapLoader extends JPanel {
             Element mapElement = (Element) document.getElementsByTagName("map").item(0);
             mapWidth = Integer.parseInt(mapElement.getAttribute("width"));
             mapHeight = Integer.parseInt(mapElement.getAttribute("height"));
+
+            // 读取 Map Properties
+            NodeList propertiesList = mapElement.getElementsByTagName("properties");
+            if (propertiesList.getLength() > 0) {
+                Element propertiesElement = (Element) propertiesList.item(0);
+                NodeList propertyList = propertiesElement.getElementsByTagName("property");
+                for (int i = 0; i < propertyList.getLength(); i++) {
+                    Element propertyElement = (Element) propertyList.item(i);
+                    String name = propertyElement.getAttribute("name");
+                    String value = propertyElement.getAttribute("value");
+
+                    // 读取传送点数据
+                    if ("Warp".equals(name)) {
+                        String[] warpParts = value.split(" ");
+                        if (warpParts.length == 4) {
+                            String loc = warpParts[0]; // 第一个值是传送去的地图名字
+                            int from = Integer.parseInt(warpParts[1]); // 第二个值是 传送点格子
+                            int x = Integer.parseInt(warpParts[2]); // 第三个值是 传送去的X坐标
+                            int y = Integer.parseInt(warpParts[3]); // 第四个值是传送去的Y坐标
+                            Warp warpInfo = new Warp(loc, from, x, y);
+                            warps.add(warpInfo);
+                        }
+                    }
+                }
+            }
+
 
             // 读取 layer 数据
             NodeList layerList = document.getElementsByTagName("layer");
@@ -80,30 +115,28 @@ public class MapLoader extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-
         Graphics2D g2d = (Graphics2D) g;
 
-        // 循环绘制每一层
-        for (ArrayList<Integer> layer : layersData) {
-            // 在每一层上绘制图块
+        ArrayList<ArrayList<Integer>> layersDataCopy = new ArrayList<>(layersData);
+
+        for (ArrayList<Integer> layer : layersDataCopy) {
             for (int y = 0; y < mapHeight; y++) {
                 for (int x = 0; x < mapWidth; x++) {
                     int tileId = layer.get(y * mapWidth + x);
                     if (tileId >= 0) {
-                        // 计算当前图块的起始位置
                         int tileX = (tileId % (tileset.getWidth() / tileWidth)) * tileWidth;
                         int tileY = (tileId / (tileset.getWidth() / tileWidth)) * tileHeight;
 
-                        // 通过缩放因子将图块尺寸扩大三倍
                         int newTileWidth = tileWidth * scaleFactor;
                         int newTileHeight = tileHeight * scaleFactor;
 
-                        // 绘制当前图块，放大到三倍
-                        g2d.drawImage(tileset,
+                        g2d.drawImage(
+                                tileset,
                                 x * newTileWidth, y * newTileHeight,
                                 x * newTileWidth + newTileWidth, y * newTileHeight + newTileHeight,
                                 tileX, tileY, tileX + tileWidth, tileY + tileHeight,
-                                this);
+                                this
+                        );
                     }
                 }
             }
@@ -114,10 +147,38 @@ public class MapLoader extends JPanel {
     public boolean checkCollision(int x, int y) {
         int tileX = (x - 16) / (tileHeight * scaleFactor) + 1;
         int tileY = (y - 16) / (tileHeight * scaleFactor) + 1 ;
-        System.out.println(tileX + ", " +  tileY);
+//        System.out.println(tileX + ", " +  tileY);
         int index = tileY * mapWidth + tileX;
         System.out.println(index);
+
         // 如果保存的value不是-1(empty), 则代表该位置有碰撞
         return collisionData.get(index) == -1;
+    }
+
+    public boolean checkWarp(int x, int y) {
+        if (pc == null) {
+            pc = Farmer.getInstance();
+        }
+
+        int tileX = (x - 16) / (tileHeight * scaleFactor) + 1;
+        int tileY = (y - 16) / (tileHeight * scaleFactor) + 1 ;
+        int index = tileY * mapWidth + tileX;
+
+        for (Warp warp : warps) {
+            if (warp.getFrom() == index) {
+                blackScreenController.startBlackScreen(); // 开始过场动画
+
+                String loc = warp.getLocation();  // 获取目标地图文件
+                int targetX = warp.getToX();  // 传送后的目标X坐标
+                int targetY = warp.getToY();  // 传送后的目标Y坐标
+
+                loadTileset(AssetManager.mapPath + loc + ".png");
+                loadMap(AssetManager.mapPath + loc + ".tmx");
+                pc.setPosition(targetX, targetY);
+
+                return true;
+            }
+        }
+        return false;
     }
 }

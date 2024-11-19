@@ -4,12 +4,15 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Objects;
 
-public class Farmer implements Runnable{
+public class Farmer implements Runnable {
+    // 单例实例
+    private static Farmer instance;
+
     // 坐标
     private int x;
     private int y;
 
-    private int dir; //0上1右2下3左
+    private int dir; // 0上1右2下3左
 
     // 移动速度
     public final int movespeed = 10;
@@ -20,21 +23,47 @@ public class Farmer implements Runnable{
 
     private String newStatus; // 下一状态
     private String currentStatus; // 当前状态
-    private int currentFrame = 0; //当前动画帧
+    private int currentFrame = 0; // 当前动画帧
 
     private final Thread thread;
     private final MapLoader mapViewer;
 
-    public Farmer(MapLoader mapViewer, int x, int y) {
-        this.mapViewer = mapViewer; // 构造时传入MapLoader
-        this.x = x;
-        this.y = y;
+    // 私有构造函数
+    private Farmer(MapLoader mapViewer, int x, int y) {
+        this.mapViewer = mapViewer;
+        setX(x);
+        setY(y);
         this.dir = 2;
         show = AssetManager.idle; // 默认向下站立
         this.currentStatus = "stand--down";
         this.newStatus = "stand--down";
         thread = new Thread(this);
         thread.start();
+    }
+
+    // 获取单例实例的方法
+    public static synchronized Farmer getInstance(MapLoader mapViewer, int x, int y) {
+        if (instance == null) {
+            instance = new Farmer(mapViewer, x, y);
+        }
+        return instance;
+    }
+
+    public static synchronized Farmer getInstance() {
+        return instance;
+    }
+
+    public void setPosition(int x, int y) {
+        setX(x);
+        setY(y);
+    }
+
+    public void setX(int x) {
+        this.x = x * 48 - 8;
+    }
+
+    public void setY(int y) {
+        this.y = y * 48 - 16;
     }
 
     public int getX() {
@@ -103,32 +132,38 @@ public class Farmer implements Runnable{
 
     @Override
     public void run() {
-        while(true) {
-//            System.out.println(x + ", " +  y);
-            if (xspreed != 0 && mapViewer.checkCollision(x + xspreed, y)) {
-                x += xspreed;
-                if (x < 0) {
-                    x = 0;
+        while (true) {
+            if (xspreed != 0) {
+                if (mapViewer.checkWarp(x + xspreed, y)) {
+                    continue;
                 }
-                if (x > 1112) {
-                    x = 1112;
+                if (mapViewer.checkCollision(x + xspreed, y)) {
+                    x += xspreed;
+                    if (x < 0) {
+                        x = 0;
+                    }
+                    if (x > 1112) {
+                        x = 1112;
+                    }
                 }
             }
-            if (yspreed != 0 && mapViewer.checkCollision(x, y + yspreed)) {
-                y += yspreed;
-
-                // 判断pc是否到底地图最下边
-                if (y < 0) {
-                    y = 0;
+            if (yspreed != 0) {
+                if (mapViewer.checkWarp(x, y + yspreed)) {
+                    continue;
                 }
-                if (y > 600) {
-                    y = 600;
+                if (mapViewer.checkCollision(x, y + yspreed)) {
+                    y += yspreed;
+                    if (y < 0) {
+                        y = 0;
+                    }
+                    if (y > 600) {
+                        y = 600;
+                    }
                 }
             }
 
             // 改变pc图像
             switch (newStatus) {
-                // 走动
                 case "move--up" -> {
                     BufferedImage[] anim = AssetManager.walk_U;
                     updateframe(anim);
@@ -149,7 +184,6 @@ public class Farmer implements Runnable{
                     updateframe(anim);
                     show = anim[currentFrame];
                 }
-                // 站立
                 case "stand--up" -> {
                     BufferedImage[] anim = AssetManager.walk_U;
                     show = anim[2];
@@ -168,7 +202,7 @@ public class Farmer implements Runnable{
                 }
             }
             try {
-                Thread.sleep(60); // 让线程休眠80毫秒
+                Thread.sleep(60);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
