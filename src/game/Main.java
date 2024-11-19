@@ -34,7 +34,7 @@ public class Main extends JFrame implements KeyListener,Runnable {
         add(mapViewer, BorderLayout.CENTER);
 
         // 初始化PC
-        pc = new Farmer(mapViewer, 640, 256);
+        pc = new Farmer(mapViewer, 640, 288);
 
         // 播放BGM
         soundManager.playBGM();

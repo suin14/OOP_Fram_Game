@@ -5,31 +5,25 @@ import java.awt.image.BufferedImage;
 import java.util.Objects;
 
 public class Farmer implements Runnable{
-    // 横纵坐标
+    // 坐标
     private int x;
     private int y;
 
     private int dir; //0上1右2下3左
 
-    public final int movespeed = 10;
-
     // 移动速度
+    public final int movespeed = 10;
     private int xspreed;
     private int yspreed;
 
+    private BufferedImage show;
+
     private String newStatus; // 下一状态
     private String currentStatus; // 当前状态
-    private BufferedImage show = null;
     private int currentFrame = 0; //当前动画帧
 
-    // 实现PC动作
-    private Thread thread = null;
-
-    private MapLoader mapViewer; // 添加一个MapViewer对象来进行碰撞检测
-
-    public Farmer(MapLoader mapViewer) {
-        this.mapViewer = mapViewer; // 构造时传入MapLoader
-    }
+    private final Thread thread;
+    private final MapLoader mapViewer;
 
     public Farmer(MapLoader mapViewer, int x, int y) {
         this.mapViewer = mapViewer; // 构造时传入MapLoader
@@ -111,7 +105,7 @@ public class Farmer implements Runnable{
     public void run() {
         while(true) {
 //            System.out.println(x + ", " +  y);
-            if (xspreed != 0 && !mapViewer.checkCollision(x + xspreed, y)) {
+            if (xspreed != 0 && mapViewer.checkCollision(x + xspreed, y)) {
                 x += xspreed;
                 if (x < 0) {
                     x = 0;
@@ -120,7 +114,7 @@ public class Farmer implements Runnable{
                     x = 1112;
                 }
             }
-            if (yspreed != 0 && !mapViewer.checkCollision(x, y + yspreed)) {
+            if (yspreed != 0 && mapViewer.checkCollision(x, y + yspreed)) {
                 y += yspreed;
 
                 // 判断pc是否到底地图最下边

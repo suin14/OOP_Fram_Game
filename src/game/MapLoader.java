@@ -12,8 +12,8 @@ import java.util.ArrayList;
 public class MapLoader extends JPanel {
     private final int scaleFactor = 3; // 缩放倍数
     private BufferedImage tileset; // 图块集图像
-    private static int tileWidth; // 单个图块宽度
-    private static int tileHeight; // 单个图块高度
+    private static final int tileWidth = 16; // 单个图块宽度
+    private static final int tileHeight = 16; // 单个图块高度
     private static int mapWidth; // 地图宽度（以图块为单位）
     private int mapHeight; // 地图高度（以图块为单位）
     private ArrayList<Integer> collisionData = new ArrayList<>();
@@ -30,8 +30,6 @@ public class MapLoader extends JPanel {
     private void loadTileset(String tilesetImagePath) {
         try {
             tileset = ImageIO.read(new File(tilesetImagePath));
-            tileWidth = 16; // 设置图块宽度
-            tileHeight = 16; // 设置图块高度
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -86,9 +84,7 @@ public class MapLoader extends JPanel {
         Graphics2D g2d = (Graphics2D) g;
 
         // 循环绘制每一层
-        for (int layerIndex = 0; layerIndex < layersData.size(); layerIndex++) {
-            ArrayList<Integer> layer = layersData.get(layerIndex);
-
+        for (ArrayList<Integer> layer : layersData) {
             // 在每一层上绘制图块
             for (int y = 0; y < mapHeight; y++) {
                 for (int x = 0; x < mapWidth; x++) {
@@ -116,12 +112,12 @@ public class MapLoader extends JPanel {
 
     // 碰撞检测
     public boolean checkCollision(int x, int y) {
-        int tileX = x / (tileHeight * scaleFactor);
-        int tileY = y / (tileHeight * scaleFactor) + 1;  //不知道为什么但是y轴偏移-1
-//        System.out.println(tileX + ", " +  tileY);
+        int tileX = (x - 16) / (tileHeight * scaleFactor) + 1;
+        int tileY = (y - 16) / (tileHeight * scaleFactor) + 1 ;
+        System.out.println(tileX + ", " +  tileY);
         int index = tileY * mapWidth + tileX;
-//        System.out.println(index);
-        // 如果保存的value不是-1(无图块), 则代表该位置有碰撞
-        return collisionData.get(index) != -1;
+        System.out.println(index);
+        // 如果保存的value不是-1(empty), 则代表该位置有碰撞
+        return collisionData.get(index) == -1;
     }
 }
