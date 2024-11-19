@@ -4,25 +4,19 @@ import javax.swing.JFrame;
 import java.awt.*;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
 
 public class Main extends JFrame implements KeyListener,Runnable {
-    private List<Location> Locations = new ArrayList<>(); // 用于存储所有的地图
-
-    private final int LocationsCnt = 1; // 场景数量
-
-    // 用于存储当前地图
-    private Location nowLocation = new Location();
-
     private Image offScreenImage = null;
 
     // 创建PC
     private Farmer pc = new Farmer();
 
-    private Thread thread = new Thread(this);
+    private final Thread thread = new Thread(this);
 
-    private SoundManager soundManager = new SoundManager();
+    private final SoundManager soundManager = new SoundManager();
+
+    private MapLoader mapViewer;
 
 
     public Main() {
@@ -36,16 +30,13 @@ public class Main extends JFrame implements KeyListener,Runnable {
 
         AssetManager.init(); // 初始化图片资源
 
+
+        // 初始化场景farm
+        mapViewer = new MapLoader(AssetManager.path + "map" + File.separator + "farm.tmx", AssetManager.path + "map" + File.separator + "farm.png");
+        add(mapViewer, BorderLayout.CENTER);
+
         // 初始化PC
         pc = new Farmer(0, 0);
-
-        // 创建所有场景
-        for (int i = 1; i <= LocationsCnt; i++) {
-            Locations.add(new Location("farm"));
-        }
-
-        // 设置初始场景
-        nowLocation = Locations.get(0);
 
         // 播放BGM
         soundManager.playBGM();
@@ -62,13 +53,15 @@ public class Main extends JFrame implements KeyListener,Runnable {
             offScreenImage = createImage(getWidth(), getHeight());
         }
         Graphics graphics = offScreenImage.getGraphics();
-        graphics.fillRect(0, 0, getWidth(), getHeight());
+        graphics.clearRect(0, 0, getWidth(), getHeight());  // 清空背景
 
-        // 绘制背景，按窗口大小缩放背景图(3倍)
-        graphics.drawImage(nowLocation.getBgImage(), 0, 0, getWidth(), getHeight(), this);
+        // 渲染地图
+        if (mapViewer != null) {
+            mapViewer.paintComponent(graphics);
+        }
 
-        // 绘制pc, 放大至64x64
-        graphics.drawImage(pc.getShow(), pc.getX(), pc.getY(), 64, 64,  this);
+        // 绘制PC角色, 放大至64x64
+        graphics.drawImage(pc.getShow(), pc.getX(), pc.getY(), 64, 64, this);
 
         // 将图片绘制到窗口中
         g.drawImage(offScreenImage, 0, 0, this);
@@ -133,7 +126,7 @@ public class Main extends JFrame implements KeyListener,Runnable {
                 Thread.sleep(80);
 
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
             }
 
         }

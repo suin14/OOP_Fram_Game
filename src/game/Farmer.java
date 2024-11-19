@@ -22,9 +22,6 @@ public class Farmer implements Runnable{
     private BufferedImage show = null;
     private int currentFrame = 0; //当前动画帧
 
-
-    private Location loc = new Location();
-
     // 实现PC动作
     private Thread thread = null;
 

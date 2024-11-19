@@ -21,9 +21,6 @@ public class AssetManager {
 
     public static void init() {
         try {
-            // 加载背景图片
-            farm = ImageIO.read(new File(path + "farm.png"));
-
             // 加载PC图片
             walk_U = loadFrames("walk_u.png", 5);
             walk_D = loadFrames("walk_d.png", 5);
@@ -39,7 +36,7 @@ public class AssetManager {
 
     // 导入精灵帧
     private static BufferedImage[] loadFrames(String filename, int frame) throws IOException {
-        BufferedImage spriteSheet = ImageIO.read(new File(path + "Characters" + File.separator + filename));
+        BufferedImage spriteSheet = ImageIO.read(new File(path + "characters" + File.separator + filename));
         BufferedImage[] frames = new BufferedImage[frame];
 
         for (int i = 0; i < frame; i++) {
