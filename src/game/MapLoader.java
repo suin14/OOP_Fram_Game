@@ -16,8 +16,7 @@ public class MapLoader extends JPanel {
     private static int tileHeight; // 单个图块高度
     private static int mapWidth; // 地图宽度（以图块为单位）
     private int mapHeight; // 地图高度（以图块为单位）
-    private ArrayList<Integer> mapData = new ArrayList<>(); // 地图图块数据
-    private ArrayList<Integer> collisionData = new ArrayList<>(); // 碰撞数据（0为无碰撞，1为有碰撞）
+    private ArrayList<Integer> collisionData = new ArrayList<>();
 
     // 存储图层数据
     private ArrayList<ArrayList<Integer>> layersData = new ArrayList<>();
@@ -64,14 +63,12 @@ public class MapLoader extends JPanel {
                         layer.add(Integer.parseInt(tile.trim()) - 1); // TMX ID 从1开始，减1方便处理
                     }
 
-                    // 获取图层名称（假设 layerElement 中有 getName() 方法）
-                    String layerName = layerElement.getAttribute("name"); // 获取图层名称
-
+                    String layerName = layerElement.getAttribute("name");
                     if ("Buildings".equals(layerName)) {
-                        collisionData = layer; // 如果图层名为 Buildings，则设置为碰撞数据
+                        collisionData = layer; // 只跟Buildings产生碰撞
                     }
 
-                    layersData.add(layer); // 添加图层到 layersData 列表
+                    layersData.add(layer); // 添加图层数据到 layersData 列表
                 }
             }
 
@@ -119,10 +116,12 @@ public class MapLoader extends JPanel {
 
     // 碰撞检测
     public boolean checkCollision(int x, int y) {
-        int tileX = x / tileWidth;
-        int tileY = y / tileHeight;
+        int tileX = x / (tileHeight * scaleFactor);
+        int tileY = y / (tileHeight * scaleFactor) + 1;  //不知道为什么但是y轴偏移-1
+//        System.out.println(tileX + ", " +  tileY);
         int index = tileY * mapWidth + tileX;
-        // 返回碰撞数据
-        return collisionData.get(index) == 1;
+//        System.out.println(index);
+        // 如果保存的value不是-1(无图块), 则代表该位置有碰撞
+        return collisionData.get(index) != -1;
     }
 }

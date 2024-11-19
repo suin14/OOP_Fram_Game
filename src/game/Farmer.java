@@ -11,7 +11,7 @@ public class Farmer implements Runnable{
 
     private int dir; //0上1右2下3左
 
-    private final int movespeed = 8;
+    public final int movespeed = 10;
 
     // 移动速度
     private int xspreed;
@@ -25,11 +25,14 @@ public class Farmer implements Runnable{
     // 实现PC动作
     private Thread thread = null;
 
-    public Farmer() {
+    private MapLoader mapViewer; // 添加一个MapViewer对象来进行碰撞检测
 
+    public Farmer(MapLoader mapViewer) {
+        this.mapViewer = mapViewer; // 构造时传入MapLoader
     }
 
-    public Farmer(int x, int y) {
+    public Farmer(MapLoader mapViewer, int x, int y) {
+        this.mapViewer = mapViewer; // 构造时传入MapLoader
         this.x = x;
         this.y = y;
         this.dir = 2;
@@ -44,16 +47,8 @@ public class Farmer implements Runnable{
         return x;
     }
 
-    public void setX(int x) {
-        this.x = x;
-    }
-
     public int getY() {
         return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
     }
 
     public Image getShow() {
@@ -115,7 +110,8 @@ public class Farmer implements Runnable{
     @Override
     public void run() {
         while(true) {
-            if (xspreed != 0) {
+//            System.out.println(x + ", " +  y);
+            if (xspreed != 0 && !mapViewer.checkCollision(x + xspreed, y)) {
                 x += xspreed;
                 if (x < 0) {
                     x = 0;
@@ -124,7 +120,7 @@ public class Farmer implements Runnable{
                     x = 1112;
                 }
             }
-            if (yspreed != 0) {
+            if (yspreed != 0 && !mapViewer.checkCollision(x, y + yspreed)) {
                 y += yspreed;
 
                 // 判断pc是否到底地图最下边
@@ -178,9 +174,9 @@ public class Farmer implements Runnable{
                 }
             }
             try {
-                Thread.sleep(80); // 让线程休眠50毫秒
+                Thread.sleep(60); // 让线程休眠80毫秒
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
             }
         }
     }

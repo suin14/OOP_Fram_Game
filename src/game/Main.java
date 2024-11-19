@@ -9,15 +9,13 @@ import java.io.File;
 public class Main extends JFrame implements KeyListener,Runnable {
     private Image offScreenImage = null;
 
-    // 创建PC
-    private Farmer pc = new Farmer();
-
     private final Thread thread = new Thread(this);
 
     private final SoundManager soundManager = new SoundManager();
 
-    private MapLoader mapViewer;
+    private final MapLoader mapViewer;
 
+    private Farmer pc;
 
     public Main() {
         setTitle("圈圈物语");
@@ -36,7 +34,7 @@ public class Main extends JFrame implements KeyListener,Runnable {
         add(mapViewer, BorderLayout.CENTER);
 
         // 初始化PC
-        pc = new Farmer(0, 0);
+        pc = new Farmer(mapViewer, 640, 256);
 
         // 播放BGM
         soundManager.playBGM();
@@ -61,7 +59,9 @@ public class Main extends JFrame implements KeyListener,Runnable {
         }
 
         // 绘制PC角色, 放大至64x64
-        graphics.drawImage(pc.getShow(), pc.getX(), pc.getY(), 64, 64, this);
+        if (pc != null) {
+            graphics.drawImage(pc.getShow(), pc.getX(), pc.getY(), 64, 64, this);
+        }
 
         // 将图片绘制到窗口中
         g.drawImage(offScreenImage, 0, 0, this);
@@ -75,16 +75,16 @@ public class Main extends JFrame implements KeyListener,Runnable {
 
         if (keyCode == KeyEvent.VK_A) {
             // 按下 A 键，农民向左移动
-            pc.move(3);
+                pc.move(3);
         } else if (keyCode == KeyEvent.VK_D) {
             // 按下 D 键，农民向右移动
-            pc.move(1);
+                pc.move(1);
         } else if (keyCode == KeyEvent.VK_W) {
             // 按下 W 键，农民向上移动
-            pc.move(0);
+                pc.move(0);
         } else if (keyCode == KeyEvent.VK_S) {
             // 按下 S 键，农民向下移动
-            pc.move(2);
+                pc.move(2);
         }
     }
 
@@ -123,7 +123,7 @@ public class Main extends JFrame implements KeyListener,Runnable {
         while (true) {
             repaint();
             try {
-                Thread.sleep(80);
+                Thread.sleep(60);
 
             } catch (InterruptedException e) {
                 e.printStackTrace();
