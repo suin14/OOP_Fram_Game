@@ -1,11 +1,13 @@
 package game;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class AssetManager {
+public class StaticValue {
     // PC
     public static BufferedImage idle = null;
     public static BufferedImage[] walk_U = new BufferedImage[5];
@@ -14,7 +16,7 @@ public class AssetManager {
     public static BufferedImage[] walk_R = new BufferedImage[8];
 
     public static String path = System.getProperty("user.dir") + File.separator + "assets" + File.separator;
-    public static String mapPath = AssetManager.path + "map" + File.separator;
+    public static String mapPath = StaticValue.path + "map" + File.separator;
 
     public static void init() {
         try {
@@ -23,7 +25,6 @@ public class AssetManager {
             walk_D = loadFrames("walk_d.png", 5);
             walk_L = loadFrames("walk_l.png", 8);
             walk_R = loadFrames("walk_r.png", 8);
-
             idle = walk_D[2];
 
         } catch (IOException e) {

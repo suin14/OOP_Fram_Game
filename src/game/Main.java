@@ -1,9 +1,10 @@
 package game;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
+import java.io.File;
 
 
 public class Main extends JFrame implements KeyListener,Runnable {
@@ -11,14 +12,13 @@ public class Main extends JFrame implements KeyListener,Runnable {
 
     private final Thread thread = new Thread(this);
 
-    private final MapLoader mapViewer;
-
     private final Farmer pc;
-
     private final BlackScreenController blackScreenController;
+    private final MapsData mapViewer;
 
     public Main() {
         setTitle("圈圈物语");
+        setIconImage(new ImageIcon(System.getProperty("user.dir") + File.separator + "assets" + File.separator + "logo.png").getImage());
         setSize(1152, 648);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -26,16 +26,17 @@ public class Main extends JFrame implements KeyListener,Runnable {
         addKeyListener(this);
         setVisible(true);
 
-        AssetManager.init(); // 初始化图片资源
+        StaticValue.init(); // 初始化图片资源
 
         blackScreenController = BlackScreenController.getInstance(this); //控制过场动画
 
-        // 初始化场景farm
-        mapViewer = new MapLoader(AssetManager.mapPath + "farm.tmx", AssetManager.mapPath + "farm.png");
-        add(mapViewer, BorderLayout.CENTER);
+        // 初始化地图
+        mapViewer = MapsData.getInstance();
+        mapViewer.updadteNowMap("farm");
+        add(mapViewer.nowMap, BorderLayout.CENTER);
 
         // 初始化PC
-        pc = Farmer.getInstance(mapViewer, 14, 7);
+        pc = Farmer.getInstance(14, 7);
 
         // 播放BGM
         SoundManager soundManager = SoundManager.getInstance();
@@ -62,8 +63,8 @@ public class Main extends JFrame implements KeyListener,Runnable {
             g.fillRect(0, 0, getWidth(), getHeight());
         } else {
             // 渲染地图
-            if (mapViewer != null) {
-                mapViewer.paintComponent(graphics);
+            if (mapViewer != null && mapViewer.nowMap != null) {
+                mapViewer.nowMap.paintComponent(graphics);
             }
 
             // 绘制PC角色, 放大至64x64

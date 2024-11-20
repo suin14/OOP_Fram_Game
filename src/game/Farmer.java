@@ -26,25 +26,24 @@ public class Farmer implements Runnable {
     private int currentFrame = 0; // 当前动画帧
 
     private final Thread thread;
-    private final MapLoader mapViewer;
+    private final MapsData mapViewer;
 
-    // 私有构造函数
-    private Farmer(MapLoader mapViewer, int x, int y) {
-        this.mapViewer = mapViewer;
+    private Farmer(int x, int y) {
+        mapViewer = MapsData.getInstance();
+
         setX(x);
         setY(y);
         this.dir = 2;
-        show = AssetManager.idle; // 默认向下站立
+        show = StaticValue.idle; // 默认向下站立
         this.currentStatus = "stand--down";
         this.newStatus = "stand--down";
         thread = new Thread(this);
         thread.start();
     }
 
-    // 获取单例实例的方法
-    public static synchronized Farmer getInstance(MapLoader mapViewer, int x, int y) {
+    public static synchronized Farmer getInstance(int x, int y) {
         if (instance == null) {
-            instance = new Farmer(mapViewer, x, y);
+            instance = new Farmer(x, y);
         }
         return instance;
     }
@@ -165,39 +164,39 @@ public class Farmer implements Runnable {
             // 改变pc图像
             switch (newStatus) {
                 case "move--up" -> {
-                    BufferedImage[] anim = AssetManager.walk_U;
+                    BufferedImage[] anim = StaticValue.walk_U;
                     updateframe(anim);
                     show = anim[currentFrame];
                 }
                 case "move--right" -> {
-                    BufferedImage[] anim = AssetManager.walk_R;
+                    BufferedImage[] anim = StaticValue.walk_R;
                     updateframe(anim);
                     show = anim[currentFrame];
                 }
                 case "move--down" -> {
-                    BufferedImage[] anim = AssetManager.walk_D;
+                    BufferedImage[] anim = StaticValue.walk_D;
                     updateframe(anim);
                     show = anim[currentFrame];
                 }
                 case "move--left" -> {
-                    BufferedImage[] anim = AssetManager.walk_L;
+                    BufferedImage[] anim = StaticValue.walk_L;
                     updateframe(anim);
                     show = anim[currentFrame];
                 }
                 case "stand--up" -> {
-                    BufferedImage[] anim = AssetManager.walk_U;
+                    BufferedImage[] anim = StaticValue.walk_U;
                     show = anim[2];
                 }
                 case "stand--right" -> {
-                    BufferedImage[] anim = AssetManager.walk_R;
+                    BufferedImage[] anim = StaticValue.walk_R;
                     show = anim[4];
                 }
                 case "stand--down" -> {
-                    BufferedImage[] anim = AssetManager.walk_D;
+                    BufferedImage[] anim = StaticValue.walk_D;
                     show = anim[2];
                 }
                 case "stand--left" -> {
-                    BufferedImage[] anim = AssetManager.walk_L;
+                    BufferedImage[] anim = StaticValue.walk_L;
                     show = anim[4];
                 }
             }
