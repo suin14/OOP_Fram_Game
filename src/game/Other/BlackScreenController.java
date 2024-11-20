@@ -1,10 +1,12 @@
-package game;
+package game.Other;
+
+import game.MainFrame;
 
 import javax.swing.Timer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-class BlackScreenController {
+public class BlackScreenController {
     private static BlackScreenController instance;
     private boolean isBlackScreen = false;
     private int duration = 120; // 黑屏持续时间

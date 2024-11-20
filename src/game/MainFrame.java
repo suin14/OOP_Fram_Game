@@ -1,10 +1,16 @@
 package game;
 
+import game.Character.Farmer;
+import game.Map.MapsData;
+import game.Other.BlackScreenController;
+import game.Other.SoundManager;
+import game.Other.StaticValue;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
-import java.io.File;
+import java.util.Objects;
 
 
 public class MainFrame extends JFrame implements KeyListener,Runnable {
@@ -12,13 +18,14 @@ public class MainFrame extends JFrame implements KeyListener,Runnable {
 
     private final Thread thread = new Thread(this);
 
-    private final game.Farmer pc;
-    private final game.BlackScreenController blackScreenController;
-    private final game.MapsData mapViewer;
+    private final Farmer pc;
+    private final BlackScreenController blackScreenController;
+    private final MapsData mapViewer;
 
     public MainFrame() {
         setTitle("圈圈物语");
-        setIconImage(new ImageIcon(System.getProperty("user.dir") + File.separator + "assets" + File.separator + "logo.png").getImage());
+        setIconImage(new ImageIcon(Objects.requireNonNull(
+                getClass().getClassLoader().getResource("assets/logo.png"))).getImage());
         setSize(1152, 648);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -26,19 +33,19 @@ public class MainFrame extends JFrame implements KeyListener,Runnable {
         addKeyListener(this);
         setVisible(true);
 
-        game.StaticValue.init(); // 初始化图片资源
+        StaticValue.init(); // 初始化图片资源
 
-        blackScreenController = game.BlackScreenController.getInstance(this); //控制过场动画
+        blackScreenController = BlackScreenController.getInstance(this); //控制过场动画
 
         // 初始化地图
-        mapViewer = game.MapsData.getInstance();
+        mapViewer = MapsData.getInstance();
         mapViewer.updadteNowMap("farm");
 
         // 初始化PC
-        pc = game.Farmer.getInstance(14, 7);
+        pc = Farmer.getInstance(14, 7);
 
         // 播放BGM
-        game.SoundManager soundManager = game.SoundManager.getInstance();
+        SoundManager soundManager = SoundManager.getInstance();
         soundManager.playBGM();
 
 

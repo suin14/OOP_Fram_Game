@@ -1,11 +1,11 @@
-package game;
+package game.Other;
 
 import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 public class SoundManager {
-    private static final String path = System.getProperty("user.dir") + File.separator + "assets" + File.separator + "audio" + File.separator;
 
     private Clip bgmClip;
     private Clip sfxClip;
@@ -30,8 +30,13 @@ public class SoundManager {
         }
 
         try {
-            File bgmFile = new File(path + "bgm.wav");
-            AudioInputStream bgmStream = AudioSystem.getAudioInputStream(bgmFile);
+            URL bgmUrl = getClass().getClassLoader().getResource("assets/audio/bgm.wav");
+            if (bgmUrl == null) {
+                System.err.println("无法找到音频资源: assets/audio/bgm.wav");
+                return;
+            }
+
+            AudioInputStream bgmStream = AudioSystem.getAudioInputStream(bgmUrl);
             bgmClip = AudioSystem.getClip();
             bgmClip.open(bgmStream);
             bgmClip.loop(Clip.LOOP_CONTINUOUSLY);
@@ -41,11 +46,18 @@ public class SoundManager {
         }
     }
 
+
     // 播放声效
     public void playSFX(String sfx) {
         try {
-            File sfxFile = new File(path + sfx + ".wav");
-            AudioInputStream sfxStream = AudioSystem.getAudioInputStream(sfxFile);
+            URL sfxUrl = getClass().getClassLoader().getResource("assets/audio/" + sfx + ".wav");
+
+            if (sfxUrl == null) {
+                System.err.println("无法找到音效文件: assets/audio/" + sfx + ".wav");
+                return;
+            }
+
+            AudioInputStream sfxStream = AudioSystem.getAudioInputStream(sfxUrl);
             sfxClip = AudioSystem.getClip();
             sfxClip.open(sfxStream);
             sfxClip.start();
@@ -53,5 +65,4 @@ public class SoundManager {
             e.printStackTrace();
         }
     }
-
 }

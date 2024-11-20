@@ -1,4 +1,4 @@
-package game;
+package game.Map;
 
 public class Warp {
     private String location; // 传送地图

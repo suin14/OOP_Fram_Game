@@ -1,4 +1,7 @@
-package game;
+package game.Character;
+
+import game.Map.MapsData;
+import game.Other.StaticValue;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

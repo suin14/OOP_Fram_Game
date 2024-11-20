@@ -1,11 +1,15 @@
-package game;
+package game.Map;
+
+import game.Character.Farmer;
+import game.Other.BlackScreenController;
+
 
 import java.util.HashMap;
 
 public class MapsData {
-    private java.util.Map<String, Map> maps;
+    private java.util.Map<String, MapLoader> maps;
     
-    public Map nowMap;
+    public MapLoader nowMap;
 
     private static MapsData instance;
 
@@ -14,8 +18,8 @@ public class MapsData {
 
     private MapsData() {
         maps = new HashMap<>();
-        maps.put("farm", new Map(StaticValue.mapPath + "farm.tmx", StaticValue.mapPath + "farm.png"));
-        maps.put("shop", new Map(StaticValue.mapPath + "shop.tmx", StaticValue.mapPath + "shop.png"));
+        maps.put("farm", new MapLoader("farm.tmx", "farm.png"));
+        maps.put("shop", new MapLoader("shop.tmx", "shop.png"));
         nowMap = getMap("farm");
 
         pc = Farmer.getInstance();
@@ -29,7 +33,7 @@ public class MapsData {
         return instance;
     }
 
-    public Map getMap(String mapName) {
+    public MapLoader getMap(String mapName) {
         return maps.get(mapName);
     }
 

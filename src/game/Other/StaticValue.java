@@ -1,9 +1,9 @@
-package game;
+package game.Other;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 public class StaticValue {
     // PC
@@ -16,9 +16,6 @@ public class StaticValue {
     // npc
     public static BufferedImage npc = null;
 
-    public static String path = System.getProperty("user.dir") + File.separator + "assets" + File.separator;
-    public static String mapPath = StaticValue.path + "map" + File.separator;
-
     public static void init() {
         try {
             // 加载PC图片
@@ -29,7 +26,9 @@ public class StaticValue {
             idle = walk_D[2];
 
             // 加载npc图片
-            BufferedImage npc = ImageIO.read(new File(path + "characters" + File.separator + "npc.png"));
+            npc = ImageIO.read(Objects.requireNonNull(
+                    StaticValue.class.getClassLoader().getResource("assets/characters/npc.png"),
+                    "Resource not found: assets/characters/npc.png"));
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -38,7 +37,9 @@ public class StaticValue {
 
     // 导入精灵帧
     private static BufferedImage[] loadFrames(String filename, int frame) throws IOException {
-        BufferedImage spriteSheet = ImageIO.read(new File(path + "characters" + File.separator + filename));
+        BufferedImage spriteSheet = ImageIO.read(Objects.requireNonNull(
+                StaticValue.class.getClassLoader().getResource("assets/characters/" + filename),
+                "Resource not found: assets/characters/" + filename));
         BufferedImage[] frames = new BufferedImage[frame];
 
         for (int i = 0; i < frame; i++) {
