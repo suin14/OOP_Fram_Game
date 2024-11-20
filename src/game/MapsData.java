@@ -66,8 +66,6 @@ public class MapsData {
                 int targetX = warp.getToX();  // 传送后的目标X坐标
                 int targetY = warp.getToY();  // 传送后的目标Y坐标
 
-//                loadTileset(StaticValue.mapPath + loc + ".png");
-//                loadMap(StaticValue.mapPath + loc + ".tmx");
                 updadteNowMap(loc);
                 pc.setPosition(targetX, targetY);
 

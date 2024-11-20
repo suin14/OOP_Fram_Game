@@ -1,8 +1,6 @@
 package game;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +13,9 @@ public class StaticValue {
     public static BufferedImage[] walk_L = new BufferedImage[8];
     public static BufferedImage[] walk_R = new BufferedImage[8];
 
+    // npc
+    public static BufferedImage npc = null;
+
     public static String path = System.getProperty("user.dir") + File.separator + "assets" + File.separator;
     public static String mapPath = StaticValue.path + "map" + File.separator;
 
@@ -26,6 +27,9 @@ public class StaticValue {
             walk_L = loadFrames("walk_l.png", 8);
             walk_R = loadFrames("walk_r.png", 8);
             idle = walk_D[2];
+
+            // 加载npc图片
+            BufferedImage npc = ImageIO.read(new File(path + "characters" + File.separator + "npc.png"));
 
         } catch (IOException e) {
             throw new RuntimeException(e);

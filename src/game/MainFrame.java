@@ -7,7 +7,7 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 
 
-public class Main extends JFrame implements KeyListener,Runnable {
+public class MainFrame extends JFrame implements KeyListener,Runnable {
     private Image offScreenImage = null;
 
     private final Thread thread = new Thread(this);
@@ -16,7 +16,7 @@ public class Main extends JFrame implements KeyListener,Runnable {
     private final BlackScreenController blackScreenController;
     private final MapsData mapViewer;
 
-    public Main() {
+    public MainFrame() {
         setTitle("圈圈物语");
         setIconImage(new ImageIcon(System.getProperty("user.dir") + File.separator + "assets" + File.separator + "logo.png").getImage());
         setSize(1152, 648);
@@ -33,7 +33,6 @@ public class Main extends JFrame implements KeyListener,Runnable {
         // 初始化地图
         mapViewer = MapsData.getInstance();
         mapViewer.updadteNowMap("farm");
-        add(mapViewer.nowMap, BorderLayout.CENTER);
 
         // 初始化PC
         pc = Farmer.getInstance(14, 7);
@@ -84,16 +83,16 @@ public class Main extends JFrame implements KeyListener,Runnable {
         int keyCode = e.getKeyCode();
 
         if (keyCode == KeyEvent.VK_A) {
-            // 按下 A 键，农民向左移动
+            // 按下 A 键，pc向左移动
                 pc.move(3);
         } else if (keyCode == KeyEvent.VK_D) {
-            // 按下 D 键，农民向右移动
+            // 按下 D 键，pc向右移动
                 pc.move(1);
         } else if (keyCode == KeyEvent.VK_W) {
-            // 按下 W 键，农民向上移动
+            // 按下 W 键，pc向上移动
                 pc.move(0);
         } else if (keyCode == KeyEvent.VK_S) {
-            // 按下 S 键，农民向下移动
+            // 按下 S 键，pc向下移动
                 pc.move(2);
         }
     }
@@ -115,7 +114,7 @@ public class Main extends JFrame implements KeyListener,Runnable {
     }
 
     public static void main(String[] args) {
-        new Main();
+        new MainFrame();
     }
 
     @Override
