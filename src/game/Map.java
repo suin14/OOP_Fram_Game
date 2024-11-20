@@ -9,13 +9,12 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 
-public class MapLoader extends JPanel {
-    private Farmer pc;
+public class Map extends JPanel {
     private final int scaleFactor = 3; // 缩放倍数
     private BufferedImage tileset; // 图块集图像
-    private static final int tileWidth = 16; // 单个图块宽度
-    private static final int tileHeight = 16; // 单个图块高度
-    private static int mapWidth; // 地图宽度（以图块为单位）
+    private final int tileWidth = 16; // 单个图块宽度
+    private final int tileHeight = 16; // 单个图块高度
+    private int mapWidth; // 地图宽度（以图块为单位）
     private int mapHeight; // 地图高度（以图块为单位）
 
     // 存储图层数据
@@ -25,14 +24,9 @@ public class MapLoader extends JPanel {
     private final ArrayList<Warp> warps = new ArrayList<>(); // 传送点列表
 
 
-    private final BlackScreenController blackScreenController;
-
-
-    public MapLoader(String tmxFilePath, String tilesetImagePath) {
+    public Map(String tmxFilePath, String tilesetImagePath) {
         loadTileset(tilesetImagePath);
         loadMap(tmxFilePath);
-        pc = Farmer.getInstance();
-        blackScreenController = BlackScreenController.getInstance(); //过场动画
     }
 
     // 加载图块集
@@ -143,42 +137,27 @@ public class MapLoader extends JPanel {
         }
     }
 
-    // 碰撞检测
-    public boolean checkCollision(int x, int y) {
-        int tileX = (x - 16) / (tileHeight * scaleFactor) + 1;
-        int tileY = (y - 16) / (tileHeight * scaleFactor) + 1 ;
-//        System.out.println(tileX + ", " +  tileY);
-        int index = tileY * mapWidth + tileX;
-        System.out.println(index);
-
-        // 如果保存的value不是-1(empty), 则代表该位置有碰撞
-        return collisionData.get(index) == -1;
+    public int getScaleFactor() {
+        return scaleFactor;
     }
 
-    public boolean checkWarp(int x, int y) {
-        if (pc == null) {
-            pc = Farmer.getInstance();
-        }
+    public int getTileWidth() {
+        return tileWidth;
+    }
 
-        int tileX = (x - 16) / (tileHeight * scaleFactor) + 1;
-        int tileY = (y - 16) / (tileHeight * scaleFactor) + 1 ;
-        int index = tileY * mapWidth + tileX;
+    public int getTileHeight() {
+        return tileHeight;
+    }
 
-        for (Warp warp : warps) {
-            if (warp.getFrom() == index) {
-                blackScreenController.startBlackScreen(); // 开始过场动画
+    public int getMapWidth() {
+        return mapWidth;
+    }
 
-                String loc = warp.getLocation();  // 获取目标地图文件
-                int targetX = warp.getToX();  // 传送后的目标X坐标
-                int targetY = warp.getToY();  // 传送后的目标Y坐标
+    public ArrayList<Integer> getCollisionData() {
+        return collisionData;
+    }
 
-                loadTileset(AssetManager.mapPath + loc + ".png");
-                loadMap(AssetManager.mapPath + loc + ".tmx");
-                pc.setPosition(targetX, targetY);
-
-                return true;
-            }
-        }
-        return false;
+    public ArrayList<Warp> getWarps() {
+        return warps;
     }
 }

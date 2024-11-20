@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class AssetManager {
+public class StaticValue {
     // PC
     public static BufferedImage idle = null;
     public static BufferedImage[] walk_U = new BufferedImage[5];
@@ -14,7 +14,7 @@ public class AssetManager {
     public static BufferedImage[] walk_R = new BufferedImage[8];
 
     public static String path = System.getProperty("user.dir") + File.separator + "assets" + File.separator;
-    public static String mapPath = AssetManager.path + "map" + File.separator;
+    public static String mapPath = StaticValue.path + "map" + File.separator;
 
     public static void init() {
         try {
