@@ -22,7 +22,7 @@ public class StartFrame extends JFrame implements ActionListener {
 
         play = new JButton();
 
-        ImageIcon playIcon = new ImageIcon(System.getProperty("user.dir") + File.separator + "assets" + File.separator + "start.png");
+        ImageIcon playIcon = new ImageIcon(System.getProperty("user.dir") + File.separator + "assets" + File.separator + "ui" + File.separator + "start.png");
         play.setIcon(playIcon);
         play.setFocusPainted(false);  // 不显示按钮的焦点矩形
         play.setContentAreaFilled(false); // 去掉按钮的背景色
@@ -49,7 +49,7 @@ public class StartFrame extends JFrame implements ActionListener {
         Graphics2D graphics = offScreenImage.createGraphics();
         graphics.clearRect(0, 0, getWidth(), getHeight());
 
-        graphics.drawImage(new ImageIcon(System.getProperty("user.dir") + File.separator + "assets" + File.separator + "title.png").getImage(), 0, 0, getWidth(), getHeight(), this);
+        graphics.drawImage(new ImageIcon(System.getProperty("user.dir") + File.separator + "assets" + File.separator + "ui" + File.separator + "title.png").getImage(), 0, 0, getWidth(), getHeight(), this);
 
         g.drawImage(offScreenImage, 0, 0, this);
 

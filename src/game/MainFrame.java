@@ -12,9 +12,9 @@ public class MainFrame extends JFrame implements KeyListener,Runnable {
 
     private final Thread thread = new Thread(this);
 
-    private final Farmer pc;
-    private final BlackScreenController blackScreenController;
-    private final MapsData mapViewer;
+    private final game.Farmer pc;
+    private final game.BlackScreenController blackScreenController;
+    private final game.MapsData mapViewer;
 
     public MainFrame() {
         setTitle("圈圈物语");
@@ -26,19 +26,19 @@ public class MainFrame extends JFrame implements KeyListener,Runnable {
         addKeyListener(this);
         setVisible(true);
 
-        StaticValue.init(); // 初始化图片资源
+        game.StaticValue.init(); // 初始化图片资源
 
-        blackScreenController = BlackScreenController.getInstance(this); //控制过场动画
+        blackScreenController = game.BlackScreenController.getInstance(this); //控制过场动画
 
         // 初始化地图
-        mapViewer = MapsData.getInstance();
+        mapViewer = game.MapsData.getInstance();
         mapViewer.updadteNowMap("farm");
 
         // 初始化PC
-        pc = Farmer.getInstance(14, 7);
+        pc = game.Farmer.getInstance(14, 7);
 
         // 播放BGM
-        SoundManager soundManager = SoundManager.getInstance();
+        game.SoundManager soundManager = game.SoundManager.getInstance();
         soundManager.playBGM();
 
 
