@@ -1,9 +1,10 @@
 package game;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
+import java.io.File;
 
 
 public class Main extends JFrame implements KeyListener,Runnable {
@@ -17,6 +18,7 @@ public class Main extends JFrame implements KeyListener,Runnable {
 
     public Main() {
         setTitle("圈圈物语");
+        setIconImage(new ImageIcon(System.getProperty("user.dir") + File.separator + "assets" + File.separator + "logo.png").getImage());
         setSize(1152, 648);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -43,7 +43,7 @@ public class MapsData {
         int tileY = (y - 16) / (16 * 3) + 1 ;
 //        System.out.println(tileX + ", " +  tileY);
         int index = tileY * nowMap.getMapWidth() + tileX;
-        System.out.println(index);
+//        System.out.println(index);
 
         // 如果保存的value不是-1(empty), 则代表该位置有碰撞
         return nowMap.getCollisionData().get(index) == -1;

@@ -1,6 +1,8 @@
 package game;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +25,6 @@ public class StaticValue {
             walk_D = loadFrames("walk_d.png", 5);
             walk_L = loadFrames("walk_l.png", 8);
             walk_R = loadFrames("walk_r.png", 8);
-
             idle = walk_D[2];
 
         } catch (IOException e) {
