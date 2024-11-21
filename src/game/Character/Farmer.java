@@ -1,5 +1,6 @@
 package game.Character;
 
+import game.Map.MapLoader;
 import game.Map.MapsData;
 import game.Other.StaticValue;
 
@@ -96,6 +97,30 @@ public class Farmer extends Character implements Runnable {
             currentStatus = newStatus;
         }
     }
+
+    @Override
+    public void interact() {
+        MapLoader nowMap = mapViewer.nowMap;
+        int tileX = (getX() - nowMap.getTileWidth()) / (nowMap.getTileWidth() * nowMap.getScaleFactor()) + 1;
+        int tileY = (getY() - nowMap.getTileHeight()) / (nowMap.getTileWidth() * nowMap.getScaleFactor()) + 1 ;
+
+        // 交互范围检测
+        switch (dir) {
+            case 0 -> tileY--;
+            case 1 -> tileX++;
+            case 2 -> tileY++;
+            case 3 -> tileX--;
+        }
+        int index = tileY * nowMap.getMapWidth() + tileX;
+
+        // npc检测
+        if (nowMap.npcData.containsKey(index)) {
+//          System.out.println("[Interact] " + nowMap.npcData.get(index));
+            nowMap.npcData.get(index).interact();
+        }
+
+    }
+
 
     @Override
     public void run() {

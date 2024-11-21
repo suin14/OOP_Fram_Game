@@ -27,10 +27,10 @@ public class MapLoader extends JPanel {
 
     private final HashMap<Integer, Warp> warpsData = new HashMap<>(); // 传送点信息
 
-    private boolean isFarm = false; // 当前地图有没有农田
-    private final HashMap<Integer, Warp> farmData = new HashMap<>(); // 农田信息 // TODO 替换成Plant类
+    public boolean isFarm = false; // 当前地图有没有农田
+    public final HashMap<Integer, Warp> farmData = new HashMap<>(); // 农田信息 // TODO 替换成Plant类
 
-    private final HashMap<Integer, Character> npcData = new HashMap<>(); // 地图上npc信息
+    public final HashMap<Integer, Character> npcData = new HashMap<>(); // 地图上npc信息
 
 
     public MapLoader(String tmxFilePath, String tilesetImagePath) {

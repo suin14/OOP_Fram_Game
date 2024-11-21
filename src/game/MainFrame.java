@@ -102,6 +102,11 @@ public class MainFrame extends JFrame implements KeyListener,Runnable {
             // 按下 S 键，pc向下移动
                 pc.move(2);
         }
+
+        else if (keyCode == KeyEvent.VK_SPACE) {
+            // 按下 Space 键，pc进行交互
+            pc.interact();
+        }
     }
 
     @Override

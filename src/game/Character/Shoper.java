@@ -20,6 +20,6 @@ public class Shoper extends Character {
 
     @Override
     public void interact() {
-
+        System.out.println("[Interact] Shoper");
     }
 }
