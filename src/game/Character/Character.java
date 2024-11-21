@@ -2,6 +2,7 @@ package game.Character;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 public class Character {
     // 坐标
@@ -9,6 +10,8 @@ public class Character {
     private int y;
 
     private BufferedImage show;
+
+    private final ArrayList<String> eventsList = new ArrayList<>();
 
     public Character(int x, int y) {
         setPosition(x, y);
@@ -43,6 +46,16 @@ public class Character {
         return show;
     }
 
+    public void addEvents(String eventID) {
+        eventsList.add(eventID);
+    }
+
+    // 检测是否未经历某个事件
+    public boolean checkEvents(String eventID) {
+        return !eventsList.contains(eventID);
+    }
+
     public void interact() {
+        System.out.println("[Interact] " + getClass().getSimpleName());
     }
 }

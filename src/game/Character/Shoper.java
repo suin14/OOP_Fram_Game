@@ -1,10 +1,13 @@
 package game.Character;
 
-import game.Other.StaticValue;
 
+import game.Dialog.DialogBubble;
+import game.Other.StaticValue;
 
 public class Shoper extends Character {
     private static Shoper instance;
+
+
 
     private Shoper(int x, int y) {
         super(x, y);
@@ -20,6 +23,15 @@ public class Shoper extends Character {
 
     @Override
     public void interact() {
-        System.out.println("[Interact] Shoper");
+        super.interact();
+
+        if (checkEvents("hello")) {
+            DialogBubble.talk(getClass().getSimpleName(), "hello");
+            addEvents("hello");
+        } else {
+            DialogBubble.talk(getClass().getSimpleName(), "shop");
+        }
+
+
     }
 }
