@@ -48,12 +48,12 @@ public class SoundManager {
 
 
     // 播放声效
-    public void playSFX(String sfx) {
+    public void playSFX(String sfxPath) {
         try {
-            URL sfxUrl = getClass().getClassLoader().getResource("assets/audio/" + sfx + ".wav");
+            URL sfxUrl = getClass().getClassLoader().getResource("assets/audio/" + sfxPath);
 
             if (sfxUrl == null) {
-                System.err.println("无法找到音效文件: assets/audio/" + sfx + ".wav");
+                System.err.println("无法找到音效文件: assets/audio/" + sfxPath);
                 return;
             }
 

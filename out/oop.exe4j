@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <exe4j version="6.0.1" transformSequenceNumber="2">
-  <directoryPresets config="C:/Users/suin/.jdks" />
+  <directoryPresets config="C:/Users/suin/Desktop/大四上/OOP/OOP_Project/out" />
   <application name="oop" distributionSourceDir="C:/Users/suin/Desktop/大四上/OOP/OOP_Project/out">
     <languages>
       <principalLanguage id="en" customLocalizationFile="" />
@@ -18,7 +18,9 @@
   </splashScreen>
   <java mainClass="game.StartFrame" mainMode="1" vmParameters="" arguments="" allowVMPassthroughParameters="true" preferredVM="" bundleRuntime="true" minVersion="21" maxVersion="21" allowBetaVM="false" jdkOnly="false">
     <searchSequence>
-      <directory location="../../../../../.jdks/openjdk-21.0.1" />
+      <registry />
+      <envVar name="JAVA_HOME" />
+      <envVar name="JDK_HOME" />
     </searchSequence>
     <classPath>
       <archive location="C:/Users/suin/Desktop/大四上/OOP/OOP_Project/out/src.jar" failOnError="false" />
