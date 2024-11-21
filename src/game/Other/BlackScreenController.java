@@ -3,8 +3,7 @@ package game.Other;
 import game.MainFrame;
 
 import javax.swing.Timer;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
 
 public class BlackScreenController {
     private static BlackScreenController instance;
@@ -33,13 +32,10 @@ public class BlackScreenController {
         mainFrame.repaint(); // 重绘以显示黑屏
 
         // 使用 Timer 进行延迟处理
-        new Timer(duration, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                isBlackScreen = false;
-                mainFrame.repaint(); // 重绘以移除黑屏
-                ((Timer) e.getSource()).stop(); // 停止定时器
-            }
+        new Timer(duration, e -> {
+            isBlackScreen = false;
+            mainFrame.repaint(); // 重绘以移除黑屏
+            ((Timer) e.getSource()).stop(); // 停止定时器
         }).start();
     }
 

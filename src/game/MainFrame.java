@@ -1,6 +1,7 @@
 package game;
 
 import game.Character.Farmer;
+import game.Dialog.DialogBubble;
 import game.Map.MapsData;
 import game.Other.BlackScreenController;
 import game.Other.SoundManager;
@@ -21,6 +22,8 @@ public class MainFrame extends JFrame implements KeyListener,Runnable {
     private final Farmer pc;
     private final BlackScreenController blackScreenController;
     private final MapsData mapViewer;
+
+    private final DialogBubble dialogBubble;
 
     public MainFrame() {
         setTitle("圈圈物语");
@@ -48,6 +51,8 @@ public class MainFrame extends JFrame implements KeyListener,Runnable {
         SoundManager soundManager = SoundManager.getInstance();
         soundManager.playBGM();
 
+        // 对话框
+        dialogBubble = DialogBubble.getInstance();
 
         // 绘制图像
         repaint();
@@ -78,6 +83,10 @@ public class MainFrame extends JFrame implements KeyListener,Runnable {
                 graphics.drawImage(pc.getShow(), pc.getX(), pc.getY(), 64, 64, this);
             }
 
+            if (dialogBubble != null && DialogBubble.isTalking()) {
+                dialogBubble.paintComponent(graphics);
+            }
+
             // 将图片绘制到窗口中
             g.drawImage(offScreenImage, 0, 0, this);
         }
@@ -89,23 +98,31 @@ public class MainFrame extends JFrame implements KeyListener,Runnable {
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
 
-        if (keyCode == KeyEvent.VK_A) {
-            // 按下 A 键，pc向左移动
-                pc.move(3);
-        } else if (keyCode == KeyEvent.VK_D) {
-            // 按下 D 键，pc向右移动
-                pc.move(1);
-        } else if (keyCode == KeyEvent.VK_W) {
-            // 按下 W 键，pc向上移动
-                pc.move(0);
-        } else if (keyCode == KeyEvent.VK_S) {
-            // 按下 S 键，pc向下移动
-                pc.move(2);
-        }
+        // 如果正在进行对话，只能先结束对话
+        if (DialogBubble.isTalking()) {
+            if (keyCode == KeyEvent.VK_SPACE) {
+                DialogBubble.stopTalking();
+            }
+        } else {
 
-        else if (keyCode == KeyEvent.VK_SPACE) {
-            // 按下 Space 键，pc进行交互
-            pc.interact();
+            if (keyCode == KeyEvent.VK_A) {
+                // 按下 A 键，pc向左移动
+                    pc.move(3);
+            } else if (keyCode == KeyEvent.VK_D) {
+                // 按下 D 键，pc向右移动
+                    pc.move(1);
+            } else if (keyCode == KeyEvent.VK_W) {
+                // 按下 W 键，pc向上移动
+                    pc.move(0);
+            } else if (keyCode == KeyEvent.VK_S) {
+                // 按下 S 键，pc向下移动
+                    pc.move(2);
+            }
+
+            else if (keyCode == KeyEvent.VK_SPACE) {
+                // 按下 Space 键，pc进行交互
+                    pc.interact();
+            }
         }
     }
 
