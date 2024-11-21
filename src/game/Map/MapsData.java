@@ -8,16 +8,13 @@ import game.Other.SoundManager;
 import java.util.HashMap;
 
 public class MapsData {
-    private java.util.Map<String, MapLoader> maps;
+    private final java.util.Map<String, MapLoader> maps;
     
     public MapLoader nowMap;
 
     private static MapsData instance;
 
     private Farmer pc;
-    private final BlackScreenController blackScreenController;
-
-    private final SoundManager soundManager;
 
     private MapsData() {
         maps = new HashMap<>();
@@ -26,8 +23,6 @@ public class MapsData {
         nowMap = getMap("farm");
 
         pc = Farmer.getInstance();
-        blackScreenController = BlackScreenController.getInstance(); //过场动画
-        soundManager = SoundManager.getInstance();
     }
 
     public static MapsData getInstance() {
@@ -47,10 +42,10 @@ public class MapsData {
     
     // 碰撞检测
     public boolean checkCollision(int x, int y) {
-        int tileX = (x - 16) / (16 * 3) + 1;
-        int tileY = (y - 16) / (16 * 3) + 1 ;
-//        System.out.println(tileX + ", " +  tileY);
+        int tileX = (x - nowMap.getTileWidth()) / (nowMap.getTileWidth() * nowMap.getScaleFactor()) + 1;
+        int tileY = (y - nowMap.getTileHeight()) / (nowMap.getTileWidth() * nowMap.getScaleFactor()) + 1 ;
         int index = tileY * nowMap.getMapWidth() + tileX;
+//        System.out.println(tileX + ", " +  tileY);
 //        System.out.println(index);
 
         // 如果保存的value不是-1(empty), 则代表该位置有碰撞
@@ -66,20 +61,18 @@ public class MapsData {
         int tileY = (y - nowMap.getTileHeight()) / (nowMap.getTileWidth() * nowMap.getScaleFactor()) + 1 ;
         int index = tileY * nowMap.getMapWidth() + tileX;
 
-        for (Warp warp : nowMap.getWarps()) {
-            if (warp.getFrom() == index) {
-                blackScreenController.startBlackScreen(); // 开始过场动画
+        if (nowMap.getWarpsData().containsKey(index)) {
+            BlackScreenController.start(); // 开始过场动画
 
-                String loc = warp.getLocation();  // 获取目标地图文件
-                int targetX = warp.getToX();  // 传送后的目标X坐标
-                int targetY = warp.getToY();  // 传送后的目标Y坐标
+            Warp warp = nowMap.getWarpsData().get(index);
+            String loc = warp.getLocation();  // 获取目标地图文件
+            int targetX = warp.getToX();  // 传送后的目标X坐标
+            int targetY = warp.getToY();  // 传送后的目标Y坐标
 
-                updadteNowMap(loc);
-                soundManager.playSFX("door.wav");
-                pc.setPosition(targetX, targetY);
-
-                return true;
-            }
+            updadteNowMap(loc);
+            SoundManager.playSFX("door.wav");
+            pc.setPosition(targetX, targetY);
+            return true;
         }
         return false;
     }

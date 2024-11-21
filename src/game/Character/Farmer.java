@@ -1,83 +1,49 @@
 package game.Character;
 
+import game.Map.MapLoader;
 import game.Map.MapsData;
 import game.Other.StaticValue;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Objects;
 
-public class Farmer implements Runnable {
-    // 单例实例
-    private static Farmer instance;
+public class Farmer extends Character implements Runnable {
 
-    // 坐标
-    private int x;
-    private int y;
+    private static Farmer instance;
 
     private int dir; // 0上1右2下3左
 
     // 移动速度
-    public final int movespeed = 10;
+    public final int movespeed = 8;
     private int xspreed;
     private int yspreed;
-
-    private BufferedImage show;
-
     private String newStatus; // 下一状态
     private String currentStatus; // 当前状态
     private int currentFrame = 0; // 当前动画帧
 
-    private final Thread thread;
     private final MapsData mapViewer;
 
     private Farmer(int x, int y) {
-        mapViewer = MapsData.getInstance();
-
-        setX(x);
-        setY(y);
+        super(x, y);
         this.dir = 2;
-        show = StaticValue.idle; // 默认向下站立
+        setShow(StaticValue.idle); // 默认向下站立
         this.currentStatus = "stand--down";
         this.newStatus = "stand--down";
-        thread = new Thread(this);
+        Thread thread = new Thread(this);
         thread.start();
+
+        mapViewer = MapsData.getInstance();
     }
 
-    public static synchronized Farmer getInstance(int x, int y) {
+    public static Farmer getInstance(int x, int y) {
         if (instance == null) {
             instance = new Farmer(x, y);
         }
         return instance;
     }
 
-    public static synchronized Farmer getInstance() {
+    public static Farmer getInstance() {
         return instance;
-    }
-
-    public void setPosition(int x, int y) {
-        setX(x);
-        setY(y);
-    }
-
-    public void setX(int x) {
-        this.x = x * 48 - 8;
-    }
-
-    public void setY(int y) {
-        this.y = y * 48 - 16;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public Image getShow() {
-        return show;
     }
 
     // 移动
@@ -133,33 +99,57 @@ public class Farmer implements Runnable {
     }
 
     @Override
+    public void interact() {
+        MapLoader nowMap = mapViewer.nowMap;
+        int tileX = (getX() - nowMap.getTileWidth()) / (nowMap.getTileWidth() * nowMap.getScaleFactor()) + 1;
+        int tileY = (getY() - nowMap.getTileHeight()) / (nowMap.getTileWidth() * nowMap.getScaleFactor()) + 1 ;
+
+        // 交互范围检测
+        switch (dir) {
+            case 0 -> tileY--;
+            case 1 -> tileX++;
+            case 2 -> tileY++;
+            case 3 -> tileX--;
+        }
+        int index = tileY * nowMap.getMapWidth() + tileX;
+
+        // npc检测
+        if (nowMap.npcData.containsKey(index)) {
+//          System.out.println("[Interact] " + nowMap.npcData.get(index));
+            nowMap.npcData.get(index).interact();
+        }
+
+    }
+
+
+    @Override
     public void run() {
         while (true) {
             if (xspreed != 0) {
-                if (mapViewer.checkWarp(x + xspreed, y)) {
+                if (mapViewer.checkWarp(getX() + xspreed, getY())) {
                     continue;
                 }
-                if (mapViewer.checkCollision(x + xspreed, y)) {
-                    x += xspreed;
-                    if (x < 0) {
-                        x = 0;
+                if (mapViewer.checkCollision(getX() + xspreed, getY())) {
+                    setX(getX() + xspreed);
+                    if (getX() < 0) {
+                        setX(0);
                     }
-                    if (x > 1112) {
-                        x = 1112;
+                    if (getX() > 1112) {
+                        setX(1112);
                     }
                 }
             }
             if (yspreed != 0) {
-                if (mapViewer.checkWarp(x, y + yspreed)) {
+                if (mapViewer.checkWarp(getX(), getY() + yspreed)) {
                     continue;
                 }
-                if (mapViewer.checkCollision(x, y + yspreed)) {
-                    y += yspreed;
-                    if (y < 0) {
-                        y = 0;
+                if (mapViewer.checkCollision(getX(), getY() + yspreed)) {
+                    setY(getY() + yspreed);
+                    if (getY() < 0) {
+                        setY(0);
                     }
-                    if (y > 600) {
-                        y = 600;
+                    if (getY() > 600) {
+                        setY(600);
                     }
                 }
             }
@@ -169,38 +159,38 @@ public class Farmer implements Runnable {
                 case "move--up" -> {
                     BufferedImage[] anim = StaticValue.walk_U;
                     updateframe(anim);
-                    show = anim[currentFrame];
+                    setShow(anim[currentFrame]);
                 }
                 case "move--right" -> {
                     BufferedImage[] anim = StaticValue.walk_R;
                     updateframe(anim);
-                    show = anim[currentFrame];
+                    setShow(anim[currentFrame]);
                 }
                 case "move--down" -> {
                     BufferedImage[] anim = StaticValue.walk_D;
                     updateframe(anim);
-                    show = anim[currentFrame];
+                    setShow(anim[currentFrame]);
                 }
                 case "move--left" -> {
                     BufferedImage[] anim = StaticValue.walk_L;
                     updateframe(anim);
-                    show = anim[currentFrame];
+                    setShow(anim[currentFrame]);
                 }
                 case "stand--up" -> {
                     BufferedImage[] anim = StaticValue.walk_U;
-                    show = anim[2];
+                    setShow(anim[2]);
                 }
                 case "stand--right" -> {
                     BufferedImage[] anim = StaticValue.walk_R;
-                    show = anim[4];
+                    setShow(anim[4]);
                 }
                 case "stand--down" -> {
                     BufferedImage[] anim = StaticValue.walk_D;
-                    show = anim[2];
+                    setShow(anim[2]);
                 }
                 case "stand--left" -> {
                     BufferedImage[] anim = StaticValue.walk_L;
-                    show = anim[4];
+                    setShow(anim[4]);
                 }
             }
             try {

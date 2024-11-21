@@ -14,10 +14,28 @@ public class StaticValue {
     public static BufferedImage[] walk_R = new BufferedImage[8];
 
     // npc
-    public static BufferedImage npc = null;
+    public static BufferedImage shoper = null;
+
+    // ui
+    public static BufferedImage dialogBubble = null;
+    public static BufferedImage menuIcon = null;
+    public static BufferedImage menuPanel = null;
 
     public static void init() {
         try {
+            // 加载ui
+            dialogBubble = ImageIO.read(Objects.requireNonNull(
+                    StaticValue.class.getClassLoader().getResource("assets/ui/dialogBubble.png"),
+                    "Resource not found: assets/ui/dialogBubble.png"));
+
+            menuIcon = ImageIO.read(Objects.requireNonNull(
+                    StaticValue.class.getClassLoader().getResource("assets/ui/menu.png"),
+                    "Resource not found: assets/ui/menu.png"));
+
+            menuPanel = ImageIO.read(Objects.requireNonNull(
+                    StaticValue.class.getClassLoader().getResource("assets/ui/menuPanel.png"),
+                    "Resource not found: assets/ui/menuPanel.png"));
+
             // 加载PC图片
             walk_U = loadFrames("walk_u.png", 5);
             walk_D = loadFrames("walk_d.png", 5);
@@ -26,7 +44,7 @@ public class StaticValue {
             idle = walk_D[2];
 
             // 加载npc图片
-            npc = ImageIO.read(Objects.requireNonNull(
+            shoper = ImageIO.read(Objects.requireNonNull(
                     StaticValue.class.getClassLoader().getResource("assets/characters/npc.png"),
                     "Resource not found: assets/characters/npc.png"));
 
