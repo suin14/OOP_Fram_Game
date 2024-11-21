@@ -1,10 +1,10 @@
 package game.Map;
 
 public class Warp {
-    private String location; // 传送地图
-    private int from;
-    private int toX;
-    private int toY;
+    private final String location; // 传送地图
+    private final int from;
+    private final int toX;
+    private final int toY;
 
     // 构造方法
     public Warp(String location, int from, int toX, int toY) {

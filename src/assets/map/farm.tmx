@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="24" height="14" tilewidth="16" tileheight="16" infinite="0" nextlayerid="6" nextobjectid="1">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="24" height="14" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="50">
  <properties>
-  <property name="Warp" value="shop 163 11 12"/>
+  <property name="Warp" value="shop 19 6 11 12"/>
+  <property name="isFarm" value="T"/>
  </properties>
  <tileset firstgid="1" name="farm" tilewidth="16" tileheight="16" tilecount="130" columns="13">
   <image source="farm.png" width="208" height="160"/>
@@ -42,6 +43,151 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <objectgroup id="6" name="Buildings">
+  <properties>
+   <property name="canPlanted" value="True"/>
+  </properties>
+  <object id="25" name="TileData" x="144" y="96" width="16" height="16">
+   <properties>
+    <property name="canPlanted" value="True"/>
+   </properties>
+  </object>
+  <object id="21" name="TileData" x="128" y="96" width="16" height="16">
+   <properties>
+    <property name="canPlanted" value="True"/>
+   </properties>
+  </object>
+  <object id="17" name="TileData" x="112" y="96" width="16" height="16">
+   <properties>
+    <property name="canPlanted" value="True"/>
+   </properties>
+  </object>
+  <object id="13" name="TileData" x="96" y="96" width="16" height="16">
+   <properties>
+    <property name="canPlanted" value="True"/>
+   </properties>
+  </object>
+  <object id="9" name="TileData" x="80" y="96" width="16" height="16">
+   <properties>
+    <property name="canPlanted" value="True"/>
+   </properties>
+  </object>
+  <object id="5" name="TileData" x="64" y="96" width="16" height="16">
+   <properties>
+    <property name="canPlanted" value="True"/>
+   </properties>
+  </object>
+  <object id="1" name="TileData" x="48" y="96" width="16" height="16">
+   <properties>
+    <property name="canPlanted" value="True"/>
+   </properties>
+  </object>
+  <object id="29" name="TileData" x="144" y="80" width="16" height="16">
+   <properties>
+    <property name="canPlanted" value="True"/>
+   </properties>
+  </object>
+  <object id="30" name="TileData" x="128" y="80" width="16" height="16">
+   <properties>
+    <property name="canPlanted" value="True"/>
+   </properties>
+  </object>
+  <object id="31" name="TileData" x="112" y="80" width="16" height="16">
+   <properties>
+    <property name="canPlanted" value="True"/>
+   </properties>
+  </object>
+  <object id="32" name="TileData" x="96" y="80" width="16" height="16">
+   <properties>
+    <property name="canPlanted" value="True"/>
+   </properties>
+  </object>
+  <object id="33" name="TileData" x="80" y="80" width="16" height="16">
+   <properties>
+    <property name="canPlanted" value="True"/>
+   </properties>
+  </object>
+  <object id="34" name="TileData" x="64" y="80" width="16" height="16">
+   <properties>
+    <property name="canPlanted" value="True"/>
+   </properties>
+  </object>
+  <object id="35" name="TileData" x="48" y="80" width="16" height="16">
+   <properties>
+    <property name="canPlanted" value="True"/>
+   </properties>
+  </object>
+  <object id="36" name="TileData" x="144" y="64" width="16" height="16">
+   <properties>
+    <property name="canPlanted" value="True"/>
+   </properties>
+  </object>
+  <object id="37" name="TileData" x="128" y="64" width="16" height="16">
+   <properties>
+    <property name="canPlanted" value="True"/>
+   </properties>
+  </object>
+  <object id="38" name="TileData" x="112" y="64" width="16" height="16">
+   <properties>
+    <property name="canPlanted" value="True"/>
+   </properties>
+  </object>
+  <object id="39" name="TileData" x="96" y="64" width="16" height="16">
+   <properties>
+    <property name="canPlanted" value="True"/>
+   </properties>
+  </object>
+  <object id="40" name="TileData" x="80" y="64" width="16" height="16">
+   <properties>
+    <property name="canPlanted" value="True"/>
+   </properties>
+  </object>
+  <object id="41" name="TileData" x="64" y="64" width="16" height="16">
+   <properties>
+    <property name="canPlanted" value="True"/>
+   </properties>
+  </object>
+  <object id="42" name="TileData" x="48" y="64" width="16" height="16">
+   <properties>
+    <property name="canPlanted" value="True"/>
+   </properties>
+  </object>
+  <object id="43" name="TileData" x="144" y="48" width="16" height="16">
+   <properties>
+    <property name="canPlanted" value="True"/>
+   </properties>
+  </object>
+  <object id="44" name="TileData" x="128" y="48" width="16" height="16">
+   <properties>
+    <property name="canPlanted" value="True"/>
+   </properties>
+  </object>
+  <object id="45" name="TileData" x="112" y="48" width="16" height="16">
+   <properties>
+    <property name="canPlanted" value="True"/>
+   </properties>
+  </object>
+  <object id="46" name="TileData" x="96" y="48" width="16" height="16">
+   <properties>
+    <property name="canPlanted" value="True"/>
+   </properties>
+  </object>
+  <object id="47" name="TileData" x="80" y="48" width="16" height="16">
+   <properties>
+    <property name="canPlanted" value="True"/>
+   </properties>
+  </object>
+  <object id="48" name="TileData" x="64" y="48" width="16" height="16">
+   <properties>
+    <property name="canPlanted" value="True"/>
+   </properties>
+  </object>
+  <object id="49" name="TileData" x="48" y="48" width="16" height="16">
+   <properties>
+    <property name="canPlanted" value="True"/>
+   </properties>
+  </object>
+ </objectgroup>
  <layer id="2" name="Buildings" width="24" height="14">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
