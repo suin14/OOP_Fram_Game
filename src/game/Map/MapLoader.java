@@ -1,5 +1,6 @@
 package game.Map;
 
+import game.Character.Shoper;
 import org.w3c.dom.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -10,6 +11,8 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public class MapLoader extends JPanel {
     private final int scaleFactor = 3; // 缩放倍数
@@ -23,10 +26,12 @@ public class MapLoader extends JPanel {
     private final ArrayList<ArrayList<Integer>> layersData = new ArrayList<>();
     private ArrayList<Integer> collisionData = new ArrayList<>();
 
-    private final HashMap<Integer, Warp> warpsData = new HashMap<>(); // 传送点数据
+    private final HashMap<Integer, Warp> warpsData = new HashMap<>(); // 传送点信息
 
     private boolean isFarm = false; // 当前地图有没有农田
-    private final HashMap<Integer, Warp> farmData = new HashMap<>(); // 农田数据 // TODO 替换成Plant类
+    private final HashMap<Integer, Warp> farmData = new HashMap<>(); // 农田信息 // TODO 替换成Plant类
+
+    private final HashMap<Integer, Shoper> npcData = new HashMap<>(); // 地图上npc信息
 
 
     public MapLoader(String tmxFilePath, String tilesetImagePath) {
@@ -75,7 +80,7 @@ public class MapLoader extends JPanel {
                         String name = propertyElement.getAttribute("name");
                         String value = propertyElement.getAttribute("value");
 
-                        // 读取传送点数据
+                        // 读取传送点信息
                         if ("Warp".equals(name)) {
                             String[] warpParts = value.split(" ");
                             if (warpParts.length == 5) {
@@ -90,7 +95,7 @@ public class MapLoader extends JPanel {
                             }
                         }
 
-                        // 读取农田数据
+                        // 读取农田信息
                         if ("isFarm".equals(name)) {
                             if ("T".equals(value)) {
                                 this.isFarm = true;
@@ -145,15 +150,24 @@ public class MapLoader extends JPanel {
                                     Element propertyElement = (Element) propertyList.item(k);
                                     String propName = propertyElement.getAttribute("name");
 
+                                    int tileX = (int) ((x / getTileWidth()));
+                                    int tileY = (int) ((y / getTileWidth()));
+                                    int index = tileY * getMapWidth() + tileX;
+
                                     // 读取农田数据
                                     if ("canPlanted".equals(propName)) {
                                         String propValue = propertyElement.getAttribute("value");
                                         if ("True".equals(propValue)) {
-                                            int tileX = (int) ((x / getTileWidth()));
-                                            int tileY = (int) ((y / getTileWidth()));
-                                            int index = tileY * getMapWidth() + tileX;
-
                                             farmData.put(index, null);
+                                        }
+                                    }
+
+                                    // 读取NPC信息
+                                    if ("NPC".equals(propName)) {
+                                        String npcName = propertyElement.getAttribute("value");
+                                        if (npcName.equals("Shoper")) {
+                                            Shoper shoper = Shoper.getInstance(tileX, tileY);
+                                            npcData.put(index, shoper);
                                         }
                                     }
                                 }
@@ -170,8 +184,6 @@ public class MapLoader extends JPanel {
             e.printStackTrace();
         }
     }
-
-
 
     // 渲染地图
     @Override
@@ -202,6 +214,11 @@ public class MapLoader extends JPanel {
                     }
                 }
             }
+        }
+
+        // 绘制npc
+        for (Shoper npc : npcData.values()) {
+            g2d.drawImage(npc.getShow(), npc.getX(), npc.getY(), 64, 64, this);
         }
     }
 

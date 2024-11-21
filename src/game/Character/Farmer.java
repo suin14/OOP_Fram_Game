@@ -18,7 +18,7 @@ public class Farmer implements Runnable {
     private int dir; // 0上1右2下3左
 
     // 移动速度
-    public final int movespeed = 10;
+    public final int movespeed = 8;
     private int xspreed;
     private int yspreed;
 
@@ -32,8 +32,6 @@ public class Farmer implements Runnable {
     private final MapsData mapViewer;
 
     private Farmer(int x, int y) {
-        mapViewer = MapsData.getInstance();
-
         setX(x);
         setY(y);
         this.dir = 2;
@@ -42,16 +40,18 @@ public class Farmer implements Runnable {
         this.newStatus = "stand--down";
         thread = new Thread(this);
         thread.start();
+
+        mapViewer = MapsData.getInstance();
     }
 
-    public static synchronized Farmer getInstance(int x, int y) {
+    public static Farmer getInstance(int x, int y) {
         if (instance == null) {
             instance = new Farmer(x, y);
         }
         return instance;
     }
 
-    public static synchronized Farmer getInstance() {
+    public static Farmer getInstance() {
         return instance;
     }
 

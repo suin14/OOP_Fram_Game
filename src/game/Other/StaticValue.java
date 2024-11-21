@@ -14,7 +14,7 @@ public class StaticValue {
     public static BufferedImage[] walk_R = new BufferedImage[8];
 
     // npc
-    public static BufferedImage npc = null;
+    public static BufferedImage shoper = null;
 
     public static void init() {
         try {
@@ -26,7 +26,7 @@ public class StaticValue {
             idle = walk_D[2];
 
             // 加载npc图片
-            npc = ImageIO.read(Objects.requireNonNull(
+            shoper = ImageIO.read(Objects.requireNonNull(
                     StaticValue.class.getClassLoader().getResource("assets/characters/npc.png"),
                     "Resource not found: assets/characters/npc.png"));
 
