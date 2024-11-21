@@ -1,26 +1,14 @@
 package game.Character;
 
-import game.Map.MapsData;
 import game.Other.StaticValue;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.util.Objects;
 
-public class Shoper {
-    // 单例实例
+public class Shoper extends Character {
     private static Shoper instance;
 
-    // 坐标
-    private int x;
-    private int y;
-
-    private BufferedImage show;
-
     private Shoper(int x, int y) {
-        setX(x);
-        setY(y);
-        show = StaticValue.shoper;
+        super(x, y);
+        setShow(StaticValue.shoper);
     }
 
     public static Shoper getInstance(int x, int y) {
@@ -30,26 +18,7 @@ public class Shoper {
         return instance;
     }
 
-    public void setX(int x) {
-        this.x = x * 48 - 8;
-    }
-
-    public void setY(int y) {
-        this.y = y * 48 - 16;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public Image getShow() {
-        return show;
-    }
-
+    @Override
     public void interact() {
 
     }

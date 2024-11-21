@@ -1,5 +1,6 @@
 package game.Map;
 
+import game.Character.Character;
 import game.Character.Shoper;
 import org.w3c.dom.*;
 import javax.imageio.ImageIO;
@@ -11,8 +12,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
 
 public class MapLoader extends JPanel {
     private final int scaleFactor = 3; // 缩放倍数
@@ -31,7 +30,7 @@ public class MapLoader extends JPanel {
     private boolean isFarm = false; // 当前地图有没有农田
     private final HashMap<Integer, Warp> farmData = new HashMap<>(); // 农田信息 // TODO 替换成Plant类
 
-    private final HashMap<Integer, Shoper> npcData = new HashMap<>(); // 地图上npc信息
+    private final HashMap<Integer, Character> npcData = new HashMap<>(); // 地图上npc信息
 
 
     public MapLoader(String tmxFilePath, String tilesetImagePath) {
@@ -52,7 +51,6 @@ public class MapLoader extends JPanel {
             e.printStackTrace();
         }
     }
-
 
 
     // 加载 TMX 地图
@@ -217,8 +215,8 @@ public class MapLoader extends JPanel {
         }
 
         // 绘制npc
-        for (Shoper npc : npcData.values()) {
-            g2d.drawImage(npc.getShow(), npc.getX(), npc.getY(), 64, 64, this);
+        for (Character character : npcData.values()) {
+            g2d.drawImage(character.getShow(), character.getX(), character.getY(), 64, 64, this);
         }
     }
 
@@ -252,5 +250,5 @@ public class MapLoader extends JPanel {
 
     public HashMap<Integer, Warp> getFarmData() {  // TODO 替换成Plant类
         return farmData;
-    }
+    } // TODO:偷换成Plant类
 }
