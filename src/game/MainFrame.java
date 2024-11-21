@@ -16,11 +16,7 @@ import java.util.Objects;
 
 public class MainFrame extends JFrame implements KeyListener,Runnable {
     private Image offScreenImage = null;
-
-    private final Thread thread = new Thread(this);
-
     private final Farmer pc;
-    private final BlackScreenController blackScreenController;
     private final MapsData mapViewer;
 
     private final DialogBubble dialogBubble;
@@ -38,8 +34,6 @@ public class MainFrame extends JFrame implements KeyListener,Runnable {
 
         StaticValue.init(); // 初始化图片资源
 
-        blackScreenController = BlackScreenController.getInstance(this); //控制过场动画
-
         // 初始化地图
         mapViewer = MapsData.getInstance();
         mapViewer.updadteNowMap("farm");
@@ -48,14 +42,14 @@ public class MainFrame extends JFrame implements KeyListener,Runnable {
         pc = Farmer.getInstance(14, 7);
 
         // 播放BGM
-        SoundManager soundManager = SoundManager.getInstance();
-        soundManager.playBGM();
+        SoundManager.playBGM();
 
         // 对话框
         dialogBubble = DialogBubble.getInstance();
 
         // 绘制图像
         repaint();
+        Thread thread = new Thread(this);
         thread.start();
     }
 
@@ -68,10 +62,16 @@ public class MainFrame extends JFrame implements KeyListener,Runnable {
         graphics.clearRect(0, 0, getWidth(), getHeight());  // 清空背景
 
 
-        if (blackScreenController != null && blackScreenController.isBlackScreen()) { //播放过场动画
+        if (BlackScreenController.isBlackScreen()) { //播放过场动画
             // 绘制黑屏
             g.setColor(Color.BLACK);
             g.fillRect(0, 0, getWidth(), getHeight());
+
+            new Timer(120, e -> {
+                BlackScreenController.stop();
+                ((Timer) e.getSource()).stop(); // 停止定时器
+            }).start();
+
         } else {
             // 渲染地图
             if (mapViewer != null && mapViewer.nowMap != null) {
@@ -83,6 +83,7 @@ public class MainFrame extends JFrame implements KeyListener,Runnable {
                 graphics.drawImage(pc.getShow(), pc.getX(), pc.getY(), 64, 64, this);
             }
 
+            // 渲染对话框
             if (dialogBubble != null && DialogBubble.isTalking()) {
                 dialogBubble.paintComponent(graphics);
             }

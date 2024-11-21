@@ -67,9 +67,9 @@ public class DialogBubble extends JPanel {
 
     public static void talk(String dialogWith, String key) {
         startTalking();
+        name = dialogWith;
         message = loadMessageFromJSON(dialogWith,key);
 //        System.out.println(message);
-        name = dialogWith;
     }
 
     // 读取并解析 JSON 文件

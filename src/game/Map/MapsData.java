@@ -8,16 +8,13 @@ import game.Other.SoundManager;
 import java.util.HashMap;
 
 public class MapsData {
-    private java.util.Map<String, MapLoader> maps;
+    private final java.util.Map<String, MapLoader> maps;
     
     public MapLoader nowMap;
 
     private static MapsData instance;
 
     private Farmer pc;
-    private final BlackScreenController blackScreenController;
-
-    private final SoundManager soundManager;
 
     private MapsData() {
         maps = new HashMap<>();
@@ -26,8 +23,6 @@ public class MapsData {
         nowMap = getMap("farm");
 
         pc = Farmer.getInstance();
-        blackScreenController = BlackScreenController.getInstance(); //过场动画
-        soundManager = SoundManager.getInstance();
     }
 
     public static MapsData getInstance() {
@@ -67,7 +62,7 @@ public class MapsData {
         int index = tileY * nowMap.getMapWidth() + tileX;
 
         if (nowMap.getWarpsData().containsKey(index)) {
-            blackScreenController.startBlackScreen(); // 开始过场动画
+            BlackScreenController.start(); // 开始过场动画
 
             Warp warp = nowMap.getWarpsData().get(index);
             String loc = warp.getLocation();  // 获取目标地图文件
@@ -75,7 +70,7 @@ public class MapsData {
             int targetY = warp.getToY();  // 传送后的目标Y坐标
 
             updadteNowMap(loc);
-            soundManager.playSFX("door.wav");
+            SoundManager.playSFX("door.wav");
             pc.setPosition(targetX, targetY);
             return true;
         }
