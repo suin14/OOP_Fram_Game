@@ -2,6 +2,7 @@ package game.Map;
 
 import game.Character.Farmer;
 import game.Other.BlackScreenController;
+import game.Other.SoundManager;
 
 
 import java.util.HashMap;
@@ -16,6 +17,8 @@ public class MapsData {
     private Farmer pc;
     private final BlackScreenController blackScreenController;
 
+    private final SoundManager soundManager;
+
     private MapsData() {
         maps = new HashMap<>();
         maps.put("farm", new MapLoader("farm.tmx", "farm.png"));
@@ -24,6 +27,7 @@ public class MapsData {
 
         pc = Farmer.getInstance();
         blackScreenController = BlackScreenController.getInstance(); //过场动画
+        soundManager = SoundManager.getInstance();
     }
 
     public static MapsData getInstance() {
@@ -71,6 +75,7 @@ public class MapsData {
                 int targetY = warp.getToY();  // 传送后的目标Y坐标
 
                 updadteNowMap(loc);
+                soundManager.playSFX("door.wav");
                 pc.setPosition(targetX, targetY);
 
                 return true;

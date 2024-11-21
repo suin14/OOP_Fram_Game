@@ -31,13 +31,6 @@ public class MapLoader extends JPanel {
     }
 
     // 加载图块集
-//    private void loadTileset(String tilesetImagePath) {
-//        try {
-//            tileset = ImageIO.read(new File(tilesetImagePath));
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
     private void loadTileset(String tilesetImagePath) {
         try {
             URL url = getClass().getClassLoader().getResource("assets/map/" + tilesetImagePath);
