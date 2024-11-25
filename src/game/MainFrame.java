@@ -71,7 +71,7 @@ public class MainFrame extends JFrame implements KeyListener,Runnable {
             g.setColor(Color.BLACK);
             g.fillRect(0, 0, getWidth(), getHeight());
 
-            new Timer(120, e -> {
+            new Timer(135, e -> {
                 BlackScreenController.stop();
                 ((Timer) e.getSource()).stop(); // 停止定时器
             }).start();
@@ -83,7 +83,7 @@ public class MainFrame extends JFrame implements KeyListener,Runnable {
             }
 
             // 在农场地图绘制道具栏
-            if (mapViewer != null && mapViewer.nowMap.isFarm) {
+            if (mapViewer != null && mapViewer.nowMap != null && mapViewer.nowMap.isFarm) {
                 mapViewer.nowMap.drawToolBar(graphics, selectedToolIndex);
             }
 
