@@ -16,7 +16,7 @@ public class StartFrame extends JFrame implements ActionListener {
         setTitle("圈圈物语");
         setIconImage(new ImageIcon(Objects.requireNonNull(
                 getClass().getClassLoader().getResource("assets/logo.png"))).getImage());
-        setSize(1152, 648);
+        setSize(1280, 720);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
@@ -29,7 +29,7 @@ public class StartFrame extends JFrame implements ActionListener {
         play.setFocusPainted(false);  // 不显示按钮的焦点矩形
         play.setContentAreaFilled(false); // 去掉按钮的背景色
         play.setBorderPainted(false);  // 去掉按钮的边框
-        play.setBounds((getWidth() - playIcon.getIconWidth()) / 2, 370, playIcon.getIconWidth(), playIcon.getIconHeight());
+        play.setBounds((getWidth() - playIcon.getIconWidth()) / 2, 470, playIcon.getIconWidth(), playIcon.getIconHeight());
         play.addActionListener(this);
         setLayout(null);
         add(play);
