@@ -14,7 +14,7 @@ public class Farmer extends Character implements Runnable {
     private int dir; // 0上1右2下3左
 
     // 移动速度
-    public final int movespeed = 8;
+    public final int movespeed = 12;
     private int xspreed;
     private int yspreed;
     private String newStatus; // 下一状态
@@ -134,9 +134,9 @@ public class Farmer extends Character implements Runnable {
                     if (getX() < 0) {
                         setX(0);
                     }
-                    if (getX() > 1112) {
-                        setX(1112);
-                    }
+//                    if (getX() > 1112) {
+//                        setX(1112);
+//                    }
                 }
             }
             if (yspreed != 0) {
@@ -148,9 +148,9 @@ public class Farmer extends Character implements Runnable {
                     if (getY() < 0) {
                         setY(0);
                     }
-                    if (getY() > 600) {
-                        setY(600);
-                    }
+//                    if (getY() > 600) {
+//                        setY(600);
+//                    }
                 }
             }
 

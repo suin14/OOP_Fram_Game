@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MapLoader extends JPanel {
-    private final int scaleFactor = 3; // 缩放倍数
+    private final int scaleFactor = 2; // 缩放倍数
     private BufferedImage tileset; // 图块集图像
     private BufferedImage boxImage, scytheImage, potatoImage, tomatoImage, chooseImage; //道具栏相关图片
     private final int tileWidth = 16; // 单个图块宽度
@@ -240,8 +240,8 @@ public class MapLoader extends JPanel {
         int toolCount = 3;
         int boxWidth = 64;
         int boxHeight = 64;
-        int startX = 512 - (boxWidth * toolCount) / 2;
-        int startY = 550;
+        int startX = 1160 - (boxWidth * toolCount) / 2;
+        int startY = 630;
 
         for (int i = 0; i < toolCount; i++) {
             g.drawImage(boxImage, startX + i * boxWidth, startY, boxWidth, boxHeight, null);

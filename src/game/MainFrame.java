@@ -29,7 +29,7 @@ public class MainFrame extends JFrame implements KeyListener,Runnable {
         setTitle("圈圈物语");
         setIconImage(new ImageIcon(Objects.requireNonNull(
                 getClass().getClassLoader().getResource("assets/logo.png"))).getImage());
-        setSize(1152, 648);
+        setSize(1280, 720);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false); // 窗口大小不可变
@@ -43,7 +43,7 @@ public class MainFrame extends JFrame implements KeyListener,Runnable {
         mapViewer.updadteNowMap("farm");
 
         // 初始化PC
-        pc = Farmer.getInstance(14, 7);
+        pc = Farmer.getInstance(19, 9);
 
         // 播放BGM
         SoundManager.playBGM();
@@ -83,7 +83,7 @@ public class MainFrame extends JFrame implements KeyListener,Runnable {
             }
 
             // 在农场地图绘制道具栏
-            if (mapViewer.nowMap.isFarm) {
+            if (mapViewer != null && mapViewer.nowMap.isFarm) {
                 mapViewer.nowMap.drawToolBar(graphics, selectedToolIndex);
             }
 
