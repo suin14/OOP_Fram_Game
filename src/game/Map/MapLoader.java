@@ -8,6 +8,8 @@ import javax.swing.*;
 import javax.xml.parsers.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
@@ -16,6 +18,7 @@ import java.util.HashMap;
 public class MapLoader extends JPanel {
     private final int scaleFactor = 3; // 缩放倍数
     private BufferedImage tileset; // 图块集图像
+    private BufferedImage boxImage, scytheImage, potatoImage, tomatoImage, chooseImage; //道具栏相关图片
     private final int tileWidth = 16; // 单个图块宽度
     private final int tileHeight = 16; // 单个图块高度
     private int mapWidth; // 地图宽度（以图块为单位）
@@ -36,6 +39,7 @@ public class MapLoader extends JPanel {
     public MapLoader(String tmxFilePath, String tilesetImagePath) {
         loadTileset(tilesetImagePath);
         loadMap(tmxFilePath);
+        loadToolBarResources();
     }
 
     // 加载图块集
@@ -52,6 +56,18 @@ public class MapLoader extends JPanel {
         }
     }
 
+    // 加载道具栏相关资源
+    private void loadToolBarResources() {
+        try {
+            boxImage = ImageIO.read(new File("assets/ui/box.png"));
+            scytheImage = ImageIO.read(new File("assets/objects/scythe.png"));
+            potatoImage = ImageIO.read(new File("assets/objects/potato.png"));
+            tomatoImage = ImageIO.read(new File("assets/objects/tomato.png"));
+            chooseImage = ImageIO.read(new File("assets/ui/choose.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     // 加载 TMX 地图
     private void loadMap(String tmxFilePath) {
@@ -217,6 +233,47 @@ public class MapLoader extends JPanel {
         // 绘制npc
         for (Character character : npcData.values()) {
             g2d.drawImage(character.getShow(), character.getX(), character.getY(), 64, 64, this);
+        }
+    }
+
+    public void drawToolBar(Graphics g, int selectedToolIndex) {
+        int toolCount = 3;
+        int boxWidth = 64;
+        int boxHeight = 64;
+        int startX = 512 - (boxWidth * toolCount) / 2;
+        int startY = 550;
+
+        for (int i = 0; i < toolCount; i++) {
+            g.drawImage(boxImage, startX + i * boxWidth, startY, boxWidth, boxHeight, null);
+
+            // 绘制工具图片
+            switch (i) {
+                case 0 :
+                    int toolWidth = (int) (boxWidth * 0.75);
+                    int toolHeight = (int) (boxHeight * 0.75);
+                    int offsetX = (boxWidth - toolWidth) / 2;
+                    int offsetY = (boxHeight - toolHeight) / 2;
+                    g.drawImage(scytheImage, startX + i * boxWidth + offsetX, startY + offsetY, toolWidth, toolHeight, null);
+                    break;
+                case 1 :
+                    toolWidth = (int) (boxWidth * 0.55);
+                    toolHeight = (int) (boxHeight * 0.55);
+                    offsetX = (boxWidth - toolWidth) / 2;
+                    offsetY = (boxHeight - toolHeight) / 2;
+                    g.drawImage(potatoImage, startX + i * boxWidth + offsetX, startY + offsetY, toolWidth, toolHeight, null);
+                    break;
+                case 2 :
+                    toolWidth = (int) (boxWidth * 0.55);
+                    toolHeight = (int) (boxHeight * 0.55);
+                    offsetX = (boxWidth - toolWidth) / 2;
+                    offsetY = (boxHeight - toolHeight) / 2;
+                    g.drawImage(tomatoImage, startX + i * boxWidth + offsetX, startY + offsetY, toolWidth, toolHeight, null);
+                    break;
+            }
+
+            if (i == selectedToolIndex) {
+                g.drawImage(chooseImage, startX + i * boxWidth, startY, boxWidth, boxHeight, null);
+            }
         }
     }
 

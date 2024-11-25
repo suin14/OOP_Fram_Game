@@ -21,6 +21,10 @@ public class MainFrame extends JFrame implements KeyListener,Runnable {
 
     private final DialogBubble dialogBubble;
 
+    // 道具栏相关变量
+    private int selectedToolIndex = 0; // 当前选中的工具
+    private final int toolCount = 3;   // 道具数量
+
     public MainFrame() {
         setTitle("圈圈物语");
         setIconImage(new ImageIcon(Objects.requireNonNull(
@@ -78,6 +82,11 @@ public class MainFrame extends JFrame implements KeyListener,Runnable {
                 mapViewer.nowMap.paintComponent(graphics);
             }
 
+            // 在农场地图绘制道具栏
+            if (mapViewer.nowMap.isFarm) {
+                mapViewer.nowMap.drawToolBar(graphics, selectedToolIndex);
+            }
+
             // 绘制PC角色, 放大至64x64
             if (pc != null) {
                 graphics.drawImage(pc.getShow(), pc.getX(), pc.getY(), 64, 64, this);
@@ -118,6 +127,15 @@ public class MainFrame extends JFrame implements KeyListener,Runnable {
             } else if (keyCode == KeyEvent.VK_S) {
                 // 按下 S 键，pc向下移动
                     pc.move(2);
+            }
+
+            else if (e.getKeyCode() == KeyEvent.VK_Q) {
+                // 按下 Q 键，切换工具
+                selectedToolIndex = (selectedToolIndex + 1) % toolCount;
+                repaint();
+            } else if (e.getKeyCode() == KeyEvent.VK_E) {
+                // 按下 E 键，使用道具
+
             }
 
             else if (keyCode == KeyEvent.VK_SPACE) {
