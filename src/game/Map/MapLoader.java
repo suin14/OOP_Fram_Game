@@ -6,6 +6,7 @@ import org.w3c.dom.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.xml.parsers.*;
+import java.util.List;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -18,7 +19,10 @@ import java.util.HashMap;
 public class MapLoader extends JPanel {
     private final int scaleFactor = 2; // 缩放倍数
     private BufferedImage tileset; // 图块集图像
-    private BufferedImage boxImage, scytheImage, potatoImage, tomatoImage, chooseImage; //道具栏相关图片
+    private BufferedImage boxImage, box2Image, scytheImage, potatoSeedImage, tomatoSeedImage, chooseImage; //道具栏相关图片
+    private final List<BufferedImage> itemImages = new ArrayList<>(); // 物品图片列表
+    private final List<Integer> itemCounts = new ArrayList<>(); // 物品数量
+    private Font Font; // 自定义像素字体
     private final int tileWidth = 16; // 单个图块宽度
     private final int tileHeight = 16; // 单个图块高度
     private int mapWidth; // 地图宽度（以图块为单位）
@@ -40,6 +44,7 @@ public class MapLoader extends JPanel {
         loadTileset(tilesetImagePath);
         loadMap(tmxFilePath);
         loadToolBarResources();
+        loadInventoryBarResources();
     }
 
     // 加载图块集
@@ -61,10 +66,35 @@ public class MapLoader extends JPanel {
         try {
             boxImage = ImageIO.read(new File("assets/ui/box.png"));
             scytheImage = ImageIO.read(new File("assets/objects/scythe.png"));
-            potatoImage = ImageIO.read(new File("assets/objects/potato.png"));
-            tomatoImage = ImageIO.read(new File("assets/objects/tomato.png"));
+            potatoSeedImage = ImageIO.read(new File("assets/objects/potatoSeed.png"));
+            tomatoSeedImage = ImageIO.read(new File("assets/objects/tomatoSeed.png"));
             chooseImage = ImageIO.read(new File("assets/ui/choose.png"));
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // 加载物品栏相关资源
+    private void loadInventoryBarResources() {
+        try {
+            box2Image = ImageIO.read(new File("assets/ui/box2.png"));
+            // 加载物品图片
+            itemImages.add(ImageIO.read(new File("assets/objects/money.png")));
+            itemImages.add(ImageIO.read(new File("assets/objects/potato.png")));
+            itemImages.add(ImageIO.read(new File("assets/objects/tomato.png")));
+            itemImages.add(ImageIO.read(new File("assets/objects/egg.png")));
+            itemImages.add(ImageIO.read(new File("assets/objects/milk.png")));
+
+            // 初始化物品数量
+            itemCounts.add(1000);
+            itemCounts.add(1);
+            itemCounts.add(2);
+            itemCounts.add(3);
+            itemCounts.add(4);
+
+            // 加载字体
+            Font = Font.createFont(Font.TRUETYPE_FONT, new File("assets/font/PressStart2P.ttf")).deriveFont(12f);
+        } catch (IOException | FontFormatException e) {
             e.printStackTrace();
         }
     }
@@ -236,6 +266,7 @@ public class MapLoader extends JPanel {
         }
     }
 
+    // 绘制工具栏
     public void drawToolBar(Graphics g, int selectedToolIndex) {
         int toolCount = 3;
         int boxWidth = 64;
@@ -260,20 +291,59 @@ public class MapLoader extends JPanel {
                     toolHeight = (int) (boxHeight * 0.55);
                     offsetX = (boxWidth - toolWidth) / 2;
                     offsetY = (boxHeight - toolHeight) / 2;
-                    g.drawImage(potatoImage, startX + i * boxWidth + offsetX, startY + offsetY, toolWidth, toolHeight, null);
+                    g.drawImage(potatoSeedImage, startX + i * boxWidth + offsetX, startY + offsetY, toolWidth, toolHeight, null);
                     break;
                 case 2 :
                     toolWidth = (int) (boxWidth * 0.55);
                     toolHeight = (int) (boxHeight * 0.55);
                     offsetX = (boxWidth - toolWidth) / 2;
                     offsetY = (boxHeight - toolHeight) / 2;
-                    g.drawImage(tomatoImage, startX + i * boxWidth + offsetX, startY + offsetY, toolWidth, toolHeight, null);
+                    g.drawImage(tomatoSeedImage, startX + i * boxWidth + offsetX, startY + offsetY, toolWidth, toolHeight, null);
                     break;
             }
 
             if (i == selectedToolIndex) {
                 g.drawImage(chooseImage, startX + i * boxWidth, startY, boxWidth, boxHeight, null);
             }
+        }
+    }
+
+    // 绘制物品栏
+    public void drawInventoryBar(Graphics g) {
+        int boxWidth = 64;
+        int boxHeight = 90;
+        int startY = (int) (tileHeight * mapHeight * 0.3); // 顶部空40%
+
+        // 设置字体
+        if (Font != null) {
+            g.setFont(Font);
+        }
+        g.setColor(Color.WHITE); // 字体颜色设为白色
+
+        int currentY = startY;
+
+        // 遍历物品，绘制Box、图片和数量
+        for (int i = 0; i < 5; i++) {
+            // 绘制Box
+            g.drawImage(boxImage, 10, currentY, boxWidth, boxHeight, null);
+
+            // 绘制物品图片
+            BufferedImage itemImage = itemImages.get(i);
+            if (itemImage != null) {
+                int itemSize = (int) (boxHeight * 0.35); // 物品图片高度占Box的40%
+                int offsetX = (boxWidth - itemSize) / 2; // 水平居中
+                int offsetY = (int) (boxHeight * 0.2); // 顶部空白
+                g.drawImage(itemImage, 10 + offsetX, currentY + offsetY, itemSize, itemSize, null);
+            }
+
+            // 绘制物品数量
+            String count = String.valueOf(itemCounts.get(i));
+            int textX = 10 + boxWidth / 2 - g.getFontMetrics().stringWidth(count) / 2; // 水平居中
+            int textY = currentY + boxHeight - 23; // 靠近Box底部
+            g.drawString(count, textX, textY);
+
+            // 更新Y坐标为下一个Box的起始位置
+            currentY += boxHeight;
         }
     }
 

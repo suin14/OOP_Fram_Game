@@ -87,6 +87,11 @@ public class MainFrame extends JFrame implements KeyListener,Runnable {
                 mapViewer.nowMap.drawToolBar(graphics, selectedToolIndex);
             }
 
+            // 绘制物品栏
+            if (mapViewer != null && mapViewer.nowMap != null) {
+                mapViewer.nowMap.drawInventoryBar(graphics);
+            }
+
             // 绘制PC角色, 放大至64x64
             if (pc != null) {
                 graphics.drawImage(pc.getShow(), pc.getX(), pc.getY(), 64, 64, this);
