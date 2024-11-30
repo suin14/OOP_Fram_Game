@@ -6,6 +6,7 @@ import game.Map.MapsData;
 import game.Other.BlackScreenController;
 import game.Other.SoundManager;
 import game.Other.StaticValue;
+import game.Hud.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,6 +21,9 @@ public class MainFrame extends JFrame implements KeyListener,Runnable {
     private final MapsData mapViewer;
 
     private final DialogBubble dialogBubble;
+
+    private ToolBar toolBar;
+    private InventoryBar inventoryBar;
 
     // 道具栏相关变量
     private int selectedToolIndex = 0; // 当前选中的工具
@@ -50,6 +54,12 @@ public class MainFrame extends JFrame implements KeyListener,Runnable {
 
         // 对话框
         dialogBubble = DialogBubble.getInstance();
+
+        // 工具栏
+        toolBar = ToolBar.getInstance();
+
+        // 物品栏
+        inventoryBar = InventoryBar.getInstance();
 
         // 绘制图像
         repaint();
@@ -84,12 +94,12 @@ public class MainFrame extends JFrame implements KeyListener,Runnable {
 
             // 在农场地图绘制道具栏
             if (mapViewer != null && mapViewer.nowMap != null && mapViewer.nowMap.isFarm) {
-                mapViewer.nowMap.drawToolBar(graphics, selectedToolIndex);
+                toolBar.paintComponent(graphics);
             }
 
             // 绘制物品栏
             if (mapViewer != null && mapViewer.nowMap != null) {
-                mapViewer.nowMap.drawInventoryBar(graphics);
+                inventoryBar.paintComponent(graphics);
             }
 
             // 绘制PC角色, 放大至64x64
@@ -137,7 +147,7 @@ public class MainFrame extends JFrame implements KeyListener,Runnable {
             else if (e.getKeyCode() == KeyEvent.VK_Q) {
                 // 按下 Q 键，切换工具
                 selectedToolIndex = (selectedToolIndex + 1) % toolCount;
-                repaint();
+                toolBar.setSelectedToolIndex(selectedToolIndex);
             } else if (e.getKeyCode() == KeyEvent.VK_E) {
                 // 按下 E 键，使用道具
 
