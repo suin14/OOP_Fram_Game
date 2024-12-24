@@ -2,6 +2,7 @@ package game.Other;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Objects;
@@ -19,7 +20,7 @@ public class StaticValue {
 
     // ui
     public static BufferedImage dialogBubble = null;
-    public static BufferedImage menuIcon = null;
+    public static ImageIcon menuIcon = null;
     public static BufferedImage menuPanel = null;
 
     //道具栏
@@ -47,9 +48,8 @@ public class StaticValue {
                     StaticValue.class.getClassLoader().getResource("assets/ui/dialogBubble.png"),
                     "Resource not found: assets/ui/dialogBubble.png"));
 
-            menuIcon = ImageIO.read(Objects.requireNonNull(
-                    StaticValue.class.getClassLoader().getResource("assets/ui/menu.png"),
-                    "Resource not found: assets/ui/menu.png"));
+            menuIcon = new ImageIcon(Objects.requireNonNull(
+                    StaticValue.class.getClassLoader().getResource("assets/ui/menu.png")));
 
             menuPanel = ImageIO.read(Objects.requireNonNull(
                     StaticValue.class.getClassLoader().getResource("assets/ui/menuPanel.png"),

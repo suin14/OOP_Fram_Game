@@ -9,7 +9,7 @@ import java.util.Objects;
 
 public class StartFrame extends JFrame implements ActionListener {
     private BufferedImage offScreenImage;
-    private JButton play;
+    private final JButton play;
 
     // 构造方法
     public StartFrame() {
@@ -22,7 +22,6 @@ public class StartFrame extends JFrame implements ActionListener {
         setResizable(false);
 
         play = new JButton();
-
         ImageIcon playIcon = new ImageIcon(Objects.requireNonNull(
                 getClass().getClassLoader().getResource("assets/ui/start.png")));
         play.setIcon(playIcon);

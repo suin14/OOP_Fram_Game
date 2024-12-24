@@ -4,18 +4,21 @@ import game.Character.Farmer;
 import game.Dialog.DialogBubble;
 import game.Map.MapsData;
 import game.Other.BlackScreenController;
+import game.Other.PauseMenuPanel;
 import game.Other.SoundManager;
 import game.Other.StaticValue;
 import game.Hud.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 import java.util.Objects;
 
 
-public class MainFrame extends JFrame implements KeyListener,Runnable {
+public class MainFrame extends JFrame implements KeyListener, Runnable, ActionListener {
     private Image offScreenImage = null;
     private final Farmer pc;
     private final MapsData mapViewer;
@@ -24,6 +27,7 @@ public class MainFrame extends JFrame implements KeyListener,Runnable {
 
     private ToolBar toolBar;
     private InventoryBar inventoryBar;
+    private final PauseMenuPanel pauseMenuPanel;
 
     // 道具栏相关变量
     private int selectedToolIndex = 0; // 当前选中的工具
@@ -51,6 +55,8 @@ public class MainFrame extends JFrame implements KeyListener,Runnable {
 
         // 播放BGM
         SoundManager.playBGM();
+
+        pauseMenuPanel = new PauseMenuPanel();
 
         // 对话框
         dialogBubble = DialogBubble.getInstance();
@@ -112,6 +118,10 @@ public class MainFrame extends JFrame implements KeyListener,Runnable {
                 dialogBubble.paintComponent(graphics);
             }
 
+            if(pauseMenuPanel != null) {
+                pauseMenuPanel.paintComponent(graphics);
+            }
+
             // 将图片绘制到窗口中
             g.drawImage(offScreenImage, 0, 0, this);
         }
@@ -123,39 +133,47 @@ public class MainFrame extends JFrame implements KeyListener,Runnable {
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
 
-        // 如果正在进行对话，只能先结束对话
-        if (DialogBubble.isTalking()) {
-            if (keyCode == KeyEvent.VK_SPACE) {
-                DialogBubble.stopTalking();
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            // 按下 Esc 键，暂停游戏
+            if (pauseMenuPanel.isPause()) {
+                pauseMenuPanel.hidePanel();
+            } else {
+                pauseMenuPanel.showPanel();
             }
-        } else {
-
-            if (keyCode == KeyEvent.VK_A) {
-                // 按下 A 键，pc向左移动
+        }
+        else if (!pauseMenuPanel.isPause()) {
+            // 如果正在进行对话，只能先结束对话
+            if (DialogBubble.isTalking()) {
+                if (keyCode == KeyEvent.VK_SPACE) {
+                    DialogBubble.stopTalking();
+                }
+            } else if (!pauseMenuPanel.isPause()) {
+                if (keyCode == KeyEvent.VK_A) {
+                    // 按下 A 键，pc向左移动
                     pc.move(3);
-            } else if (keyCode == KeyEvent.VK_D) {
-                // 按下 D 键，pc向右移动
+                } else if (keyCode == KeyEvent.VK_D) {
+                    // 按下 D 键，pc向右移动
                     pc.move(1);
-            } else if (keyCode == KeyEvent.VK_W) {
-                // 按下 W 键，pc向上移动
+                } else if (keyCode == KeyEvent.VK_W) {
+                    // 按下 W 键，pc向上移动
                     pc.move(0);
-            } else if (keyCode == KeyEvent.VK_S) {
-                // 按下 S 键，pc向下移动
+                } else if (keyCode == KeyEvent.VK_S) {
+                    // 按下 S 键，pc向下移动
                     pc.move(2);
-            }
+                }
 
-            else if (e.getKeyCode() == KeyEvent.VK_Q) {
-                // 按下 Q 键，切换工具
-                selectedToolIndex = (selectedToolIndex + 1) % toolCount;
-                toolBar.setSelectedToolIndex(selectedToolIndex);
-            } else if (e.getKeyCode() == KeyEvent.VK_E) {
-                // 按下 E 键，使用道具
+                else if (e.getKeyCode() == KeyEvent.VK_Q) {
+                    // 按下 Q 键，切换工具
+                    selectedToolIndex = (selectedToolIndex + 1) % toolCount;
+                    toolBar.setSelectedToolIndex(selectedToolIndex);
+                } else if (e.getKeyCode() == KeyEvent.VK_E) {
+                    // 按下 E 键，使用道具
 
-            }
-
-            else if (keyCode == KeyEvent.VK_SPACE) {
-                // 按下 Space 键，pc进行交互
+                }
+                else if (keyCode == KeyEvent.VK_SPACE) {
+                    // 按下 Space 键，pc进行交互
                     pc.interact();
+                }
             }
         }
     }
@@ -192,5 +210,12 @@ public class MainFrame extends JFrame implements KeyListener,Runnable {
             }
 
         }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+//        if (e.getSource() == pause) {
+//
+//        }
     }
 }
