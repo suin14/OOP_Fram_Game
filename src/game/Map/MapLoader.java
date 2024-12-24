@@ -98,7 +98,7 @@ public class MapLoader extends JPanel {
                                 }
                             }
                         }
-                        
+
                         // 读取农田信息
                         if ("isFarm".equals(name)) {
                             if ("T".equals(value)) {
