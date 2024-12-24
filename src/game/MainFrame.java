@@ -98,6 +98,11 @@ public class MainFrame extends JFrame implements KeyListener, Runnable, ActionLi
                 mapViewer.nowMap.paintComponent(graphics);
             }
 
+            // 绘制PC角色, 放大至64x64
+            if (pc != null) {
+                graphics.drawImage(pc.getShow(), pc.getX(), pc.getY(), 64, 64, this);
+            }
+
             // 在农场地图绘制道具栏
             if (mapViewer != null && mapViewer.nowMap != null && mapViewer.nowMap.isFarm) {
                 toolBar.paintComponent(graphics);
@@ -106,11 +111,6 @@ public class MainFrame extends JFrame implements KeyListener, Runnable, ActionLi
             // 绘制物品栏
             if (mapViewer != null && mapViewer.nowMap != null) {
                 inventoryBar.paintComponent(graphics);
-            }
-
-            // 绘制PC角色, 放大至64x64
-            if (pc != null) {
-                graphics.drawImage(pc.getShow(), pc.getX(), pc.getY(), 64, 64, this);
             }
 
             // 渲染对话框
