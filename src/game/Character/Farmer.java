@@ -134,9 +134,9 @@ public class Farmer extends Character implements Runnable {
                     if (getX() < 0) {
                         setX(0);
                     }
-//                    if (getX() > 1112) {
-//                        setX(1112);
-//                    }
+                    if (getX() > 1220) {
+                        setX(1220);
+                    }
                 }
             }
             if (yspreed != 0) {
@@ -148,9 +148,9 @@ public class Farmer extends Character implements Runnable {
                     if (getY() < 0) {
                         setY(0);
                     }
-//                    if (getY() > 600) {
-//                        setY(600);
-//                    }
+                    if (getY() > 650) {
+                        setY(650);
+                    }
                 }
             }
 

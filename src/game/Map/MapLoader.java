@@ -84,15 +84,18 @@ public class MapLoader extends JPanel {
                         // 读取传送点信息
                         if ("Warp".equals(name)) {
                             String[] warpParts = value.split(" ");
-                            if (warpParts.length == 5) {
-                                String loc = warpParts[0]; // 第一个值是传送去的地图名字
-                                int fromX = Integer.parseInt(warpParts[1]); // 第二个值是 传送点的X坐标
-                                int fromY = Integer.parseInt(warpParts[2]); // 第二个值是 传送点的的Y坐标
-                                int x = Integer.parseInt(warpParts[3]); // 第三个值是 传送去的X坐标
-                                int y = Integer.parseInt(warpParts[4]); // 第四个值是 传送去的Y坐标
-                                int fromIndex = fromY * getMapWidth() + fromX;
-                                Warp warpInfo = new Warp(loc, fromIndex, x, y);
-                                warpsData.put(fromIndex, warpInfo);
+                            if (warpParts.length % 5 == 0) {
+                                for (int j = 0; j < warpParts.length; j += 5) {
+                                    String loc = warpParts[i]; // 传送去的地图名字
+                                    int fromX = Integer.parseInt(warpParts[j + 1]); // 传送点的X坐标
+                                    int fromY = Integer.parseInt(warpParts[j + 2]); // 传送点的Y坐标
+                                    int x = Integer.parseInt(warpParts[j + 3]); // 目标地图的X坐标
+                                    int y = Integer.parseInt(warpParts[j + 4]); // 目标地图的Y坐标
+
+                                    int fromIndex = fromY * getMapWidth() + fromX;
+                                    Warp warpInfo = new Warp(loc, fromIndex, x, y);
+                                    warpsData.put(fromIndex, warpInfo);
+                                }
                             }
                         }
 

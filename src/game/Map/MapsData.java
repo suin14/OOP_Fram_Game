@@ -61,8 +61,8 @@ public class MapsData {
         int tileY = (y - nowMap.getTileHeight()) / (nowMap.getTileWidth() * nowMap.getScaleFactor()) + 2;
         int index = tileY * nowMap.getMapWidth() + tileX;
 
-        System.out.println(tileX + ", " +  tileY);
-        System.out.println(index);
+//        System.out.println(tileX + ", " +  tileY);
+//        System.out.println(index);
 
         if (nowMap.getWarpsData().containsKey(index)) {
             BlackScreenController.start(); // 开始过场动画

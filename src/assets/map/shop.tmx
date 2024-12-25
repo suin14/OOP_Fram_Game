@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="40" height="23" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="3">
  <properties>
-  <property name="Warp" value="farm 19 22 27 9"/>
+  <property name="Warp" value="farm 19 22 27 8 farm 18 22 27 8 farm 20 22 27 8"/>
  </properties>
  <tileset firstgid="1" name="Furniture" tilewidth="16" tileheight="16" tilecount="738" columns="18">
   <image source="shop.png" width="288" height="656"/>

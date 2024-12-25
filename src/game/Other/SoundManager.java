@@ -32,6 +32,11 @@ public class SoundManager {
         }
     }
 
+    public static void stopBGM() {
+        if (bgmClip != null && bgmClip.isRunning())
+            bgmClip.stop();
+    }
+
 
     // 播放声效
     public static void playSFX(String sfxPath) {
