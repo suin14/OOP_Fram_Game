@@ -23,6 +23,9 @@ public class StaticValue {
     public static ImageIcon menuIcon = null;
     public static BufferedImage menuPanel = null;
 
+    // 工具相关
+    public static BufferedImage[] toolImages;
+    public static BufferedImage toolBar;
     //道具栏
     public static BufferedImage boxImage = null;
     public static BufferedImage scytheImage = null;
@@ -30,6 +33,7 @@ public class StaticValue {
     public static BufferedImage tomatoSeedImage = null;
     public static BufferedImage chooseImage = null;
 
+    private static BufferedImage plantTileset;
     //物品栏
     public static BufferedImage box2Image = null;
     public static BufferedImage moneyImage = null;
@@ -125,5 +129,18 @@ public class StaticValue {
             frames[i] = spriteSheet.getSubimage(i * 32, 0, 32, 32);
         }
         return frames;
+    }
+
+    public static BufferedImage getPlantImage(int row, int col) {
+        if (plantTileset == null) {
+            try {
+                plantTileset = ImageIO.read(Objects.requireNonNull(
+                        StaticValue.class.getClassLoader().getResource("assets/map/assets.png")));
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+        return plantTileset.getSubimage(col * 16, row * 16, 16, 16);
     }
 }

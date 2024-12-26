@@ -6,11 +6,8 @@ import org.w3c.dom.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.xml.parsers.*;
-import java.util.List;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
@@ -261,4 +258,15 @@ public class MapLoader extends JPanel {
     public HashMap<Integer, Warp> getFarmData() {  // TODO 替换成Plant类
         return farmData;
     } // TODO:偷换成Plant类
+
+    // 获取指定位置的瓦片ID
+    public int getTileIdAt(int tileX, int tileY) {
+        if (tileX < 0 || tileY < 0 || tileX >= mapWidth || tileY >= mapHeight) {
+            return -1;
+        }
+        int tileIndex = tileY * mapWidth + tileX;
+        // 使用Backs2层（index为1）来判断农田
+        ArrayList<Integer> layer = layersData.get(1);
+        return layer.get(tileIndex);
+    }
 }
