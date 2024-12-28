@@ -1,5 +1,7 @@
 package game.Character;
 
+import game.Farm.FarmManager;
+import game.MainFrame;
 import game.Map.MapLoader;
 import game.Map.MapsData;
 import game.Other.StaticValue;
@@ -18,6 +20,11 @@ public class Farmer extends Character implements Runnable {
     private int xspreed;
     private int yspreed;
     private String newStatus; // 下一状态
+
+    public int getDir() {
+        return dir;
+    }
+
     private String currentStatus; // 当前状态
     private int currentFrame = 0; // 当前动画帧
 
@@ -118,6 +125,7 @@ public class Farmer extends Character implements Runnable {
 //          System.out.println("[Interact] " + nowMap.npcData.get(index));
             nowMap.npcData.get(index).interact();
         }
+
 
     }
 

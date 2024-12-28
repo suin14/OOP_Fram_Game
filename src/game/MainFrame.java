@@ -2,6 +2,7 @@ package game;
 
 import game.Character.Farmer;
 import game.Dialog.DialogBubble;
+import game.Map.MapLoader;
 import game.Map.MapsData;
 import game.Other.BlackScreenController;
 import game.Other.PauseMenuPanel;
@@ -41,7 +42,7 @@ public class MainFrame extends JFrame implements KeyListener, Runnable, ActionLi
 
     private String currentMap = "farm";  // 默认地图名称为农场
     // 道具栏相关变量
-    private int selectedToolIndex = 0; // 当前选中的工具
+    private static int selectedToolIndex = 0; // 当前选中的工具
     private final int toolCount = 3;   // 道具数量
 
     public MainFrame() {
@@ -131,6 +132,11 @@ public class MainFrame extends JFrame implements KeyListener, Runnable, ActionLi
                 }
             }
 
+            // 绘制PC角色, 放大至64x64
+            if (pc != null) {
+                graphics.drawImage(pc.getShow(), pc.getX(), pc.getY(), 64, 64, this);
+            }
+
             // 在农场地图绘制道具栏
             if (mapViewer != null && mapViewer.nowMap != null && mapViewer.nowMap.isFarm) {
                 toolBar.paintComponent(graphics);
@@ -139,11 +145,6 @@ public class MainFrame extends JFrame implements KeyListener, Runnable, ActionLi
             // 绘制物品栏
             if (mapViewer != null && mapViewer.nowMap != null) {
                 inventoryBar.paintComponent(graphics);
-            }
-
-            // 绘制PC角色, 放大至64x64
-            if (pc != null) {
-                graphics.drawImage(pc.getShow(), pc.getX(), pc.getY(), 64, 64, this);
             }
 
             // 渲染对话框
@@ -196,16 +197,38 @@ public class MainFrame extends JFrame implements KeyListener, Runnable, ActionLi
                     // 按下 S 键，pc向下移动
                     pc.move(2);
                 } else if (e.getKeyCode() == KeyEvent.VK_Q) {
-                    // 按下 Q 键，切换工具
-                    selectedToolIndex = (selectedToolIndex + 1) % toolCount;
+                    // 按下 Q 键，向左切换工具
+                    selectedToolIndex = (selectedToolIndex + toolCount - 1) % toolCount;
                     toolBar.setSelectedToolIndex(selectedToolIndex);
                 } else if (e.getKeyCode() == KeyEvent.VK_E) {
-                    // 按下 E 键，使用道具
-                    try {
-                        // 获取玩家当前位置对应的瓦片ID
-                        int tileX = (pc.getX() + 32) / 48;  // 居中齐
-                        int tileY = (pc.getY() + 32) / 48;
+                    // 按下 E 键，向右切换工具
+                    selectedToolIndex = (selectedToolIndex + toolCount + 1) % toolCount;
+                    toolBar.setSelectedToolIndex(selectedToolIndex);
+                } else if (keyCode == KeyEvent.VK_SPACE) {
+                    MapLoader nowMap = mapViewer.nowMap;
+                    // 按下 Space 键，pc进行交互
+                    int tileX = (getX() - nowMap.getTileWidth()) / (nowMap.getTileWidth() * nowMap.getScaleFactor()) + 1;
+                    int tileY = (getY() - nowMap.getTileHeight()) / (nowMap.getTileWidth() * nowMap.getScaleFactor()) + 1;
 
+                    // 交互范围检测
+                    switch (pc.getDir()) {
+                        case 0 -> tileY--;
+                        case 1 -> tileX++;
+                        case 2 -> tileY++;
+                        case 3 -> tileX--;
+                    }
+                    int index = tileY * nowMap.getMapWidth() + tileX;
+
+                    // npc检测
+                    if (nowMap.npcData.containsKey(index)) {
+                        // System.out.println("[Interact] " + nowMap.npcData.get(index));
+                        nowMap.npcData.get(index).interact();
+                    } else {
+                        // 使用道具
+                        // 获取玩家当前位置对应的瓦片ID
+                        tileX = (pc.getX() + 32) / 48;  // 居中齐
+                        tileY = (pc.getY() + 32) / 48;
+                        // 使用工具
                         if (selectedToolIndex == 0) {
                             // 工具1：收获或销毁植物
                             farmManager.handleHarvest(tileX, tileY);
@@ -216,17 +239,13 @@ public class MainFrame extends JFrame implements KeyListener, Runnable, ActionLi
                                 farmManager.plantSeed(selectedToolIndex + 1, tileX, tileY);
                             }
                         }
-                    } catch (Exception ex) {
-                        System.err.println("Error while planting/harvesting: " + ex.getMessage());
-                        ex.printStackTrace();
                     }
-                } else if (keyCode == KeyEvent.VK_SPACE) {
-                    // 按下 Space 键，pc进行交互
-                    pc.interact();
                 }
+
             }
         }
     }
+
 
     @Override
     public void keyReleased(KeyEvent e) {

@@ -1,6 +1,8 @@
 package game.Farm;
 
+import game.Hud.InventoryBar;
 import game.Other.StaticValue;
+import game.Other.TimeSystem;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -10,6 +12,12 @@ public class FarmManager {
     private final HashMap<String, Plant> plants = new HashMap<>();
     private int harvestedCount2 = 0;  // 工具2种植物的收获计数
     private int harvestedCount3 = 0;  // 工具3种植物的收获计数
+
+    private InventoryBar inventoryBar;
+
+    public FarmManager() {
+        inventoryBar = InventoryBar.getInstance();
+    }
 
     public boolean canPlant(Boolean isFarm, int x, int y) {
         String key = x + "," + y;
@@ -26,23 +34,32 @@ public class FarmManager {
     }
 
     // 处理收获或销毁
-    public void handleHarvest(int x, int y) {
-        String key = x + "," + y;
+    public void handleHarvest(int tileX, int tileY) {
+        String key = tileX + "," + tileY;
         Plant plant = plants.get(key);
-        if (plant != null) {
-            if (plant.isFullyGrown()) {
-                // 根据植物类型增加对应的计数
-                if (plant.getType() == 2) {
-                    harvestedCount2++;
-                    System.out.println("Harvested plant type 2! Total: " + harvestedCount2);
-                } else {
-                    harvestedCount3++;
-                    System.out.println("Harvested plant type 3! Total: " + harvestedCount3);
-                }
-            }
-            plants.remove(key);
+
+        if (plant == null) {
+            System.out.println("No plant found at location: " + key);
+            return;
         }
+
+        if (!plant.isFullyGrown()) {
+            System.out.println("Plant at " + key + " is not fully grown yet.");
+            return;
+        }
+
+        // 根据植物类型增加对应的计数
+        try {
+            InventoryBar.getInstance().addItem(plant.getType());
+            System.out.println("Harvested plant type " + plant.getType() + " at " + key);
+        } catch (IllegalArgumentException e) {
+            System.err.println("Error adding item to inventory: " + e.getMessage());
+        }
+
+        plants.remove(key);
+        System.out.println("Plant removed from location: " + key);
     }
+
 
     public void update() {
         plants.values().forEach(Plant::update);
@@ -61,19 +78,5 @@ public class FarmManager {
                 e.printStackTrace();
             }
         });
-
-        // 设置字体和颜色
-        g.setColor(Color.WHITE);
-        g.setFont(new Font("Arial", Font.BOLD, 20));
-
-        // 渲染工具2的植物收获计数
-        BufferedImage plant2Image = StaticValue.getPlantImage(8, 11); // 工具2的成熟植物图片
-        g.drawImage(plant2Image, frameWidth - 80, 50, 32, 32, null);
-        g.drawString("" + harvestedCount2, frameWidth - 80, 82);
-
-        // 渲染工具3的植物收获计数
-        BufferedImage plant3Image = StaticValue.getPlantImage(9, 11); // 工具3的成熟植物图片
-        g.drawImage(plant3Image, frameWidth - 80, 100, 32, 32, null);
-        g.drawString("" + harvestedCount3, frameWidth - 80, 132);
     }
 } 

@@ -17,10 +17,11 @@ public class InventoryBar extends JPanel {
     private static final int boxWidth = 64;
     private static final int boxHeight = 90;
 
-    private final List<Integer> itemCounts = new ArrayList<>(); // 物品数量
+    private List<Integer> itemCounts = new ArrayList<>(); // 物品数量
 
     public InventoryBar() {
         mapViewer = MapsData.getInstance();
+        itemCounts = new ArrayList<>(List.of(0, 0, 0, 0, 0));
     }
 
     public static InventoryBar getInstance() {
@@ -70,13 +71,6 @@ public class InventoryBar extends JPanel {
                     break;
             }
 
-            // 初始化物品数量
-            itemCounts.add(1000);
-            itemCounts.add(1);
-            itemCounts.add(2);
-            itemCounts.add(3);
-            itemCounts.add(4);
-
             // 绘制物品数量
             String count = String.valueOf(itemCounts.get(i));
             int textX = 10 + boxWidth / 2 - g.getFontMetrics().stringWidth(count) / 2; // 水平居中
@@ -85,6 +79,15 @@ public class InventoryBar extends JPanel {
 
             // 更新Y坐标为下一个Box的起始位置
             currentY += boxHeight;
+        }
+    }
+
+    public void addItem(int itemID) {
+        if (itemID >= 1 && itemID <= itemCounts.size()) {
+            itemCounts.set(itemID - 1, itemCounts.get(itemID - 1) + 1);
+            repaint();
+        } else {
+            throw new IllegalArgumentException("Invalid item ID: " + itemID);
         }
     }
 }

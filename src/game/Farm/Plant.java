@@ -5,7 +5,7 @@ import game.Other.StaticValue;
 import java.awt.image.BufferedImage;
 
 public class Plant {
-    private final int type;  // 2 或 3，对应工具类型
+    private int type;  // 2 或 3，对应工具类型
     private int growthStage = 0;  // 生长阶段 0-6
     private long lastUpdateTime;   // 上次更新时间
     private final int growthTime;  // 生长时间（秒）
