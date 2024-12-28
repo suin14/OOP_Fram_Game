@@ -90,4 +90,16 @@ public class InventoryBar extends JPanel {
             throw new IllegalArgumentException("Invalid item ID: " + itemID);
         }
     }
+
+    public void sellItem() {
+        for (int i = 1; i < itemCounts.size(); i++) {
+            if (itemCounts.get(i) != 0) {
+                itemCounts.set(0, itemCounts.get(i) * 10);
+                System.out.println("Money:" + itemCounts.get(0)); // 当前金钱数
+                itemCounts.set(i, 0);
+                repaint();
+            }
+
+        }
+    }
 }

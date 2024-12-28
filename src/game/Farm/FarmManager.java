@@ -13,11 +13,6 @@ public class FarmManager {
     private int harvestedCount2 = 0;  // 工具2种植物的收获计数
     private int harvestedCount3 = 0;  // 工具3种植物的收获计数
 
-    private InventoryBar inventoryBar;
-
-    public FarmManager() {
-        inventoryBar = InventoryBar.getInstance();
-    }
 
     public boolean canPlant(Boolean isFarm, int x, int y) {
         String key = x + "," + y;

@@ -2,6 +2,7 @@ package game.Character;
 
 
 import game.Dialog.DialogBubble;
+import game.Hud.InventoryBar;
 import game.Other.StaticValue;
 
 public class Shoper extends Character {
@@ -30,6 +31,7 @@ public class Shoper extends Character {
             addEvents("hello");
         } else {
             DialogBubble.talk(getClass().getSimpleName(), "shop");
+            InventoryBar.getInstance().sellItem();
         }
 
 

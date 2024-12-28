@@ -206,28 +206,13 @@ public class MainFrame extends JFrame implements KeyListener, Runnable, ActionLi
                     toolBar.setSelectedToolIndex(selectedToolIndex);
                 } else if (keyCode == KeyEvent.VK_SPACE) {
                     MapLoader nowMap = mapViewer.nowMap;
-                    // 按下 Space 键，pc进行交互
-                    int tileX = (getX() - nowMap.getTileWidth()) / (nowMap.getTileWidth() * nowMap.getScaleFactor()) + 1;
-                    int tileY = (getY() - nowMap.getTileHeight()) / (nowMap.getTileWidth() * nowMap.getScaleFactor()) + 1;
-
-                    // 交互范围检测
-                    switch (pc.getDir()) {
-                        case 0 -> tileY--;
-                        case 1 -> tileX++;
-                        case 2 -> tileY++;
-                        case 3 -> tileX--;
-                    }
-                    int index = tileY * nowMap.getMapWidth() + tileX;
-
-                    // npc检测
-                    if (nowMap.npcData.containsKey(index)) {
-                        // System.out.println("[Interact] " + nowMap.npcData.get(index));
-                        nowMap.npcData.get(index).interact();
+                    if (!nowMap.isFarm()) { // 在商店
+                        pc.interact();
                     } else {
                         // 使用道具
                         // 获取玩家当前位置对应的瓦片ID
-                        tileX = (pc.getX() + 32) / 48;  // 居中齐
-                        tileY = (pc.getY() + 32) / 48;
+                        int tileX = (pc.getX() + 32) / 48;  // 居中齐
+                        int tileY = (pc.getY() + 32) / 48;
                         // 使用工具
                         if (selectedToolIndex == 0) {
                             // 工具1：收获或销毁植物
@@ -241,7 +226,6 @@ public class MainFrame extends JFrame implements KeyListener, Runnable, ActionLi
                         }
                     }
                 }
-
             }
         }
     }
