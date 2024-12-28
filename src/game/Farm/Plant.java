@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 
 public class Plant {
     private int type;  // 2 或 3，对应工具类型
-    private int growthStage = 0;  // 生长阶段 0-6
+    private int growthStage = 0;  // 生长阶段 0-5
     private long lastUpdateTime;   // 上次更新时间
     private final int growthTime;  // 生长时间（秒）
     private final int x, y;        // 种植位置
@@ -21,7 +21,7 @@ public class Plant {
     }
 
     public void update() {
-        if (growthStage < 6) {  // 未完全成熟
+        if (growthStage < 5) {  // 未完全成熟
             long currentTime = System.currentTimeMillis();
             if (currentTime - lastUpdateTime >= growthTime * 1000) {
                 growthStage++;
@@ -46,7 +46,7 @@ public class Plant {
     public int getY() { return y; }
 
     public boolean isFullyGrown() {
-        return growthStage >= 6;  // 第7个阶段（索引6）表示完全成熟
+        return growthStage >= 5;  // 第6个阶段（索引5）表示完全成熟
     }
 
     public int getType() {

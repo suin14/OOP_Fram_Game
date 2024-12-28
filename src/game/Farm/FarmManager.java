@@ -65,8 +65,8 @@ public class FarmManager {
         plants.values().forEach(plant -> {
             try {
                 g.drawImage(plant.getCurrentImage(),
-                        plant.getX() * 48,
-                        plant.getY() * 48,
+                        plant.getX() * 48 - 14,
+                        plant.getY() * 48 - 10,
                         48, 48, null);
             } catch (Exception e) {
                 System.err.println("Error rendering plant at " + plant.getX() + "," + plant.getY());
