@@ -1,18 +1,12 @@
 package game.Farm;
 
 import game.Hud.InventoryBar;
-import game.Other.StaticValue;
-import game.Other.TimeSystem;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
 public class FarmManager {
     private final HashMap<String, Plant> plants = new HashMap<>();
-    private int harvestedCount2 = 0;  // 工具2种植物的收获计数
-    private int harvestedCount3 = 0;  // 工具3种植物的收获计数
-
 
     public boolean canPlant(Boolean isFarm, int x, int y) {
         String key = x + "," + y;
