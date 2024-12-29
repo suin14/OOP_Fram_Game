@@ -156,7 +156,7 @@ public class MainFrame extends JFrame implements KeyListener, Runnable, ActionLi
                 pauseMenuPanel.paintComponent(graphics);
             }
 
-            // 渲染时间系统（放在最后以确保滤镜效果覆盖在所有内容之上）
+            // 渲染时间系统
             timeSystem.render((Graphics2D) graphics, getWidth(), getHeight());
 
             // 将图片绘制到窗口中
