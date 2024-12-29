@@ -2,6 +2,7 @@ package game.Map;
 
 import game.Character.Character;
 import game.Character.Shoper;
+import game.Farm.Plant;
 import org.w3c.dom.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -16,7 +17,6 @@ import java.util.HashMap;
 public class MapLoader extends JPanel {
     private final int scaleFactor = 2; // 缩放倍数
     private BufferedImage tileset; // 图块集图像
-    private Font Font; // 自定义像素字体
     private final int tileWidth = 16; // 单个图块宽度
     private final int tileHeight = 16; // 单个图块高度
     private int mapWidth; // 地图宽度（以图块为单位）
@@ -29,7 +29,7 @@ public class MapLoader extends JPanel {
     private final HashMap<Integer, Warp> warpsData = new HashMap<>(); // 传送点信息
 
     public boolean isFarm = false; // 当前地图有没有农田
-    public final HashMap<Integer, Warp> farmData = new HashMap<>(); // 农田信息 // TODO 替换成Plant类
+    public final HashMap<Integer, Plant> farmData = new HashMap<>(); // 农田信息
 
     public final HashMap<Integer, Character> npcData = new HashMap<>(); // 地图上npc信息
 
@@ -255,9 +255,9 @@ public class MapLoader extends JPanel {
         return isFarm;
     }
 
-    public HashMap<Integer, Warp> getFarmData() {  // TODO 替换成Plant类
+    public HashMap<Integer, Plant> getFarmData() {  // TODO 替换成Plant类
         return farmData;
-    } // TODO:偷换成Plant类
+    }
 
     // 获取指定位置的瓦片ID
     public int getTileIdAt(int tileX, int tileY) {

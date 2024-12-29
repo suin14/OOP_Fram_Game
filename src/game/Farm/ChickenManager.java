@@ -12,10 +12,9 @@ public class ChickenManager {
     private boolean isVisible = true;
 
     public ChickenManager(ArrayList<Integer> walkableArea, int mapWidth) {
-        // 生成1-5只小鸡
-        int chickenCount = random.nextInt(5) + 1;
-        System.out.println("Generating " + chickenCount + " chickens");
-        
+        // 生成3只小鸡
+        int chickenCount = 3;
+
         // 从可行走区域随机选择位置生成小鸡
         List<Integer> availablePositions = new ArrayList<>();
         for (int i = 0; i < walkableArea.size(); i++) {
@@ -31,7 +30,7 @@ public class ChickenManager {
             int y = index / mapWidth;
             int x = index % mapWidth;
             chickens.add(new Chicken(x, y));
-            System.out.println("Added chicken at position: " + x + "," + y);
+//            System.out.println("Added chicken at position: " + x + "," + y);
         }
     }
 

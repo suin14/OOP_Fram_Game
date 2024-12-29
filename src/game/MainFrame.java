@@ -40,7 +40,6 @@ public class MainFrame extends JFrame implements KeyListener, Runnable, ActionLi
 
     private final ChickenManager chickenManager;
 
-    private String currentMap = "farm";  // 默认地图名称为农场
     // 道具栏相关变量
     private static int selectedToolIndex = 0; // 当前选中的工具
     private final int toolCount = 3;   // 道具数量
@@ -127,9 +126,21 @@ public class MainFrame extends JFrame implements KeyListener, Runnable, ActionLi
                 mapViewer.nowMap.paintComponent(graphics);
                 // 渲染植物
                 farmManager.render((Graphics2D) graphics, getWidth());
-                if (currentMap.equals("farm")) {
-                    chickenManager.render((Graphics2D) graphics);  // 渲染小鸡
+                if (mapViewer.nowMap.isFarm) {
+                    chickenManager.render((Graphics2D) graphics);  // 农场渲染小鸡
                 }
+            }
+
+            // 绘制PC角色, 放大至64x64
+            if (pc != null) {
+                graphics.drawImage(pc.getShow(), pc.getX(), pc.getY(), 64, 64, this);
+            }
+
+            // 渲染时间系统
+            timeSystem.render((Graphics2D) graphics, getWidth(), getHeight());
+            // 在农场套时间滤镜
+            if (mapViewer.nowMap.isFarm) {
+                timeSystem.paintDayPhase((Graphics2D) graphics, getWidth(), getHeight());
             }
 
             // 绘制PC角色, 放大至64x64
@@ -155,9 +166,6 @@ public class MainFrame extends JFrame implements KeyListener, Runnable, ActionLi
             if (pauseMenuPanel != null) {
                 pauseMenuPanel.paintComponent(graphics);
             }
-
-            // 渲染时间系统（放在最后以确保滤镜效果覆盖在所有内容之上）
-            timeSystem.render((Graphics2D) graphics, getWidth(), getHeight());
 
             // 将图片绘制到窗口中
             g.drawImage(offScreenImage, 0, 0, this);

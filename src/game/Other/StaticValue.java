@@ -53,7 +53,8 @@ public class StaticValue {
                     "Resource not found: assets/ui/dialogBubble.png"));
 
             menuIcon = new ImageIcon(Objects.requireNonNull(
-                    StaticValue.class.getClassLoader().getResource("assets/ui/menu.png")));
+                    StaticValue.class.getClassLoader().getResource("assets/ui/menu.png"),
+                    "Resource not found: assets/ui/menu.png"));
 
             menuPanel = ImageIO.read(Objects.requireNonNull(
                     StaticValue.class.getClassLoader().getResource("assets/ui/menuPanel.png"),

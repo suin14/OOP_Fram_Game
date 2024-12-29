@@ -95,7 +95,9 @@ public class TimeSystem {
         // 调试用：显示点击区域
         // g.setColor(new Color(255, 255, 255, 50));
         // g.fillRect(timeClickArea.x, timeClickArea.y, timeClickArea.width, timeClickArea.height);
+    }
 
+    public void paintDayPhase(Graphics2D g, int frameWidth, int frameHeight) {
         // 绘制时间阶段的滤镜效果
         g.setColor(currentPhase.overlay);
         g.fillRect(0, 0, frameWidth, frameHeight);
