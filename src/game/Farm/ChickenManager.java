@@ -1,5 +1,9 @@
 package game.Farm;
 
+import game.Hud.InventoryBar;
+import game.Other.SoundManager;
+import game.Other.StaticValue;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -34,6 +38,21 @@ public class ChickenManager {
         }
     }
 
+    public void pickEgg(Chicken chicken, int tileX, int tileY) {  // 收集蛋
+        Point targetPoint = new Point(tileX, tileY);
+        ArrayList<Point> eggs = chicken.getEggs();
+
+        if (eggs.contains(targetPoint)) {
+            InventoryBar.getInstance().addItem(4);
+        }
+
+        eggs.remove(targetPoint);
+    }
+
+    public List<Chicken> getChickens() {
+        return chickens;
+    }
+
     public void update() {
         chickens.forEach(Chicken::update);
     }
@@ -52,6 +71,9 @@ public class ChickenManager {
                     g.drawImage(image, 
                             chicken.getX(), chicken.getY(), 
                             48, 48, null);
+                    for (Point egg : chicken.getEggs()) {
+                        g.drawImage(StaticValue.eggImage, egg.x * 48, egg.y * 48 + 30, 20, 20, null);
+                    }
                 }
             } catch (Exception e) {
                 System.err.println("Error rendering chicken: " + e.getMessage());

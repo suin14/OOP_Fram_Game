@@ -2,6 +2,7 @@ package game;
 
 import game.Character.Farmer;
 import game.Dialog.DialogBubble;
+import game.Farm.Chicken;
 import game.Map.MapLoader;
 import game.Map.MapsData;
 import game.Other.BlackScreenController;
@@ -35,9 +36,7 @@ public class MainFrame extends JFrame implements KeyListener, Runnable, ActionLi
     private ToolBar toolBar;
     private InventoryBar inventoryBar;
     private final PauseMenuPanel pauseMenuPanel;
-
     private final TimeSystem timeSystem;
-
     private final ChickenManager chickenManager;
 
     // 道具栏相关变量
@@ -58,10 +57,10 @@ public class MainFrame extends JFrame implements KeyListener, Runnable, ActionLi
         StaticValue.init(); // 初始化图片资源
 
         // 初始化地图
-        timeSystem = TimeSystem.getInstance();
         mapViewer = MapsData.getInstance();
         mapViewer.updadteNowMap("farm");
         farmManager = new FarmManager();
+        timeSystem = TimeSystem.getInstance();
         chickenManager = new ChickenManager(
                 mapViewer.nowMap.getCollisionData(),
                 mapViewer.nowMap.getMapWidth()
@@ -124,9 +123,8 @@ public class MainFrame extends JFrame implements KeyListener, Runnable, ActionLi
             // 渲染地图
             if (mapViewer != null && mapViewer.nowMap != null) {
                 mapViewer.nowMap.paintComponent(graphics);
-                // 渲染植物
-                farmManager.render((Graphics2D) graphics, getWidth());
                 if (mapViewer.nowMap.isFarm) {
+                    farmManager.render((Graphics2D) graphics, getWidth()); // 农场渲染植物
                     chickenManager.render((Graphics2D) graphics);  // 农场渲染小鸡
                 }
             }
@@ -137,17 +135,15 @@ public class MainFrame extends JFrame implements KeyListener, Runnable, ActionLi
             }
 
             // 渲染时间系统
-            timeSystem.render((Graphics2D) graphics, getWidth(), getHeight());
+            if (mapViewer != null && mapViewer.nowMap != null) {
+                timeSystem.render((Graphics2D) graphics, getWidth(), getHeight());
+            }
+
             // 在农场套时间滤镜
-            if (mapViewer.nowMap.isFarm) {
+            if (mapViewer != null && mapViewer.nowMap != null && mapViewer.nowMap.isFarm) {
                 timeSystem.paintDayPhase((Graphics2D) graphics, getWidth(), getHeight());
             }
-
-            // 绘制PC角色, 放大至64x64
-            if (pc != null) {
-                graphics.drawImage(pc.getShow(), pc.getX(), pc.getY(), 64, 64, this);
-            }
-
+            
             // 在农场地图绘制道具栏
             if (mapViewer != null && mapViewer.nowMap != null && mapViewer.nowMap.isFarm) {
                 toolBar.paintComponent(graphics);
@@ -225,6 +221,9 @@ public class MainFrame extends JFrame implements KeyListener, Runnable, ActionLi
                         if (selectedToolIndex == 0) {
                             // 工具1：收获或销毁植物
                             farmManager.handleHarvest(tileX, tileY);
+                            for (Chicken chicken : chickenManager.getChickens()) {
+                                chickenManager.pickEgg(chicken, tileX, tileY);
+                            }
                         } else {
                             // 工具2和3：播种
                             int tileId = mapViewer.nowMap.getTileIdAt(tileX, tileY);

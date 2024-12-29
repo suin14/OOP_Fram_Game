@@ -1,6 +1,7 @@
 package game.Farm;
 
 import game.Hud.InventoryBar;
+import game.Other.SoundManager;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -24,6 +25,7 @@ public class FarmManager {
 
     // 处理收获或销毁
     public void handleHarvest(int tileX, int tileY) {
+        SoundManager.playSFX("harvest.wav");
         String key = tileX + "," + tileY;
         Plant plant = plants.get(key);
 

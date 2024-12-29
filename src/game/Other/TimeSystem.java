@@ -87,7 +87,7 @@ public class TimeSystem {
     public void render(Graphics2D g, int frameWidth, int frameHeight) {
         // 绘制时间和日期
         g.setColor(Color.WHITE);
-        g.setFont(new Font("Arial", Font.BOLD, 20));
+        g.setFont(StaticValue.pixelFont);
         String timeStr = String.format("%d-%02d-%02d %02d:%02d",
             year, month, day, hour, minute);
         g.drawString(timeStr, 50, 80);
@@ -101,10 +101,6 @@ public class TimeSystem {
         // 绘制时间阶段的滤镜效果
         g.setColor(currentPhase.overlay);
         g.fillRect(0, 0, frameWidth, frameHeight);
-    }
-
-    public DayPhase getCurrentPhase() {
-        return currentPhase;
     }
 
     // 检查点击是否在时间显示区域内
@@ -130,4 +126,13 @@ public class TimeSystem {
         minute = 1;
         updatePhase();
     }
-} 
+
+    public int getHour() {
+        return hour;
+    }
+
+    public int getMinute() {
+        return minute;
+    }
+
+}
