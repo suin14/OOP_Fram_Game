@@ -10,6 +10,7 @@ public class TimeSystem {
     private int day;
     private int hour;
     private int minute;
+    private int second;
     private DayPhase currentPhase;
 
     private static final Rectangle timeClickArea = new Rectangle(50, 60, 200, 30);  // 点击区域
@@ -44,13 +45,14 @@ public class TimeSystem {
     }
 
     private TimeSystem() {
-        // 初始化为系统时间
-        LocalDateTime now = LocalDateTime.now();
-        this.year = now.getYear();
-        this.month = now.getMonthValue();
-        this.day = now.getDayOfMonth();
-        this.hour = now.getHour();
-        this.minute = now.getMinute();
+        // 初始化时间
+//        LocalDateTime now = LocalDateTime.now();
+//        this.year = now.getYear();
+//        this.month = now.getMonthValue();
+        this.day = 0;
+        this.hour = 6;
+        this.minute = 0;
+        this.second = 0;
         updatePhase();
     }
 
@@ -62,23 +64,27 @@ public class TimeSystem {
     }
 
     public void update() {
-        minute++;
-        if (minute >= 60) {
-            minute = 0;
-            hour++;
-            if (hour >= 24) {
-                hour = 0;
-                day++;
-                if (day > getDaysInMonth(year, month)) {
-                    day = 1;
-                    month++;
-                    if (month > 12) {
-                        month = 1;
-                        year++;
-                    }
+        second = second + 6;
+        if (second >= 60) {
+            second = 0;
+            minute++;
+            if (minute >= 60) {
+                minute = 0;
+                hour++;
+                if (hour >= 24) {
+                    hour = 0;
+                    day++;
+//                    if (day > getDaysInMonth(year, month)) {
+//                        day = 1;
+//                        month++;
+//                        if (month > 12) {
+//                            month = 1;
+//                            year++;
+//                        }
+//                    }
                 }
+                updatePhase();
             }
-            updatePhase();
         }
     }
 
