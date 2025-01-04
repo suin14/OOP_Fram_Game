@@ -1,54 +1,90 @@
 package game.Farm;
 
 import game.Hud.InventoryBar;
+import game.Map.MapLoader;
+import game.Map.MapsData;
 import game.Other.SoundManager;
 
 import java.awt.*;
 import java.util.HashMap;
+import java.util.List;
 
 public class FarmManager {
-    private final HashMap<String, Plant> plants = new HashMap<>();
+    private final MapsData mapsData;
+    private final HashMap<Integer, Plant> plants;
 
-    public boolean canPlant(Boolean isFarm, int x, int y) {
-        String key = x + "," + y;
-        boolean b = isFarm && !plants.containsKey(key);
-        System.out.println("角色坐标：" + x + "," + y + "当前地图数值：" + isFarm);
-        return b;
+    public FarmManager() {
+        // 获取当前地图
+        mapsData = MapsData.getInstance();
+        plants = mapsData.nowMap.farmData;
     }
 
-    public void plantSeed(int type, int x, int y) {
-        String key = x + "," + y;
-        if (!plants.containsKey(key)) {
-            plants.put(key, new Plant(type, x, y));
+    public boolean canPlant(int tileX, int tileY) {
+        // 检查是否在可播种区域内
+        MapLoader nowMap = mapsData.nowMap;
+        int index = tileY * nowMap.getMapWidth() + tileX;
+        System.out.println("Tile coordinates: " + tileX + ", " + tileY);
+        System.out.println("通过x,y计算出index:" + index);
+        Plant plant = nowMap.farmData.get(index);
+
+        if (plant != null) {
+            if (plant.getType() == 1) {
+                System.out.println("Plant type: " + plant.getType());
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void plantSeed(int type, int tileX, int tileY) {
+        MapLoader nowMap = mapsData.nowMap;
+        int index = tileY * nowMap.getMapWidth() + tileX;
+        Plant plant = plants.get(index);
+        if (plant != null && plant.getType() == 1) {
+            plants.put(index, new Plant(type,
+                    (tileX * nowMap.getTileWidth() * nowMap.getScaleFactor()) - 8,  // x坐标左移8像素
+                    (tileY * nowMap.getTileHeight() * nowMap.getScaleFactor()) + 4   // y坐标增加4像素间距
+            ));
         }
     }
 
     // 处理收获或销毁
     public void handleHarvest(int tileX, int tileY) {
-        SoundManager.playSFX("harvest.wav");
-        String key = tileX + "," + tileY;
-        Plant plant = plants.get(key);
+        MapLoader nowMap = mapsData.nowMap;
+        int index = tileY * nowMap.getMapWidth() + tileX;
+        System.out.println("Tile coordinates: " + tileX + ", " + tileY);
+        Plant plant = plants.get(index);
 
         if (plant == null) {
-            System.out.println("No plant found at location: " + key);
+            System.out.println("No plant found at location: " + index);
+            return;
+        }
+
+        // 添加：检查是否为可种植的空地（type == 1）
+        if (plant.getType() == 1) {
+            System.out.println("This is empty farmland, nothing to harvest");
             return;
         }
 
         if (!plant.isFullyGrown()) {
-            System.out.println("Plant at " + key + " is not fully grown yet.");
+            System.out.println("Plant at " + index + " is not fully grown yet.");
             return;
         }
+
+        // 播放收获音效
+        SoundManager.playSFX("harvest.wav");
 
         // 根据植物类型增加对应的计数
         try {
             InventoryBar.getInstance().addItem(plant.getType());
-            System.out.println("Harvested plant type " + plant.getType() + " at " + key);
+            System.out.println("Harvested plant type " + plant.getType() + " at " + index);
         } catch (IllegalArgumentException e) {
             System.err.println("Error adding item to inventory: " + e.getMessage());
         }
 
-        plants.remove(key);
-        System.out.println("Plant removed from location: " + key);
+        // 收获后将地块恢复为可种植状态（type=1）
+        plants.put(index, new Plant(1, plant.getX(), plant.getY()));
+        System.out.println("Plant harvested and land restored to plantable state");
     }
 
 
@@ -57,13 +93,14 @@ public class FarmManager {
     }
 
     public void render(Graphics2D g, int frameWidth) {
-        // 渲染植物
         plants.values().forEach(plant -> {
             try {
                 g.drawImage(plant.getCurrentImage(),
-                        plant.getX() * 48 - 14,
-                        plant.getY() * 48 - 10,
-                        48, 48, null);
+                        plant.getX(),
+                        plant.getY(),
+                        48,    // 保持宽度
+                        56,    // 增加高度以增加垂直间距
+                        null);
             } catch (Exception e) {
                 System.err.println("Error rendering plant at " + plant.getX() + "," + plant.getY());
                 e.printStackTrace();

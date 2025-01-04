@@ -18,6 +18,8 @@ public class Chicken {
 
     private final TimeSystem timeSystem;
 
+    private Point currentDestination;  // 添加这个属性
+
     public Chicken(int x, int y) {
         this.x = x;
         this.y = y;
@@ -26,6 +28,7 @@ public class Chicken {
         this.frameIndex = 0;
         this.lastUpdateTime = System.currentTimeMillis();
         this.timeSystem = TimeSystem.getInstance(); // 引用时间系统
+        this.currentDestination = new Point(x, y);  // 初始化目标位置
     }
 
     public void update() {
@@ -45,6 +48,12 @@ public class Chicken {
                 int dx = facingLeft ? -1 : 1;
                 x += dx;
             }
+            
+            // 随机上下移动
+            if (random.nextInt(100) < 30) {
+                int dy = random.nextBoolean() ? -1 : 1;
+                y += dy;
+            }
         }
 
         if (timeSystem.getMinute() == 0 && timeSystem.getHour() % 2 == 0) {
@@ -57,8 +66,27 @@ public class Chicken {
         return StaticValue.getPlantImage(row, frameIndex);
     }
 
-    public int getX() { return x * 48; }  // 转换为屏幕坐标
-    public int getY() { return y * 48; }
+    public int getX() { 
+        return x * 16 * 2; // tileWidth(16) * scaleFactor(2)
+    }
+    
+    public int getY() { 
+        return y * 16 * 2; // tileHeight(16) * scaleFactor(2)
+    }
 
     public ArrayList<Point> getEggs() { return eggs; }
+
+    public boolean needsNewDestination() {
+        return currentDestination == null || 
+               (Math.abs(x - currentDestination.x) < 5 && Math.abs(y - currentDestination.y) < 5);
+    }
+
+    public void setPosition(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public void setDestination(int x, int y) {
+        this.currentDestination = new Point(x, y);
+    }
 } 

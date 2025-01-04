@@ -14,6 +14,20 @@ public class TimeSystem {
 
     private static final Rectangle timeClickArea = new Rectangle(50, 60, 200, 30);  // 点击区域
 
+    // 添加七段显示屏的数字定义
+    private static final boolean[][] DIGIT_SEGMENTS = {
+        {true, true, true, true, true, true, false},     // 0
+        {false, true, true, false, false, false, false}, // 1
+        {true, true, false, true, true, false, true},    // 2
+        {true, true, true, true, false, false, true},    // 3
+        {false, true, true, false, false, true, true},   // 4
+        {true, false, true, true, false, true, true},    // 5
+        {true, false, true, true, true, true, true},     // 6
+        {true, true, true, false, false, false, false},  // 7
+        {true, true, true, true, true, true, true},      // 8
+        {true, true, true, true, false, true, true}      // 9
+    };
+
     public enum DayPhase {
         DAWN(5, new Color(150, 150, 200, 50)),      // 黎明 5-7点
         DAY(7, new Color(0, 0, 0, 0)),              // 白天 7-17点
@@ -85,16 +99,87 @@ public class TimeSystem {
     }
 
     public void render(Graphics2D g, int frameWidth, int frameHeight) {
-        // 绘制时间和日期
-        g.setColor(Color.WHITE);
-        g.setFont(StaticValue.pixelFont);
-        String timeStr = String.format("%d-%02d-%02d %02d:%02d",
-            year, month, day, hour, minute);
-        g.drawString(timeStr, 50, 80);
+        g.setColor(Color.BLACK);
+        
+        // 启用抗锯齿
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        
+        int digitWidth = 20;
+        int digitHeight = 30;
+        int startX = 50;
+        int startY = 60;
+        
+        // 绘制小时
+        drawDigit(g, hour / 10, startX, startY, digitWidth, digitHeight);
+        drawDigit(g, hour % 10, startX + digitWidth + 5, startY, digitWidth, digitHeight);
+        
+        // 绘制六边形冒号
+        drawHexagonDot(g, startX + (digitWidth + 5) * 2, startY + digitHeight/2 - 5, 3);
+        drawHexagonDot(g, startX + (digitWidth + 5) * 2, startY + digitHeight/2 + 5, 3);
+        
+        // 绘制分钟
+        drawDigit(g, minute / 10, startX + (digitWidth + 5) * 2 + 10, startY, digitWidth, digitHeight);
+        drawDigit(g, minute % 10, startX + (digitWidth + 5) * 3 + 15, startY, digitWidth, digitHeight);
+    }
 
-        // 调试用：显示点击区域
-        // g.setColor(new Color(255, 255, 255, 50));
-        // g.fillRect(timeClickArea.x, timeClickArea.y, timeClickArea.width, timeClickArea.height);
+    private void drawDigit(Graphics2D g, int num, int x, int y, int width, int height) {
+        boolean[] segments = DIGIT_SEGMENTS[num];
+        int segmentThickness = 3;
+        
+        // 绘制水平线段（上中下）
+        if (segments[0]) drawHexagonSegment(g, x + segmentThickness, y, width - 2*segmentThickness, segmentThickness, true);
+        if (segments[6]) drawHexagonSegment(g, x + segmentThickness, y + height/2 - segmentThickness/2, width - 2*segmentThickness, segmentThickness, true);
+        if (segments[3]) drawHexagonSegment(g, x + segmentThickness, y + height - segmentThickness, width - 2*segmentThickness, segmentThickness, true);
+        
+        // 绘制垂直线段（左上、右上、左下、右下）
+        if (segments[5]) drawHexagonSegment(g, x, y + segmentThickness, segmentThickness, height/2 - segmentThickness, false);
+        if (segments[1]) drawHexagonSegment(g, x + width - segmentThickness, y + segmentThickness, segmentThickness, height/2 - segmentThickness, false);
+        if (segments[4]) drawHexagonSegment(g, x, y + height/2, segmentThickness, height/2 - segmentThickness, false);
+        if (segments[2]) drawHexagonSegment(g, x + width - segmentThickness, y + height/2, segmentThickness, height/2 - segmentThickness, false);
+    }
+
+    // 绘制六边形线段
+    private void drawHexagonSegment(Graphics2D g, int x, int y, int width, int height, boolean isHorizontal) {
+        int offset = height / 4; // 六边形两端的偏移量
+        
+        int[] xPoints;
+        int[] yPoints;
+        
+        if (isHorizontal) {
+            xPoints = new int[] {
+                x, x + offset, x + width - offset, x + width,
+                x + width - offset, x + offset
+            };
+            yPoints = new int[] {
+                y + height/2, y, y, y + height/2,
+                y + height, y + height
+            };
+        } else {
+            xPoints = new int[] {
+                x + width/2, x + width, x + width, x + width/2,
+                x, x
+            };
+            yPoints = new int[] {
+                y, y + offset, y + height - offset, y + height,
+                y + height - offset, y + offset
+            };
+        }
+        
+        g.fillPolygon(xPoints, yPoints, 6);
+    }
+
+    // 绘制六边形点（用于冒号）
+    private void drawHexagonDot(Graphics2D g, int x, int y, int radius) {
+        int[] xPoints = new int[6];
+        int[] yPoints = new int[6];
+        
+        for (int i = 0; i < 6; i++) {
+            double angle = i * Math.PI / 3;
+            xPoints[i] = x + (int)(radius * Math.cos(angle));
+            yPoints[i] = y + (int)(radius * Math.sin(angle));
+        }
+        
+        g.fillPolygon(xPoints, yPoints, 6);
     }
 
     public void paintDayPhase(Graphics2D g, int frameWidth, int frameHeight) {

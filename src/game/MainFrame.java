@@ -215,8 +215,8 @@ public class MainFrame extends JFrame implements KeyListener, Runnable, ActionLi
                     } else {
                         // 使用道具
                         // 获取玩家当前位置对应的瓦片ID
-                        int tileX = (pc.getX() + 32) / 48;  // 居中齐
-                        int tileY = (pc.getY() + 32) / 48;
+                        int tileX = (pc.getX() + 32) / (mapViewer.nowMap.getTileWidth() * mapViewer.nowMap.getScaleFactor());
+                        int tileY = (pc.getY() + 32) / (mapViewer.nowMap.getTileHeight() * mapViewer.nowMap.getScaleFactor());
                         // 使用工具
                         if (selectedToolIndex == 0) {
                             // 工具1：收获或销毁植物
@@ -226,8 +226,7 @@ public class MainFrame extends JFrame implements KeyListener, Runnable, ActionLi
                             }
                         } else {
                             // 工具2和3：播种
-                            int tileId = mapViewer.nowMap.getTileIdAt(tileX, tileY);
-                            if (farmManager.canPlant(mapViewer.nowMap.isFarm(), tileX, tileY)) {
+                            if (farmManager.canPlant(tileX, tileY)) {
                                 farmManager.plantSeed(selectedToolIndex + 1, tileX, tileY);
                             }
                         }

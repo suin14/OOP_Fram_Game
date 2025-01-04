@@ -159,7 +159,10 @@ public class MapLoader extends JPanel {
                                     if ("canPlanted".equals(propName)) {
                                         String propValue = propertyElement.getAttribute("value");
                                         if ("True".equals(propValue)) {
-                                            farmData.put(index, null);
+                                            Plant plant = new Plant(1, 
+                                                                  tileX * tileWidth * scaleFactor, 
+                                                                  tileY * tileHeight * scaleFactor);
+                                            farmData.put(index, plant);
                                         }
                                     }
 

@@ -5,7 +5,7 @@ import game.Other.StaticValue;
 import java.awt.image.BufferedImage;
 
 public class Plant {
-    private int type;  // 2 或 3，对应工具类型
+    private int type;  // 2 或 3，对应工具类型,0：表示不能种，1：表示可以种
     private int growthStage = 0;  // 生长阶段 0-5
     private long lastUpdateTime;   // 上次更新时间
     private final int growthTime;  // 生长时间（秒）
@@ -26,20 +26,19 @@ public class Plant {
             if (currentTime - lastUpdateTime >= growthTime * 1000) {
                 growthStage++;
                 lastUpdateTime = currentTime;
-                System.out.println("Plant at " + x + "," + y + " grew to stage " + growthStage); // 调试信息
+//                System.out.println("播种在" + x + "," + y + "成长到" + growthStage); // 调试信息
             }
         }
     }
 
     public BufferedImage getCurrentImage() {
+        // 如果type为1，表示空地，不显示图片
+        if (type == 1) return null;
+        
         // 工具2对应第9排，工具3对应第10排
         int row = (type == 2) ? 8 : 9;
-        int col = 5 + growthStage;  // 从第6个开始是生长图片
-        BufferedImage image = StaticValue.getPlantImage(row, col);
-        if (image == null) {
-            System.err.println("Failed to get plant image for stage " + growthStage); // 调试信息
-        }
-        return image;
+        int col = 5 + growthStage;
+        return StaticValue.getPlantImage(row, col);
     }
 
     public int getX() { return x; }
