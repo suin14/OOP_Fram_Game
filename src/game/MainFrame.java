@@ -174,14 +174,14 @@ public class MainFrame extends JFrame implements KeyListener, Runnable, ActionLi
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
 
-        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            // 按下 Esc 键，暂停游戏
-            if (pauseMenuPanel.isPause()) {
-                pauseMenuPanel.hidePanel();
-            } else {
-                pauseMenuPanel.showPanel();
-            }
-        } else if (!pauseMenuPanel.isPause()) {
+//        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+//            // 按下 Esc 键，暂停游戏
+//            if (pauseMenuPanel.isPause()) {
+//                pauseMenuPanel.hidePanel();
+//            } else {
+//                pauseMenuPanel.showPanel();
+//            }
+//        } else if (!pauseMenuPanel.isPause()) {
             // 如果正在进行对话，只能先结束对话
             if (DialogBubble.isTalking()) {
                 if (keyCode == KeyEvent.VK_SPACE) {
@@ -233,7 +233,7 @@ public class MainFrame extends JFrame implements KeyListener, Runnable, ActionLi
                     }
                 }
             }
-        }
+//        }
     }
 
 
