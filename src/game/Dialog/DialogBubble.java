@@ -51,17 +51,17 @@ public class DialogBubble extends JPanel {
         Graphics2D g2d = (Graphics2D) g;
 
         // 绘制对话框图片
-        g2d.drawImage(StaticValue.dialogBubble, 100, 390, 720, 240, this);
+        g2d.drawImage(StaticValue.dialogBubble, 80, 440, 720, 240, this);
 
         // 设置名字
         g2d.setFont(new Font("Arial", Font.BOLD, 28));
         g2d.setColor(Color.GRAY);
-        g2d.drawString(name, 170, 460);
+        g2d.drawString(name, 150, 510);
 
         // 设置对话信息
         g2d.setFont(new Font("黑体", Font.BOLD, 20));
         g2d.setColor(Color.GRAY);
-        g2d.drawString(message, 170, 550);
+        g2d.drawString(message, 150, 600);
     }
 
 

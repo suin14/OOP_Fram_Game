@@ -2,6 +2,7 @@ package game.Map;
 
 import game.Character.Character;
 import game.Character.Shoper;
+import game.Farm.Plant;
 import org.w3c.dom.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MapLoader extends JPanel {
-    private final int scaleFactor = 3; // 缩放倍数
+    private final int scaleFactor = 2; // 缩放倍数
     private BufferedImage tileset; // 图块集图像
     private final int tileWidth = 16; // 单个图块宽度
     private final int tileHeight = 16; // 单个图块高度
@@ -28,7 +29,7 @@ public class MapLoader extends JPanel {
     private final HashMap<Integer, Warp> warpsData = new HashMap<>(); // 传送点信息
 
     public boolean isFarm = false; // 当前地图有没有农田
-    public final HashMap<Integer, Warp> farmData = new HashMap<>(); // 农田信息 // TODO 替换成Plant类
+    public final HashMap<Integer, Plant> farmData = new HashMap<>(); // 农田信息
 
     public final HashMap<Integer, Character> npcData = new HashMap<>(); // 地图上npc信息
 
@@ -51,7 +52,6 @@ public class MapLoader extends JPanel {
             e.printStackTrace();
         }
     }
-
 
     // 加载 TMX 地图
     private void loadMap(String tmxFilePath) {
@@ -81,15 +81,18 @@ public class MapLoader extends JPanel {
                         // 读取传送点信息
                         if ("Warp".equals(name)) {
                             String[] warpParts = value.split(" ");
-                            if (warpParts.length == 5) {
-                                String loc = warpParts[0]; // 第一个值是传送去的地图名字
-                                int fromX = Integer.parseInt(warpParts[1]); // 第二个值是 传送点的X坐标
-                                int fromY = Integer.parseInt(warpParts[2]); // 第二个值是 传送点的的Y坐标
-                                int x = Integer.parseInt(warpParts[3]); // 第三个值是 传送去的X坐标
-                                int y = Integer.parseInt(warpParts[4]); // 第四个值是 传送去的Y坐标
-                                int fromIndex = fromY * getMapWidth() + fromX;
-                                Warp warpInfo = new Warp(loc, fromIndex, x, y);
-                                warpsData.put(fromIndex, warpInfo);
+                            if (warpParts.length % 5 == 0) {
+                                for (int j = 0; j < warpParts.length; j += 5) {
+                                    String loc = warpParts[i]; // 传送去的地图名字
+                                    int fromX = Integer.parseInt(warpParts[j + 1]); // 传送点的X坐标
+                                    int fromY = Integer.parseInt(warpParts[j + 2]); // 传送点的Y坐标
+                                    int x = Integer.parseInt(warpParts[j + 3]); // 目标地图的X坐标
+                                    int y = Integer.parseInt(warpParts[j + 4]); // 目标地图的Y坐标
+
+                                    int fromIndex = fromY * getMapWidth() + fromX;
+                                    Warp warpInfo = new Warp(loc, fromIndex, x, y);
+                                    warpsData.put(fromIndex, warpInfo);
+                                }
                             }
                         }
 
@@ -156,7 +159,10 @@ public class MapLoader extends JPanel {
                                     if ("canPlanted".equals(propName)) {
                                         String propValue = propertyElement.getAttribute("value");
                                         if ("True".equals(propValue)) {
-                                            farmData.put(index, null);
+                                            Plant plant = new Plant(1, 
+                                                                  tileX * tileWidth * scaleFactor, 
+                                                                  tileY * tileHeight * scaleFactor);
+                                            farmData.put(index, plant);
                                         }
                                     }
 
@@ -236,6 +242,10 @@ public class MapLoader extends JPanel {
         return mapWidth;
     }
 
+    public int getMapHeight() {
+        return mapHeight;
+    }
+
     public ArrayList<Integer> getCollisionData() {
         return collisionData;
     }
@@ -248,7 +258,18 @@ public class MapLoader extends JPanel {
         return isFarm;
     }
 
-    public HashMap<Integer, Warp> getFarmData() {  // TODO 替换成Plant类
+    public HashMap<Integer, Plant> getFarmData() {  // TODO 替换成Plant类
         return farmData;
-    } // TODO:偷换成Plant类
+    }
+
+    // 获取指定位置的瓦片ID
+    public int getTileIdAt(int tileX, int tileY) {
+        if (tileX < 0 || tileY < 0 || tileX >= mapWidth || tileY >= mapHeight) {
+            return -1;
+        }
+        int tileIndex = tileY * mapWidth + tileX;
+        // 使用Backs2层（index为1）来判断农田
+        ArrayList<Integer> layer = layersData.get(1);
+        return layer.get(tileIndex);
+    }
 }

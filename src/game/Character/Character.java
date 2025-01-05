@@ -18,8 +18,8 @@ public class Character {
     }
 
     public void setPosition(int x, int y) {
-        setX(x * 48 - 8);
-        setY(y * 48 - 16);
+        setX(x * 16 * 2 - 8);
+        setY(y * 16 * 2 - 16);
     }
 
     public void setX(int x) {

@@ -1,5 +1,7 @@
 package game.Character;
 
+import game.Farm.FarmManager;
+import game.MainFrame;
 import game.Map.MapLoader;
 import game.Map.MapsData;
 import game.Other.StaticValue;
@@ -14,10 +16,15 @@ public class Farmer extends Character implements Runnable {
     private int dir; // 0上1右2下3左
 
     // 移动速度
-    public final int movespeed = 8;
+    public final int movespeed = 12;
     private int xspreed;
     private int yspreed;
     private String newStatus; // 下一状态
+
+    public int getDir() {
+        return dir;
+    }
+
     private String currentStatus; // 当前状态
     private int currentFrame = 0; // 当前动画帧
 
@@ -119,6 +126,7 @@ public class Farmer extends Character implements Runnable {
             nowMap.npcData.get(index).interact();
         }
 
+
     }
 
 
@@ -134,8 +142,8 @@ public class Farmer extends Character implements Runnable {
                     if (getX() < 0) {
                         setX(0);
                     }
-                    if (getX() > 1112) {
-                        setX(1112);
+                    if (getX() > 1220) {
+                        setX(1220);
                     }
                 }
             }
@@ -148,8 +156,8 @@ public class Farmer extends Character implements Runnable {
                     if (getY() < 0) {
                         setY(0);
                     }
-                    if (getY() > 600) {
-                        setY(600);
+                    if (getY() > 650) {
+                        setY(650);
                     }
                 }
             }
