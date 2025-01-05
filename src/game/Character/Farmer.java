@@ -21,11 +21,8 @@ public class Farmer extends Character implements Runnable {
     private int yspreed;
     private String newStatus; // 下一状态
 
-    public int getDir() {
-        return dir;
-    }
-
     private String currentStatus; // 当前状态
+
     private int currentFrame = 0; // 当前动画帧
 
     private final MapsData mapViewer;
@@ -205,6 +202,56 @@ public class Farmer extends Character implements Runnable {
                 Thread.sleep(60);
             } catch (InterruptedException e) {
                 e.printStackTrace();
+            }
+        }
+    }
+
+    public int getDir() {
+        return dir;
+    }
+
+    public String getCurrentStatus() {
+        return currentStatus;
+    }
+
+    public void setCurrentStatus(String currentStatus) {
+        this.currentStatus = currentStatus;
+        switch (currentStatus) {
+            case "move--up" -> {
+                BufferedImage[] anim = StaticValue.walk_U;
+                updateframe(anim);
+                setShow(anim[currentFrame]);
+            }
+            case "move--right" -> {
+                BufferedImage[] anim = StaticValue.walk_R;
+                updateframe(anim);
+                setShow(anim[currentFrame]);
+            }
+            case "move--down" -> {
+                BufferedImage[] anim = StaticValue.walk_D;
+                updateframe(anim);
+                setShow(anim[currentFrame]);
+            }
+            case "move--left" -> {
+                BufferedImage[] anim = StaticValue.walk_L;
+                updateframe(anim);
+                setShow(anim[currentFrame]);
+            }
+            case "stand--up" -> {
+                BufferedImage[] anim = StaticValue.walk_U;
+                setShow(anim[2]);
+            }
+            case "stand--right" -> {
+                BufferedImage[] anim = StaticValue.walk_R;
+                setShow(anim[4]);
+            }
+            case "stand--down" -> {
+                BufferedImage[] anim = StaticValue.walk_D;
+                setShow(anim[2]);
+            }
+            case "stand--left" -> {
+                BufferedImage[] anim = StaticValue.walk_L;
+                setShow(anim[4]);
             }
         }
     }

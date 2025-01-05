@@ -5,16 +5,18 @@ import game.Other.TimeSystem;
 
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
 
-public class Chicken {
+public class Chicken implements Serializable {
     private int x, y;           // 位置
     private boolean facingLeft; // 朝向
+
     private int frameIndex;     // 当前动画帧
     private long lastUpdateTime;// 上次更新时间
-    private final ArrayList<Point> eggs; // 当前鸡的鸡蛋
+    public ArrayList<Point> eggs; // 当前鸡的鸡蛋
     private static final Random random = new Random();
 
     private final TimeSystem timeSystem;
@@ -78,6 +80,10 @@ public class Chicken {
 
     public ArrayList<Point> getEggs() { return eggs; }
 
+    public void setEggs(ArrayList<Point> eggs) {
+        this.eggs = eggs;
+    }
+
     public boolean needsNewDestination() {
         return currentDestination == null || 
                (Math.abs(x - currentDestination.x) < 5 && Math.abs(y - currentDestination.y) < 5);
@@ -91,4 +97,12 @@ public class Chicken {
     public void setDestination(int x, int y) {
         this.currentDestination = new Point(x, y);
     }
-} 
+
+    public int getFrameIndex() {
+        return frameIndex;
+    }
+
+    public void setFrameIndex(int frameIndex) {
+        this.frameIndex = frameIndex;
+    }
+}

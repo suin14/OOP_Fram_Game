@@ -22,10 +22,12 @@ import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.*;
+import java.util.List;
 import java.util.Objects;
 
 
-public class MainFrame extends JFrame implements KeyListener, Runnable, ActionListener {
+public class MainFrame extends JFrame implements KeyListener, Runnable, ActionListener, Serializable {
     private Image offScreenImage = null;
     private final Farmer pc;
     private final MapsData mapViewer;
@@ -36,7 +38,7 @@ public class MainFrame extends JFrame implements KeyListener, Runnable, ActionLi
     private ToolBar toolBar;
     private InventoryBar inventoryBar;
     private final PauseMenuPanel pauseMenuPanel;
-    private final TimeSystem timeSystem;
+    private TimeSystem timeSystem;
     private final ChickenManager chickenManager;
 
     // 道具栏相关变量
@@ -232,6 +234,11 @@ public class MainFrame extends JFrame implements KeyListener, Runnable, ActionLi
                         }
                     }
                 }
+//                else if (e.getKeyCode() == KeyEvent.VK_K) {
+//                    saveGame("user.data");
+//                } else if (e.getKeyCode() == KeyEvent.VK_L) {
+//                    loadGame("user.data");
+//                }
             }
 //        }
     }
@@ -288,6 +295,46 @@ public class MainFrame extends JFrame implements KeyListener, Runnable, ActionLi
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    // 保存游戏状态
+    public void saveGame(String filePath) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filePath))) {
+            // 写入时间系统
+            oos.writeObject(timeSystem);
+
+            // 写入PC的属性
+            oos.writeInt(pc.getX());
+            oos.writeInt(pc.getY());
+
+            // 保存鸡和鸡蛋的状态
+//            oos.writeObject(chickenManager.getChickens());
+
+            System.out.println("游戏已成功保存到文件：" + filePath);
+        } catch (IOException e) {
+            System.err.println("保存游戏失败：" + e.getMessage());
+        }
+    }
+
+    // 加载游戏状态
+    public void loadGame(String filePath) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
+            // 读取时间系统
+            timeSystem = (TimeSystem) ois.readObject();
+
+            // 读取并恢复PC的属性
+            pc.setX(ois.readInt());
+            pc.setY(ois.readInt());
+            pc.setCurrentStatus(ois.readUTF());
+
+            // 恢复鸡的状态
+//            List<Chicken> chickens = (List<Chicken>) ois.readObject();  // 读取鸡的List
+//            chickenManager.setChickens(chickens);  // 将读取到的List设置到鸡管理器中
+
+            System.out.println("游戏已成功加载自文件：" + filePath);
+        } catch (IOException | ClassNotFoundException e) {
+            System.err.println("加载游戏失败：" + e.getMessage());
         }
     }
 }

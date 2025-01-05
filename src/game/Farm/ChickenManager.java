@@ -6,18 +6,23 @@ import game.Other.StaticValue;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class ChickenManager {
+public class ChickenManager implements Serializable {
     // 定义活动范围（瓦片坐标）
     private static final int MIN_TILE_X = 19;
     private static final int MAX_TILE_X = 31;
     private static final int MIN_TILE_Y = 14;
     private static final int MAX_TILE_Y = 18;
 
-    private final List<Chicken> chickens = new ArrayList<>();
+    public List<Chicken> chickens = new ArrayList<>();
+
     private static final Random random = new Random();
     private final MapsData mapsData;
     private boolean isVisible = true;
@@ -46,6 +51,10 @@ public class ChickenManager {
 
     public List<Chicken> getChickens() {
         return chickens;
+    }
+
+    public void setChickens(List<Chicken> chickens) {
+        this.chickens = chickens;
     }
 
     public void update() {
@@ -96,4 +105,7 @@ public class ChickenManager {
             }
         });
     }
+
+
+
 } 

@@ -1,9 +1,12 @@
 package game.Other;
 
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyListener;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class TimeSystem {
+public class TimeSystem implements Serializable {
     private static TimeSystem instance;
     private int year;
     private int month;
