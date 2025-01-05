@@ -35,7 +35,7 @@ public class ChickenManager {
 
     public void pickEgg(Chicken chicken, int tileX, int tileY) {  // 收集蛋
         Point targetPoint = new Point(tileX, tileY);
-        List<Point> eggs = chicken.getEggs();
+        ArrayList<Point> eggs = chicken.getEggs();
 
         if (eggs.contains(targetPoint)) {
             InventoryBar.getInstance().addItem(4);
@@ -83,12 +83,6 @@ public class ChickenManager {
 
                 BufferedImage image = chicken.getCurrentImage();
                 if (image != null) {
-                    for (Point egg : chicken.getEggs()) {
-                        g.drawImage(StaticValue.eggImage,
-                                egg.x * 32,
-                                egg.y * 32 + 30,
-                                20, 20, null);
-                    }
                     g.drawImage(image,
                             chicken.getX(),
                             chicken.getY(),

@@ -5,16 +5,16 @@ import game.Other.TimeSystem;
 
 import java.awt.Point;
 import java.awt.image.BufferedImage;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Random;
-import java.util.concurrent.CopyOnWriteArrayList;
+
 
 public class Chicken {
     private int x, y;           // 位置
     private boolean facingLeft; // 朝向
     private int frameIndex;     // 当前动画帧
     private long lastUpdateTime;// 上次更新时间
-    private final List<Point> eggs; //当前鸡的鸡蛋
+    private final ArrayList<Point> eggs; // 当前鸡的鸡蛋
     private static final Random random = new Random();
 
     private final TimeSystem timeSystem;
@@ -24,7 +24,7 @@ public class Chicken {
     public Chicken(int x, int y) {
         this.x = x;
         this.y = y;
-        this.eggs = new CopyOnWriteArrayList<>();
+        this.eggs = new ArrayList<>();
         this.facingLeft = random.nextBoolean();
         this.frameIndex = 0;
         this.lastUpdateTime = System.currentTimeMillis();
@@ -59,7 +59,7 @@ public class Chicken {
 
         if (timeSystem.getMinute() % 30 == 0 && timeSystem.getSecond() == 0) {
             eggs.add(new Point(x, y));  // 每隔30分钟下个蛋
-//            System.out.println("egg");
+            System.out.println("egg");
         }
     }
 
@@ -76,7 +76,7 @@ public class Chicken {
         return y * 16 * 2; // tileHeight(16) * scaleFactor(2)
     }
 
-    public List<Point> getEggs() { return eggs; }
+    public ArrayList<Point> getEggs() { return eggs; }
 
     public boolean needsNewDestination() {
         return currentDestination == null || 
