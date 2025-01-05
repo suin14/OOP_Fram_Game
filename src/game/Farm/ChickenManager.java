@@ -76,18 +76,19 @@ public class ChickenManager {
             try {
                 BufferedImage image = chicken.getCurrentImage();
                 if (image != null) {
+                    for (Point egg : chicken.getEggs()) {
+                        g.drawImage(StaticValue.eggImage,
+                                egg.x * 32,
+                                egg.y * 32 + 30,
+                                20, 20, null);
+                    }
                     g.drawImage(image,
                             chicken.getX(),
                             chicken.getY(),
                             mapsData.nowMap.getMapWidth() * mapsData.nowMap.getScaleFactor() / 2, // 宽度缩小一半
                             mapsData.nowMap.getMapWidth() * mapsData.nowMap.getScaleFactor() / 2, // 高度缩小一半
                             null);
-                    for (Point egg : chicken.getEggs()) {
-                        g.drawImage(StaticValue.eggImage,
-                                egg.x * mapsData.nowMap.getMapWidth() * mapsData.nowMap.getScaleFactor(),
-                                egg.y * mapsData.nowMap.getMapWidth() * mapsData.nowMap.getScaleFactor() + 30,
-                                20, 20, null);
-                    }
+
                 }
             } catch (Exception e) {
                 System.err.println("Error rendering chicken: " + e.getMessage());

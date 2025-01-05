@@ -56,7 +56,7 @@ public class Chicken {
             }
         }
 
-        if (timeSystem.getMinute() % 10 == 0) {
+        if (timeSystem.getMinute() % 10 == 0 && timeSystem.getSecond() == 0) {
             eggs.add(new Point(x, y));  // 每隔10分钟下个蛋
 //            System.out.println("egg");
         }
