@@ -35,7 +35,7 @@ public class ChickenManager {
 
     public void pickEgg(Chicken chicken, int tileX, int tileY) {  // 收集蛋
         Point targetPoint = new Point(tileX, tileY);
-        ArrayList<Point> eggs = chicken.getEggs();
+        List<Point> eggs = chicken.getEggs();
 
         if (eggs.contains(targetPoint)) {
             InventoryBar.getInstance().addItem(4);
@@ -74,6 +74,13 @@ public class ChickenManager {
 
         chickens.forEach(chicken -> {
             try {
+                for (Point egg : chicken.getEggs()) {
+                    g.drawImage(StaticValue.eggImage,
+                            egg.x * 32,
+                            egg.y * 32 + 25,
+                            20, 20, null);
+                }
+
                 BufferedImage image = chicken.getCurrentImage();
                 if (image != null) {
                     g.drawImage(image,
@@ -82,12 +89,6 @@ public class ChickenManager {
                             mapsData.nowMap.getMapWidth() * mapsData.nowMap.getScaleFactor() / 2, // 宽度缩小一半
                             mapsData.nowMap.getMapWidth() * mapsData.nowMap.getScaleFactor() / 2, // 高度缩小一半
                             null);
-                    for (Point egg : chicken.getEggs()) {
-                        g.drawImage(StaticValue.eggImage,
-                                egg.x * mapsData.nowMap.getMapWidth() * mapsData.nowMap.getScaleFactor(),
-                                egg.y * mapsData.nowMap.getMapWidth() * mapsData.nowMap.getScaleFactor() + 30,
-                                20, 20, null);
-                    }
                 }
             } catch (Exception e) {
                 System.err.println("Error rendering chicken: " + e.getMessage());
