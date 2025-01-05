@@ -30,8 +30,13 @@ public class Shoper extends Character {
             DialogBubble.talk(getClass().getSimpleName(), "hello");
             addEvents("hello");
         } else {
-            DialogBubble.talk(getClass().getSimpleName(), "shop");
-            InventoryBar.getInstance().sellItem();
+            if (InventoryBar.getInstance().getItemCounts() != 0) {
+                DialogBubble.talk(getClass().getSimpleName(), "sell");
+                InventoryBar.getInstance().sellItem();
+            }
+            else {
+                DialogBubble.talk(getClass().getSimpleName(), "talk");
+            }
         }
 
 

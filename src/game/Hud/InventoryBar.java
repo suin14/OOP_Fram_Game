@@ -96,7 +96,16 @@ public class InventoryBar extends JPanel {
                 itemCounts.set(i, 0);
                 repaint();
             }
-
         }
+    }
+
+    public int getItemCounts() { // 获取库存数量
+        int cnt = 0;
+        for (int i = 1; i < itemCounts.size(); i++) {
+            if (itemCounts.get(i) != 0) {
+                cnt += itemCounts.get(i);
+            }
+        }
+        return cnt;
     }
 }

@@ -5,15 +5,16 @@ import game.Other.TimeSystem;
 
 import java.awt.Point;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Chicken {
     private int x, y;           // 位置
     private boolean facingLeft; // 朝向
     private int frameIndex;     // 当前动画帧
     private long lastUpdateTime;// 上次更新时间
-    private final ArrayList<Point> eggs; // 当前鸡的鸡蛋
+    private final List<Point> eggs; //当前鸡的鸡蛋
     private static final Random random = new Random();
 
     private final TimeSystem timeSystem;
@@ -23,7 +24,7 @@ public class Chicken {
     public Chicken(int x, int y) {
         this.x = x;
         this.y = y;
-        this.eggs = new ArrayList<>();
+        this.eggs = new CopyOnWriteArrayList<>();
         this.facingLeft = random.nextBoolean();
         this.frameIndex = 0;
         this.lastUpdateTime = System.currentTimeMillis();
@@ -32,19 +33,19 @@ public class Chicken {
     }
 
     public void update() {
-        // 每200ms更新一次动画帧
+        // 每500ms更新一次动画帧
         long currentTime = System.currentTimeMillis();
-        if (currentTime - lastUpdateTime > 200) {
+        if (currentTime - lastUpdateTime > 500) {
             frameIndex = (frameIndex + 1) % 4;
             lastUpdateTime = currentTime;
 
             // 随机改变方向
-            if (random.nextInt(100) < 5) { // 5%的概率改变方向
+            if (random.nextInt(100) < 20) { // 5%的概率改变方向
                 facingLeft = !facingLeft;
             }
 
             // 随机移动
-            if (random.nextInt(100) < 30) { // 30%的概率移动
+            if (random.nextInt(100) < 80) {
                 int dx = facingLeft ? -1 : 1;
                 x += dx;
             }
@@ -56,8 +57,9 @@ public class Chicken {
             }
         }
 
-        if (timeSystem.getMinute() == 0 && timeSystem.getHour() % 2 == 0) {
-            eggs.add(new Point(x, y));  // 每隔2小时下个蛋
+        if (timeSystem.getMinute() % 30 == 0 && timeSystem.getSecond() == 0) {
+            eggs.add(new Point(x, y));  // 每隔30分钟下个蛋
+//            System.out.println("egg");
         }
     }
 
@@ -74,7 +76,7 @@ public class Chicken {
         return y * 16 * 2; // tileHeight(16) * scaleFactor(2)
     }
 
-    public ArrayList<Point> getEggs() { return eggs; }
+    public List<Point> getEggs() { return eggs; }
 
     public boolean needsNewDestination() {
         return currentDestination == null || 

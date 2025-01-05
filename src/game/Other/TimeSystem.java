@@ -10,6 +10,7 @@ public class TimeSystem {
     private int day;
     private int hour;
     private int minute;
+
     private int second;
     private DayPhase currentPhase;
 
@@ -224,6 +225,10 @@ public class TimeSystem {
 
     public int getMinute() {
         return minute;
+    }
+
+    public int getSecond() {
+        return second;
     }
 
 }

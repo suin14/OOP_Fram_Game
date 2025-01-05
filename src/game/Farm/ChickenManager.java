@@ -35,7 +35,7 @@ public class ChickenManager {
 
     public void pickEgg(Chicken chicken, int tileX, int tileY) {  // 收集蛋
         Point targetPoint = new Point(tileX, tileY);
-        ArrayList<Point> eggs = chicken.getEggs();
+        List<Point> eggs = chicken.getEggs();
 
         if (eggs.contains(targetPoint)) {
             InventoryBar.getInstance().addItem(4);
@@ -50,16 +50,17 @@ public class ChickenManager {
 
     public void update() {
         chickens.forEach(chicken -> {
-            chicken.update();
-            // 检查并修正位置
-            int x = chicken.getX() / (mapsData.nowMap.getMapWidth() * mapsData.nowMap.getScaleFactor()); // 考虑tileWidth和scaleFactor
-            int y = chicken.getY() / (mapsData.nowMap.getMapWidth() * mapsData.nowMap.getScaleFactor()); // 考虑tileHeight和scaleFactor
+            int lastX = chicken.getX() / 32;
+            int lastY = chicken.getY() / 32;
 
-            // 如果超出范围，重新生成一个范围内的随机位置
-            if (x < MIN_TILE_X || x > MAX_TILE_X || y < MIN_TILE_Y || y > MAX_TILE_Y) {
-                int newX = random.nextInt(MAX_TILE_X - MIN_TILE_X + 1) + MIN_TILE_X;
-                int newY = random.nextInt(MAX_TILE_Y - MIN_TILE_Y + 1) + MIN_TILE_Y;
-                chicken.setPosition(newX, newY);
+            chicken.update();
+
+            // 检查是否超出范围并修正位置
+            int x = chicken.getX() / 32;
+            int y = chicken.getY() / 32;
+
+            if (x < MIN_TILE_X || x  > MAX_TILE_X || y  < MIN_TILE_Y || y > MAX_TILE_Y) {
+                chicken.setPosition(lastX, lastY);
             }
         });
     }
@@ -73,20 +74,27 @@ public class ChickenManager {
 
         chickens.forEach(chicken -> {
             try {
+                for (Point egg : chicken.getEggs()) {
+                    g.drawImage(StaticValue.eggImage,
+                            egg.x * 32,
+                            egg.y * 32 + 25,
+                            20, 20, null);
+                }
+
                 BufferedImage image = chicken.getCurrentImage();
                 if (image != null) {
+                    for (Point egg : chicken.getEggs()) {
+                        g.drawImage(StaticValue.eggImage,
+                                egg.x * 32,
+                                egg.y * 32 + 30,
+                                20, 20, null);
+                    }
                     g.drawImage(image,
                             chicken.getX(),
                             chicken.getY(),
                             mapsData.nowMap.getMapWidth() * mapsData.nowMap.getScaleFactor() / 2, // 宽度缩小一半
                             mapsData.nowMap.getMapWidth() * mapsData.nowMap.getScaleFactor() / 2, // 高度缩小一半
                             null);
-                    for (Point egg : chicken.getEggs()) {
-                        g.drawImage(StaticValue.eggImage,
-                                egg.x * mapsData.nowMap.getMapWidth() * mapsData.nowMap.getScaleFactor(),
-                                egg.y * mapsData.nowMap.getMapWidth() * mapsData.nowMap.getScaleFactor() + 30,
-                                20, 20, null);
-                    }
                 }
             } catch (Exception e) {
                 System.err.println("Error rendering chicken: " + e.getMessage());
