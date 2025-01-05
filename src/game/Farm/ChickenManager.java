@@ -50,16 +50,17 @@ public class ChickenManager {
 
     public void update() {
         chickens.forEach(chicken -> {
-            chicken.update();
-            // 检查并修正位置
-            int x = chicken.getX() / (mapsData.nowMap.getMapWidth() * mapsData.nowMap.getScaleFactor()); // 考虑tileWidth和scaleFactor
-            int y = chicken.getY() / (mapsData.nowMap.getMapWidth() * mapsData.nowMap.getScaleFactor()); // 考虑tileHeight和scaleFactor
+            int lastX = chicken.getX() / 32;
+            int lastY = chicken.getY() / 32;
 
-            // 如果超出范围，重新生成一个范围内的随机位置
-            if (x < MIN_TILE_X || x > MAX_TILE_X || y < MIN_TILE_Y || y > MAX_TILE_Y) {
-                int newX = random.nextInt(MAX_TILE_X - MIN_TILE_X + 1) + MIN_TILE_X;
-                int newY = random.nextInt(MAX_TILE_Y - MIN_TILE_Y + 1) + MIN_TILE_Y;
-                chicken.setPosition(newX, newY);
+            chicken.update();
+
+            // 检查是否超出范围并修正位置
+            int x = chicken.getX() / 32;
+            int y = chicken.getY() / 32;
+
+            if (x < MIN_TILE_X || x  > MAX_TILE_X || y  < MIN_TILE_Y || y > MAX_TILE_Y) {
+                chicken.setPosition(lastX, lastY);
             }
         });
     }

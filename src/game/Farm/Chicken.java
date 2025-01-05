@@ -32,19 +32,19 @@ public class Chicken {
     }
 
     public void update() {
-        // 每200ms更新一次动画帧
+        // 每500ms更新一次动画帧
         long currentTime = System.currentTimeMillis();
-        if (currentTime - lastUpdateTime > 200) {
+        if (currentTime - lastUpdateTime > 500) {
             frameIndex = (frameIndex + 1) % 4;
             lastUpdateTime = currentTime;
 
             // 随机改变方向
-            if (random.nextInt(100) < 5) { // 5%的概率改变方向
+            if (random.nextInt(100) < 20) { // 5%的概率改变方向
                 facingLeft = !facingLeft;
             }
 
             // 随机移动
-            if (random.nextInt(100) < 30) { // 30%的概率移动
+            if (random.nextInt(100) < 80) {
                 int dx = facingLeft ? -1 : 1;
                 x += dx;
             }
@@ -56,8 +56,9 @@ public class Chicken {
             }
         }
 
-        if (timeSystem.getMinute() == 0 && timeSystem.getHour() % 2 == 0) {
-            eggs.add(new Point(x, y));  // 每隔2小时下个蛋
+        if (timeSystem.getMinute() % 10 == 0) {
+            eggs.add(new Point(x, y));  // 每隔10分钟下个蛋
+//            System.out.println("egg");
         }
     }
 
