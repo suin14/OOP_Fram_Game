@@ -97,9 +97,9 @@ public class FarmManager {
             try {
                 g.drawImage(plant.getCurrentImage(),
                         plant.getX(),
-                        plant.getY(),
-                        48,    // 保持宽度
-                        56,    // 增加高度以增加垂直间距
+                        plant.getY() + 24,
+                        32,    // 保持宽度
+                        32,    // 增加高度以增加垂直间距
                         null);
             } catch (Exception e) {
                 System.err.println("Error rendering plant at " + plant.getX() + "," + plant.getY());
