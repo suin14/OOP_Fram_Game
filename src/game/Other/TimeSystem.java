@@ -8,11 +8,10 @@ import java.time.LocalDateTime;
 
 public class TimeSystem implements Serializable {
     private static TimeSystem instance;
-    private int year;
-    private int month;
-    private int day;
     private int hour;
     private int minute;
+
+    private int timeImage = 0;
 
     private int second;
     private DayPhase currentPhase;
@@ -50,10 +49,6 @@ public class TimeSystem implements Serializable {
 
     private TimeSystem() {
         // 初始化时间
-//        LocalDateTime now = LocalDateTime.now();
-//        this.year = now.getYear();
-//        this.month = now.getMonthValue();
-        this.day = 0;
         this.hour = 6;
         this.minute = 0;
         this.second = 0;
@@ -77,38 +72,34 @@ public class TimeSystem implements Serializable {
                 hour++;
                 if (hour >= 24) {
                     hour = 0;
-                    day++;
-//                    if (day > getDaysInMonth(year, month)) {
-//                        day = 1;
-//                        month++;
-//                        if (month > 12) {
-//                            month = 1;
-//                            year++;
-//                        }
-//                    }
                 }
                 updatePhase();
             }
         }
     }
 
-    private int getDaysInMonth(int year, int month) {
-        return java.time.YearMonth.of(year, month).lengthOfMonth();
-    }
 
     private void updatePhase() {
         if (hour >= DayPhase.DAWN.startHour && hour < DayPhase.DAY.startHour) {
             currentPhase = DayPhase.DAWN;
+            timeImage = 1;
         } else if (hour >= DayPhase.DAY.startHour && hour < DayPhase.DUSK.startHour) {
             currentPhase = DayPhase.DAY;
+            timeImage = 0;
         } else if (hour >= DayPhase.DUSK.startHour && hour < DayPhase.NIGHT.startHour) {
             currentPhase = DayPhase.DUSK;
+            timeImage = 3;
         } else {
             currentPhase = DayPhase.NIGHT;
+            timeImage = 4;
         }
     }
 
     public void render(Graphics2D g, int frameWidth, int frameHeight) {
+        g.drawImage(StaticValue.boxImage, 14, 40, 265, 70, null);
+
+        g.drawImage(StaticValue.timeImage[timeImage], 65, 52, 42, 42, null);
+
         g.setColor(Color.BLACK);
         
         // 启用抗锯齿
@@ -116,7 +107,7 @@ public class TimeSystem implements Serializable {
         
         int digitWidth = 20;
         int digitHeight = 30;
-        int startX = 50;
+        int startX = 115;
         int startY = 60;
         
         // 绘制小时

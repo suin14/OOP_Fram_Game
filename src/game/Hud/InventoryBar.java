@@ -17,7 +17,7 @@ public class InventoryBar extends JPanel {
     private static final int boxWidth = 64;
     private static final int boxHeight = 90;
 
-    private List<Integer> itemCounts; // 物品数量
+    private static List<Integer> itemCounts; // 物品数量
 
     public InventoryBar() {
         mapViewer = MapsData.getInstance();
@@ -91,8 +91,9 @@ public class InventoryBar extends JPanel {
     public void sellItem() {
         for (int i = 1; i < itemCounts.size(); i++) {
             if (itemCounts.get(i) != 0) {
-                itemCounts.set(0, itemCounts.get(i) * 10);
-                System.out.println("Money:" + itemCounts.get(0)); // 当前金钱数
+                int money = itemCounts.get(0); // 当前金钱数
+                itemCounts.set(0, money + itemCounts.get(i) * 10);
+                System.out.println("Money:" + itemCounts.get(0));
                 itemCounts.set(i, 0);
                 repaint();
             }
@@ -107,5 +108,21 @@ public class InventoryBar extends JPanel {
             }
         }
         return cnt;
+    }
+
+    public static int checkItem(int itemID) { // 获取物品数量
+        return itemCounts.get(itemID);
+    }
+
+    public static void updateItem(int itemID, int cnt) { // 更新物品数量
+        itemCounts.set(itemID, cnt);
+    }
+
+    public List<Integer> getItems() {
+        return itemCounts;
+    }
+
+    public void setItems(List<Integer> loadedItems) {
+        itemCounts = loadedItems;
     }
 }

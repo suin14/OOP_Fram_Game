@@ -7,11 +7,10 @@ import game.Other.SoundManager;
 
 import java.awt.*;
 import java.util.HashMap;
-import java.util.List;
 
 public class FarmManager {
     private final MapsData mapsData;
-    private final HashMap<Integer, Plant> plants;
+    private HashMap<Integer, Plant> plants;
 
     public FarmManager() {
         // 获取当前地图
@@ -23,13 +22,13 @@ public class FarmManager {
         // 检查是否在可播种区域内
         MapLoader nowMap = mapsData.nowMap;
         int index = tileY * nowMap.getMapWidth() + tileX;
-        System.out.println("Tile coordinates: " + tileX + ", " + tileY);
-        System.out.println("通过x,y计算出index:" + index);
+        // System.out.println("Tile coordinates: " + tileX + ", " + tileY);
+        // System.out.println("通过x,y计算出index:" + index);
         Plant plant = nowMap.farmData.get(index);
 
         if (plant != null) {
             if (plant.getType() == 1) {
-                System.out.println("Plant type: " + plant.getType());
+                // System.out.println("Plant type: " + plant.getType());
                 return true;
             }
         }
@@ -52,7 +51,7 @@ public class FarmManager {
     public void handleHarvest(int tileX, int tileY) {
         MapLoader nowMap = mapsData.nowMap;
         int index = tileY * nowMap.getMapWidth() + tileX;
-        System.out.println("Tile coordinates: " + tileX + ", " + tileY);
+        // System.out.println("Tile coordinates: " + tileX + ", " + tileY);
         Plant plant = plants.get(index);
 
         if (plant == null) {
@@ -106,5 +105,13 @@ public class FarmManager {
                 e.printStackTrace();
             }
         });
+    }
+
+    public HashMap<Integer, Plant> getPlants() {
+        return plants;
+    }
+
+    public void setPlants(HashMap<Integer, Plant> loadedPlants) {
+        this.plants = loadedPlants;
     }
 } 

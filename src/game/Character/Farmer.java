@@ -214,45 +214,29 @@ public class Farmer extends Character implements Runnable {
         return currentStatus;
     }
 
-    public void setCurrentStatus(String currentStatus) {
-        this.currentStatus = currentStatus;
-        switch (currentStatus) {
-            case "move--up" -> {
-                BufferedImage[] anim = StaticValue.walk_U;
-                updateframe(anim);
-                setShow(anim[currentFrame]);
-            }
-            case "move--right" -> {
-                BufferedImage[] anim = StaticValue.walk_R;
-                updateframe(anim);
-                setShow(anim[currentFrame]);
-            }
-            case "move--down" -> {
-                BufferedImage[] anim = StaticValue.walk_D;
-                updateframe(anim);
-                setShow(anim[currentFrame]);
-            }
-            case "move--left" -> {
-                BufferedImage[] anim = StaticValue.walk_L;
-                updateframe(anim);
-                setShow(anim[currentFrame]);
-            }
-            case "stand--up" -> {
+    public void setCurrentStatus(int dir) {
+        switch (dir) {
+            case 0 -> {
                 BufferedImage[] anim = StaticValue.walk_U;
                 setShow(anim[2]);
+                currentStatus = "stand--up";
             }
-            case "stand--right" -> {
+            case 1 -> {
                 BufferedImage[] anim = StaticValue.walk_R;
                 setShow(anim[4]);
+                currentStatus = "stand--right";
             }
-            case "stand--down" -> {
+            case 2 -> {
                 BufferedImage[] anim = StaticValue.walk_D;
                 setShow(anim[2]);
+                currentStatus = "stand--down";
             }
-            case "stand--left" -> {
+            case 3 -> {
                 BufferedImage[] anim = StaticValue.walk_L;
                 setShow(anim[4]);
+                currentStatus = "stand--left";
             }
         }
+        newStatus = currentStatus;
     }
 }

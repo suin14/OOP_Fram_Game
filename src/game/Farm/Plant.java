@@ -1,10 +1,12 @@
 package game.Farm;
-
 import game.Other.StaticValue;
 
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 
-public class Plant {
+public class Plant implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
     private int type;  // 2 或 3，对应工具类型,0：表示不能种，1：表示可以种
     private int growthStage = 0;  // 生长阶段 0-5
     private long lastUpdateTime;   // 上次更新时间
@@ -17,7 +19,7 @@ public class Plant {
         this.y = y;
         this.growthTime = (type == 2) ? 2 : 3;  // 工具2是2秒，工具3是3秒
         this.lastUpdateTime = System.currentTimeMillis();
-        System.out.println("Created plant type " + type + " at " + x + "," + y); // 调试信息
+        System.out.println("Created plant type " + type + " at " + x + "," + y);
     }
 
     public void update() {
@@ -26,7 +28,7 @@ public class Plant {
             if (currentTime - lastUpdateTime >= growthTime * 1000) {
                 growthStage++;
                 lastUpdateTime = currentTime;
-//                System.out.println("播种在" + x + "," + y + "成长到" + growthStage); // 调试信息
+//                System.out.println("播种在" + x + "," + y + "成长到" + growthStage);
             }
         }
     }

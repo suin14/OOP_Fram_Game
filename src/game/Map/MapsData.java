@@ -4,10 +4,10 @@ import game.Character.Farmer;
 import game.Other.BlackScreenController;
 import game.Other.SoundManager;
 
-
 import java.util.HashMap;
 
 public class MapsData {
+
     private final java.util.Map<String, MapLoader> maps;
     
     public MapLoader nowMap;
@@ -18,8 +18,8 @@ public class MapsData {
 
     private MapsData() {
         maps = new HashMap<>();
-        maps.put("farm", new MapLoader("farm.tmx", "farm.png"));
-        maps.put("shop", new MapLoader("shop.tmx", "shop.png"));
+        maps.put("farm", new MapLoader("farm", "farm.tmx", "farm.png"));
+        maps.put("shop", new MapLoader("shop", "shop.tmx", "shop.png"));
         nowMap = getMap("farm");
 
         pc = Farmer.getInstance();
@@ -37,7 +37,7 @@ public class MapsData {
     }
 
     public void updadteNowMap(String mapName) {
-        nowMap = maps.get(mapName);
+        nowMap = getMap(mapName);
     }
     
     // 碰撞检测

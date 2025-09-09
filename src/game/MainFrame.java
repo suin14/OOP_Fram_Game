@@ -10,6 +10,7 @@ import game.Other.PauseMenuPanel;
 import game.Other.SoundManager;
 import game.Other.StaticValue;
 import game.Farm.FarmManager;
+import game.Farm.Plant;
 import game.Other.TimeSystem;
 import game.Farm.ChickenManager;
 import game.Hud.*;
@@ -23,6 +24,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.*;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -45,10 +47,12 @@ public class MainFrame extends JFrame implements KeyListener, Runnable, ActionLi
     private static int selectedToolIndex = 0; // 当前选中的工具
     private final int toolCount = 3;   // 道具数量
 
+    private static int farmLevel = 0;
+
     public MainFrame() {
         setTitle("圈圈物语");
         setIconImage(new ImageIcon(Objects.requireNonNull(
-                getClass().getClassLoader().getResource("assets/logo.png"))).getImage());
+        getClass().getClassLoader().getResource("assets/logo.png"))).getImage());
         setSize(1280, 720);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -68,8 +72,9 @@ public class MainFrame extends JFrame implements KeyListener, Runnable, ActionLi
                 mapViewer.nowMap.getMapWidth()
         );
 
-        // 初始化PC
+        // 初始化PC和农场等级
         pc = Farmer.getInstance(19, 9);
+        farmLevel = 0;
 
         // 播放BGM
         SoundManager.playBGM();
@@ -127,7 +132,9 @@ public class MainFrame extends JFrame implements KeyListener, Runnable, ActionLi
                 mapViewer.nowMap.paintComponent(graphics);
                 if (mapViewer.nowMap.isFarm) {
                     farmManager.render((Graphics2D) graphics, getWidth()); // 农场渲染植物
-                    chickenManager.render((Graphics2D) graphics);  // 农场渲染小鸡
+                    if (farmLevel == 1) {
+                        chickenManager.render((Graphics2D) graphics);  // 农场渲染小鸡
+                    }
                 }
             }
 
@@ -141,7 +148,7 @@ public class MainFrame extends JFrame implements KeyListener, Runnable, ActionLi
                 timeSystem.render((Graphics2D) graphics, getWidth(), getHeight());
             }
 
-            // 在农场套时间滤镜
+            // 在农场套昼夜滤镜
             if (mapViewer != null && mapViewer.nowMap != null && mapViewer.nowMap.isFarm) {
                 timeSystem.paintDayPhase((Graphics2D) graphics, getWidth(), getHeight());
             }
@@ -234,11 +241,11 @@ public class MainFrame extends JFrame implements KeyListener, Runnable, ActionLi
                         }
                     }
                 }
-//                else if (e.getKeyCode() == KeyEvent.VK_K) {
-//                    saveGame("user.data");
-//                } else if (e.getKeyCode() == KeyEvent.VK_L) {
-//                    loadGame("user.data");
-//                }
+               else if (e.getKeyCode() == KeyEvent.VK_K) {
+                   saveGame("user.data");
+               } else if (e.getKeyCode() == KeyEvent.VK_L) {
+                   loadGame("user.data");
+               }
             }
 //        }
     }
@@ -288,7 +295,9 @@ public class MainFrame extends JFrame implements KeyListener, Runnable, ActionLi
         while (true) {
             farmManager.update();
             timeSystem.update();
-            chickenManager.update();  // 更新小鸡
+            if (farmLevel == 1) {
+                chickenManager.update();  // 更新小鸡
+            }
             repaint();
             try {
                 Thread.sleep(100);
@@ -304,37 +313,59 @@ public class MainFrame extends JFrame implements KeyListener, Runnable, ActionLi
             // 写入时间系统
             oos.writeObject(timeSystem);
 
-            // 写入PC的属性
+            // 写入PC位置
             oos.writeInt(pc.getX());
             oos.writeInt(pc.getY());
+            oos.writeInt(pc.getDir());
+           oos.writeUTF(mapViewer.nowMap.getLocationName());
 
-            // 保存鸡和鸡蛋的状态
-//            oos.writeObject(chickenManager.getChickens());
+           oos.writeObject(chickenManager.getChickens());
+
+           oos.writeObject(farmManager.getPlants());
+
+           oos.writeObject(inventoryBar.getItems());
+
 
             System.out.println("游戏已成功保存到文件：" + filePath);
         } catch (IOException e) {
-            System.err.println("保存游戏失败：" + e.getMessage());
+            System.err.println("保存游戏失败：");
+            e.printStackTrace();
         }
     }
 
     // 加载游戏状态
+    @SuppressWarnings("unchecked")
     public void loadGame(String filePath) {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
             // 读取时间系统
             timeSystem = (TimeSystem) ois.readObject();
 
-            // 读取并恢复PC的属性
+            // 读取并恢复PC位置
             pc.setX(ois.readInt());
             pc.setY(ois.readInt());
-            pc.setCurrentStatus(ois.readUTF());
+            pc.setCurrentStatus(ois.readInt());
+            mapViewer.updadteNowMap(ois.readUTF());;
 
-            // 恢复鸡的状态
-//            List<Chicken> chickens = (List<Chicken>) ois.readObject();  // 读取鸡的List
-//            chickenManager.setChickens(chickens);  // 将读取到的List设置到鸡管理器中
+           List<Chicken> chickens = (List<Chicken>) ois.readObject();  // 读取鸡的List
+           chickenManager.setChickens(chickens);  // 将读取到的List设置到鸡管理器中
+
+           HashMap<Integer, Plant> loadedPlants = (HashMap<Integer, Plant>) ois.readObject();
+           farmManager.setPlants(loadedPlants);
+
+           inventoryBar.setItems((List<Integer>) ois.readObject());
 
             System.out.println("游戏已成功加载自文件：" + filePath);
         } catch (IOException | ClassNotFoundException e) {
-            System.err.println("加载游戏失败：" + e.getMessage());
+            System.err.println("加载游戏失败：");
+            e.printStackTrace();
+        }
+    }
+
+    public static void updateFarm() {
+        if (farmLevel != 1){
+            farmLevel = 1;
+            int money = InventoryBar.checkItem(0);
+            InventoryBar.updateItem(0, money - 100);
         }
     }
 }

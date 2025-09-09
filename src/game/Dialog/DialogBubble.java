@@ -51,7 +51,7 @@ public class DialogBubble extends JPanel {
         Graphics2D g2d = (Graphics2D) g;
 
         // 绘制对话框图片
-        g2d.drawImage(StaticValue.dialogBubble, 80, 440, 720, 240, this);
+        g2d.drawImage(StaticValue.dialogBubble, 80, 440, 850, 240, this);
 
         // 设置名字
         g2d.setFont(new Font("Arial", Font.BOLD, 28));
@@ -72,7 +72,7 @@ public class DialogBubble extends JPanel {
 //        System.out.println(message);
     }
 
-    // 读取并解析 JSON 文件
+    // 读取 JSON 文件
     private static String loadMessageFromJSON(String FileName, String key) {
         InputStream inputStream = DialogBubble.class.getClassLoader().getResourceAsStream("assets/dialogue/" + FileName + ".json");
         if (inputStream == null) {

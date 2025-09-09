@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MapLoader extends JPanel {
+    private String location;
+
     private final int scaleFactor = 2; // 缩放倍数
     private BufferedImage tileset; // 图块集图像
     private final int tileWidth = 16; // 单个图块宽度
@@ -34,7 +36,8 @@ public class MapLoader extends JPanel {
     public final HashMap<Integer, Character> npcData = new HashMap<>(); // 地图上npc信息
 
 
-    public MapLoader(String tmxFilePath, String tilesetImagePath) {
+    public MapLoader(String mapName, String tmxFilePath, String tilesetImagePath) {
+        this.location = mapName;
         loadTileset(tilesetImagePath);
         loadMap(tmxFilePath);
     }
@@ -258,8 +261,12 @@ public class MapLoader extends JPanel {
         return isFarm;
     }
 
-    public HashMap<Integer, Plant> getFarmData() {  // TODO 替换成Plant类
+    public HashMap<Integer, Plant> getFarmData() {
         return farmData;
+    }
+
+    public String getLocationName(){
+        return location;
     }
 
     // 获取指定位置的瓦片ID

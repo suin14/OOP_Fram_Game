@@ -61,7 +61,7 @@ public class Chicken implements Serializable {
 
         if (timeSystem.getMinute() % 30 == 0 && timeSystem.getSecond() == 0) {
             eggs.add(new Point(x, y));  // 每隔30分钟下个蛋
-            System.out.println("egg");
+            // System.out.println("egg");
         }
     }
 
