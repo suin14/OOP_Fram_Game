@@ -55,18 +55,18 @@ public class FarmManager {
         Plant plant = plants.get(index);
 
         if (plant == null) {
-            System.out.println("No plant found at location: " + index);
+            System.out.println("该区域不可种植！");
             return;
         }
 
         // 添加：检查是否为可种植的空地（type == 1）
         if (plant.getType() == 1) {
-            System.out.println("This is empty farmland, nothing to harvest");
+            System.out.println("这是块空地，什么都没有！");
             return;
         }
 
         if (!plant.isFullyGrown()) {
-            System.out.println("Plant at " + index + " is not fully grown yet.");
+            System.out.println("该区域上的作物还不到收割的时候！");
             return;
         }
 
@@ -76,14 +76,13 @@ public class FarmManager {
         // 根据植物类型增加对应的计数
         try {
             InventoryBar.getInstance().addItem(plant.getType());
-            System.out.println("Harvested plant type " + plant.getType() + " at " + index);
+            System.out.println("收获【" + plant.getType() + "】！");
         } catch (IllegalArgumentException e) {
             System.err.println("Error adding item to inventory: " + e.getMessage());
         }
 
         // 收获后将地块恢复为可种植状态（type=1）
         plants.put(index, new Plant(1, plant.getX(), plant.getY()));
-        System.out.println("Plant harvested and land restored to plantable state");
     }
 
 

@@ -42,7 +42,7 @@ public class Chicken implements Serializable {
             lastUpdateTime = currentTime;
 
             // 随机改变方向
-            if (random.nextInt(100) < 20) { // 5%的概率改变方向
+            if (random.nextInt(100) < 20) {
                 facingLeft = !facingLeft;
             }
 
