@@ -7,7 +7,6 @@ import java.net.URL;
 public class SoundManager {
 
     private static Clip bgmClip;
-    private static Clip sfxClip;
 
     // 播放背景音乐
     public static void playBGM() {
@@ -48,10 +47,18 @@ public class SoundManager {
                 return;
             }
 
-            AudioInputStream sfxStream = AudioSystem.getAudioInputStream(sfxUrl);
-            sfxClip = AudioSystem.getClip();
+            AudioInputStream sfxStream = AudioSystem.getAudioInputStream(sfxUrl);  
+            // 每次播放创建新的Clip实例
+            Clip sfxClip = AudioSystem.getClip();
             sfxClip.open(sfxStream);
             sfxClip.start();
+            
+            // 监听播放结束自动释放资源
+            sfxClip.addLineListener(event -> {
+                if (event.getType() == LineEvent.Type.STOP) {
+                    sfxClip.close();
+                }
+            });
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
         }

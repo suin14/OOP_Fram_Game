@@ -1,6 +1,5 @@
 package game.Hud;
 
-import game.Dialog.DialogBubble;
 import game.Other.StaticValue;
 
 import javax.swing.*;

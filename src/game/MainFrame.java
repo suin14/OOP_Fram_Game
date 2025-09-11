@@ -21,15 +21,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-
-public class MainFrame extends JFrame implements KeyListener, Runnable, ActionListener, Serializable {
+public class MainFrame extends JFrame implements KeyListener, Runnable, ActionListener {
     private Image offScreenImage = null;
     private final Farmer pc;
     private final MapsData mapViewer;
@@ -45,14 +42,14 @@ public class MainFrame extends JFrame implements KeyListener, Runnable, ActionLi
 
     // 道具栏相关变量
     private static int selectedToolIndex = 0; // 当前选中的工具
-    private final int toolCount = 3;   // 道具数量
+    private final int toolCount = 3; // 道具数量
 
-    private static int farmLevel = 0;
+    public static int farmLevel = 0;
 
     public MainFrame() {
         setTitle("圈圈物语");
         setIconImage(new ImageIcon(Objects.requireNonNull(
-        getClass().getClassLoader().getResource("assets/logo.png"))).getImage());
+                getClass().getClassLoader().getResource("assets/logo.png"))).getImage());
         setSize(1280, 720);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -69,8 +66,7 @@ public class MainFrame extends JFrame implements KeyListener, Runnable, ActionLi
         timeSystem = TimeSystem.getInstance();
         chickenManager = new ChickenManager(
                 mapViewer.nowMap.getCollisionData(),
-                mapViewer.nowMap.getMapWidth()
-        );
+                mapViewer.nowMap.getMapWidth());
 
         // 初始化PC和农场等级
         pc = Farmer.getInstance(19, 9);
@@ -79,15 +75,7 @@ public class MainFrame extends JFrame implements KeyListener, Runnable, ActionLi
         // 播放BGM
         SoundManager.playBGM();
 
-        // 添加鼠标监听
-        addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (timeSystem.isTimeClicked(e.getX(), e.getY())) {
-                    timeSystem.switchToNextPhase();
-                }
-            }
-        });
+
         pauseMenuPanel = new PauseMenuPanel();
 
         // 对话框
@@ -103,7 +91,7 @@ public class MainFrame extends JFrame implements KeyListener, Runnable, ActionLi
         repaint();
         Thread thread = new Thread(this);
         thread.start();
-        //植物生长
+        // 植物生长
         new Thread(this::gameLoop).start();
     }
 
@@ -113,10 +101,9 @@ public class MainFrame extends JFrame implements KeyListener, Runnable, ActionLi
             offScreenImage = createImage(getWidth(), getHeight());
         }
         Graphics graphics = offScreenImage.getGraphics();
-        graphics.clearRect(0, 0, getWidth(), getHeight());  // 清空背景
+        graphics.clearRect(0, 0, getWidth(), getHeight()); // 清空背景
 
-
-        if (BlackScreenController.isBlackScreen()) { //播放过场动画
+        if (BlackScreenController.isBlackScreen()) { // 播放过场动画
             // 绘制黑屏
             g.setColor(Color.BLACK);
             g.fillRect(0, 0, getWidth(), getHeight());
@@ -133,7 +120,7 @@ public class MainFrame extends JFrame implements KeyListener, Runnable, ActionLi
                 if (mapViewer.nowMap.isFarm) {
                     farmManager.render((Graphics2D) graphics, getWidth()); // 农场渲染植物
                     if (farmLevel == 1) {
-                        chickenManager.render((Graphics2D) graphics);  // 农场渲染小鸡
+                        chickenManager.render((Graphics2D) graphics); // 农场渲染小鸡
                     }
                 }
             }
@@ -152,7 +139,7 @@ public class MainFrame extends JFrame implements KeyListener, Runnable, ActionLi
             if (mapViewer != null && mapViewer.nowMap != null && mapViewer.nowMap.isFarm) {
                 timeSystem.paintDayPhase((Graphics2D) graphics, getWidth(), getHeight());
             }
-            
+
             // 在农场地图绘制道具栏
             if (mapViewer != null && mapViewer.nowMap != null && mapViewer.nowMap.isFarm) {
                 toolBar.paintComponent(graphics);
@@ -177,85 +164,77 @@ public class MainFrame extends JFrame implements KeyListener, Runnable, ActionLi
         }
     }
 
-
     // 实现KeyListener接口的三个方法
     @Override
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
 
-//        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-//            // 按下 Esc 键，暂停游戏
-//            if (pauseMenuPanel.isPause()) {
-//                pauseMenuPanel.hidePanel();
-//            } else {
-//                pauseMenuPanel.showPanel();
-//            }
-//        } else if (!pauseMenuPanel.isPause()) {
-            // 如果正在进行对话，只能先结束对话
-            if (DialogBubble.isTalking()) {
-                if (keyCode == KeyEvent.VK_SPACE) {
-                    DialogBubble.stopTalking();
-                }
-            } else if (!pauseMenuPanel.isPause()) {
-                if (keyCode == KeyEvent.VK_A) {
-                    // 按下 A 键，pc向左移动
-                    pc.move(3);
-                } else if (keyCode == KeyEvent.VK_D) {
-                    // 按下 D 键，pc向右移动
-                    pc.move(1);
-                } else if (keyCode == KeyEvent.VK_W) {
-                    // 按下 W 键，pc向上移动
-                    pc.move(0);
-                } else if (keyCode == KeyEvent.VK_S) {
-                    // 按下 S 键，pc向下移动
-                    pc.move(2);
-                } else if (e.getKeyCode() == KeyEvent.VK_Q) {
-                    // 按下 Q 键，向左切换工具
-                    selectedToolIndex = (selectedToolIndex + toolCount - 1) % toolCount;
-                    toolBar.setSelectedToolIndex(selectedToolIndex);
-                } else if (e.getKeyCode() == KeyEvent.VK_E) {
-                    // 按下 E 键，向右切换工具
-                    selectedToolIndex = (selectedToolIndex + toolCount + 1) % toolCount;
-                    toolBar.setSelectedToolIndex(selectedToolIndex);
-                } else if (keyCode == KeyEvent.VK_SPACE) {
-                    MapLoader nowMap = mapViewer.nowMap;
-                    if (!nowMap.isFarm()) { // 在商店
-                        pc.interact();
+        if (DialogBubble.isTalking()) {
+            if (keyCode == KeyEvent.VK_SPACE) {
+                DialogBubble.stopTalking();
+            }
+        } else if (!pauseMenuPanel.isPause()) {
+            if (keyCode == KeyEvent.VK_A) {
+                // 按下 A 键，pc向左移动
+                pc.move(3);
+            } else if (keyCode == KeyEvent.VK_D) {
+                // 按下 D 键，pc向右移动
+                pc.move(1);
+            } else if (keyCode == KeyEvent.VK_W) {
+                // 按下 W 键，pc向上移动
+                pc.move(0);
+            } else if (keyCode == KeyEvent.VK_S) {
+                // 按下 S 键，pc向下移动
+                pc.move(2);
+            } else if (e.getKeyCode() == KeyEvent.VK_Q) {
+                // 按下 Q 键，向左切换工具
+                selectedToolIndex = (selectedToolIndex + toolCount - 1) % toolCount;
+                toolBar.setSelectedToolIndex(selectedToolIndex);
+            } else if (e.getKeyCode() == KeyEvent.VK_E) {
+                // 按下 E 键，向右切换工具
+                selectedToolIndex = (selectedToolIndex + toolCount + 1) % toolCount;
+                toolBar.setSelectedToolIndex(selectedToolIndex);
+            } else if (keyCode == KeyEvent.VK_SPACE) {
+                MapLoader nowMap = mapViewer.nowMap;
+                if (!nowMap.isFarm()) { // 在商店
+                    pc.interact();
+                } else {
+                    // 使用道具
+                    // 获取玩家当前位置对应的瓦片ID
+                    int tileX = (pc.getX() + 32)
+                            / (mapViewer.nowMap.getTileWidth() * mapViewer.nowMap.getScaleFactor());
+                    int tileY = (pc.getY() + 32)
+                            / (mapViewer.nowMap.getTileHeight() * mapViewer.nowMap.getScaleFactor());
+                    // 使用工具
+                    if (selectedToolIndex == 0) {
+                        // 工具1：收获或销毁植物
+                        farmManager.handleHarvest(tileX, tileY);
+
                     } else {
-                        // 使用道具
-                        // 获取玩家当前位置对应的瓦片ID
-                        int tileX = (pc.getX() + 32) / (mapViewer.nowMap.getTileWidth() * mapViewer.nowMap.getScaleFactor());
-                        int tileY = (pc.getY() + 32) / (mapViewer.nowMap.getTileHeight() * mapViewer.nowMap.getScaleFactor());
-                        // 使用工具
-                        if (selectedToolIndex == 0) {
-                            // 工具1：收获或销毁植物
-                            farmManager.handleHarvest(tileX, tileY);
-                            for (Chicken chicken : chickenManager.getChickens()) {
-                                chickenManager.pickEgg(chicken, tileX, tileY);
-                            }
-                        } else {
-                            // 工具2和3：播种
-                            if (farmManager.canPlant(tileX, tileY)) {
-                                farmManager.plantSeed(selectedToolIndex + 1, tileX, tileY);
-                            }
+                        // 工具2和3：播种
+                        if (farmManager.canPlant(tileX, tileY)) {
+                            farmManager.plantSeed(selectedToolIndex + 1, tileX, tileY);
                         }
                     }
-                }
-               else if (e.getKeyCode() == KeyEvent.VK_K) {
-                   saveGame("user.data");
-               } else if (e.getKeyCode() == KeyEvent.VK_L) {
-                   loadGame("user.data");
-               }
-            }
-//        }
-    }
 
+                    for (Chicken chicken : chickenManager.getChickens()) {
+                        chickenManager.pickEgg(chicken, tileX, tileY);
+                    }
+                }
+            } else if (e.getKeyCode() == KeyEvent.VK_K) {
+                saveGame("user.data");
+            } else if (e.getKeyCode() == KeyEvent.VK_L) {
+                loadGame("user.data");
+            }
+        }
+    }
 
     @Override
     public void keyReleased(KeyEvent e) {
         int keyCode = e.getKeyCode();
-        //当松开任意方向时，停止移动
-        if (keyCode == KeyEvent.VK_A || keyCode == KeyEvent.VK_D || keyCode == KeyEvent.VK_W || keyCode == KeyEvent.VK_S) {
+        // 当松开任意方向时，停止移动
+        if (keyCode == KeyEvent.VK_A || keyCode == KeyEvent.VK_D || keyCode == KeyEvent.VK_W
+                || keyCode == KeyEvent.VK_S) {
             pc.stop();
         }
     }
@@ -285,9 +264,9 @@ public class MainFrame extends JFrame implements KeyListener, Runnable, ActionLi
 
     @Override
     public void actionPerformed(ActionEvent e) {
-//        if (e.getSource() == pause) {
-//
-//        }
+        // if (e.getSource() == pause) {
+        //
+        // }
     }
 
     // 添加游戏循环更新植物生长
@@ -296,7 +275,7 @@ public class MainFrame extends JFrame implements KeyListener, Runnable, ActionLi
             farmManager.update();
             timeSystem.update();
             if (farmLevel == 1) {
-                chickenManager.update();  // 更新小鸡
+                chickenManager.update(); // 更新小鸡
             }
             repaint();
             try {
@@ -317,14 +296,13 @@ public class MainFrame extends JFrame implements KeyListener, Runnable, ActionLi
             oos.writeInt(pc.getX());
             oos.writeInt(pc.getY());
             oos.writeInt(pc.getDir());
-           oos.writeUTF(mapViewer.nowMap.getLocationName());
+            oos.writeUTF(mapViewer.nowMap.getLocationName());
 
-           oos.writeObject(chickenManager.getChickens());
+            oos.writeObject(chickenManager.getChickens());
 
-           oos.writeObject(farmManager.getPlants());
+            oos.writeObject(farmManager.getPlants());
 
-           oos.writeObject(inventoryBar.getItems());
-
+            oos.writeObject(inventoryBar.getItems());
 
             System.out.println("游戏已成功保存到文件：" + filePath);
         } catch (IOException e) {
@@ -344,15 +322,16 @@ public class MainFrame extends JFrame implements KeyListener, Runnable, ActionLi
             pc.setX(ois.readInt());
             pc.setY(ois.readInt());
             pc.setCurrentStatus(ois.readInt());
-            mapViewer.updadteNowMap(ois.readUTF());;
+            mapViewer.updadteNowMap(ois.readUTF());
+            ;
 
-           List<Chicken> chickens = (List<Chicken>) ois.readObject();  // 读取鸡的List
-           chickenManager.setChickens(chickens);  // 将读取到的List设置到鸡管理器中
+            List<Chicken> chickens = (List<Chicken>) ois.readObject(); // 读取鸡的List
+            chickenManager.setChickens(chickens); // 将读取到的List设置到鸡管理器中
 
-           HashMap<Integer, Plant> loadedPlants = (HashMap<Integer, Plant>) ois.readObject();
-           farmManager.setPlants(loadedPlants);
+            HashMap<Integer, Plant> loadedPlants = (HashMap<Integer, Plant>) ois.readObject();
+            farmManager.setPlants(loadedPlants);
 
-           inventoryBar.setItems((List<Integer>) ois.readObject());
+            inventoryBar.setItems((List<Integer>) ois.readObject());
 
             System.out.println("游戏已成功加载自文件：" + filePath);
         } catch (IOException | ClassNotFoundException e) {
@@ -362,7 +341,7 @@ public class MainFrame extends JFrame implements KeyListener, Runnable, ActionLi
     }
 
     public static void updateFarm() {
-        if (farmLevel != 1){
+        if (farmLevel != 1) {
             farmLevel = 1;
             int money = InventoryBar.checkItem(0);
             InventoryBar.updateItem(0, money - 100);

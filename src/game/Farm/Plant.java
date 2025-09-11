@@ -17,7 +17,7 @@ public class Plant implements Serializable {
         this.type = type;
         this.x = x;
         this.y = y;
-        this.growthTime = (type == 2) ? 2 : 3;  // 工具2是2秒，工具3是3秒
+        this.growthTime = (type == 2) ? 2 : 5;  // 工具2是2秒，工具3是5秒
         this.lastUpdateTime = System.currentTimeMillis();
         System.out.println("Created plant type " + type + " at " + x + "," + y);
     }

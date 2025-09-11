@@ -1,10 +1,7 @@
 package game.Other;
 
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyListener;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 public class TimeSystem implements Serializable {
     private static TimeSystem instance;
@@ -16,9 +13,13 @@ public class TimeSystem implements Serializable {
     private int second;
     private DayPhase currentPhase;
 
-    private static final Rectangle timeClickArea = new Rectangle(50, 60, 200, 30);  // 点击区域
+    public static TimeSystem getInstance() {
+        if (instance == null) {
+            instance = new TimeSystem();
+        }
+        return instance;
+    }
 
-    // 添加七段显示屏的数字定义
     private static final boolean[][] DIGIT_SEGMENTS = {
         {true, true, true, true, true, true, false},     // 0
         {false, true, true, false, false, false, false}, // 1
@@ -55,12 +56,7 @@ public class TimeSystem implements Serializable {
         updatePhase();
     }
 
-    public static TimeSystem getInstance() {
-        if (instance == null) {
-            instance = new TimeSystem();
-        }
-        return instance;
-    }
+
 
     public void update() {
         second = second + 6;
@@ -187,11 +183,6 @@ public class TimeSystem implements Serializable {
         // 绘制时间阶段的滤镜效果
         g.setColor(currentPhase.overlay);
         g.fillRect(0, 0, frameWidth, frameHeight);
-    }
-
-    // 检查点击是否在时间显示区域内
-    public boolean isTimeClicked(int x, int y) {
-        return timeClickArea.contains(x, y);
     }
 
     // 切换到下一个时间段

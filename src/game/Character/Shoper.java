@@ -29,7 +29,7 @@ public class Shoper extends Character {
             DialogBubble.talk(getClass().getSimpleName(), "hello");
             addEvents("hello");
         } else {
-            if (InventoryBar.getInstance().checkItem(0) >= 100) { // 查询金钱是否多于100
+            if (InventoryBar.checkItem(0) >= 100 && MainFrame.farmLevel != 1) { // 查询金钱是否多于100且未升级过农场
                 DialogBubble.talk(getClass().getSimpleName(), "update");
                 MainFrame.updateFarm();
             } else if (InventoryBar.getInstance().getItemCounts() != 0) {

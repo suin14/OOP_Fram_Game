@@ -1,7 +1,5 @@
 package game.Character;
 
-import game.Farm.FarmManager;
-import game.MainFrame;
 import game.Map.MapLoader;
 import game.Map.MapsData;
 import game.Other.StaticValue;
@@ -52,27 +50,24 @@ public class Farmer extends Character implements Runnable {
 
     // 移动
     public void move(int direction) {
+        this.dir = direction;
         switch (direction) {
             case 0 -> {
-                dir = direction;
                 xspreed = 0;
                 yspreed = -movespeed;
                 newStatus = "move--up";
             }
             case 1 -> {
-                dir = direction;
                 xspreed = movespeed;
                 yspreed = 0;
                 newStatus = "move--right";
             }
             case 2 -> {
-                dir = direction;
                 xspreed = 0;
                 yspreed = movespeed;
                 newStatus = "move--down";
             }
             case 3 -> {
-                dir = direction;
                 xspreed = -movespeed;
                 yspreed = 0;
                 newStatus = "move--left";
@@ -136,6 +131,7 @@ public class Farmer extends Character implements Runnable {
                 }
                 if (mapViewer.checkCollision(getX() + xspreed, getY())) {
                     setX(getX() + xspreed);
+                    // 地图边界控制
                     if (getX() < 0) {
                         setX(0);
                     }
